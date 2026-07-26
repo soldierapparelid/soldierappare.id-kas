@@ -13,7 +13,6 @@
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5;padding-bottom:30px;font-size:14px}
 .wrap{max-width:680px;margin:0 auto;padding:14px}
 header{display:flex;align-items:center;gap:11px;margin:4px 0 14px}
-.em{width:46px;height:46px;border:2px solid var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--accent);background:linear-gradient(135deg,#0e1115,#1a1608);font-size:15px;box-shadow:0 0 20px rgba(244,185,66,.2)}
 header h1{font-size:16px;letter-spacing:2px;text-transform:uppercase;font-weight:800}
 header small{display:block;color:var(--muted);font-size:11px}
 header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:4px 8px;border-radius:5px}
@@ -93,244 +92,245 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 </style>
 </head>
 <body>
-<header>
-  <img src="logo.png" alt="Logo" style="width:46px;height:46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);">
-  <div><h1>Kas Command</h1><small>Kas Pribadi + Pembukuan UMKM</small></div>
-  <span class="ver">v3</span>
-<div class="saldo">
-  <div class="lab">Saldo Kas Total (Real Time)</div>
-  <div class="amt" id="saldo">Rp 0</div>
-  <div class="meta" id="saldoMeta">Belum ada transaksi</div>
-</div>
+<div class="wrap">
+  <header>
+    <img src="logo.png" alt="Logo" style="width:46px;height:46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);">
+    <div><h1>Kas Command</h1><small>Kas Pribadi + Pembukuan UMKM</small></div>
+    <span class="ver">v3</span>
+  </header>
+  <div class="saldo">
+    <div class="lab">Saldo Kas Total (Real Time)</div>
+    <div class="amt" id="saldo">Rp 0</div>
+    <div class="meta" id="saldoMeta">Belum ada transaksi</div>
+  </div>
 
-<div class="card" style="padding:12px 15px">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-    <h2 style="margin:0;font-size:11px">💳 Alokasi Saldo per Rekening</h2>
-    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-      <span id="rekSelisih" style="font-size:10px;color:var(--muted)"></span>
-      <button onclick="openSplitDana()" style="background:var(--green);color:#04140a;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">⚡ Split 20/10/70</button>
-      <button onclick="openTransfer()" style="background:var(--blue);color:#04121a;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🔀 Transfer</button>
-      <button onclick="openPribadi()" style="background:transparent;border:1px solid var(--muted);color:var(--muted);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🏠 Pribadi</button>
-      <button onclick="openSetupAlokasi()" style="background:var(--accent);color:#0a0d10;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🔧 Setup</button>
+  <div class="card" style="padding:12px 15px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <h2 style="margin:0;font-size:11px">💳 Alokasi Saldo per Rekening</h2>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span id="rekSelisih" style="font-size:10px;color:var(--muted)"></span>
+        <button onclick="openSplitDana()" style="background:var(--green);color:#04140a;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">⚡ Split 20/10/70</button>
+        <button onclick="openTransfer()" style="background:var(--blue);color:#04121a;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🔀 Transfer</button>
+        <button onclick="openPribadi()" style="background:transparent;border:1px solid var(--muted);color:var(--muted);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🏠 Pribadi</button>
+        <button onclick="openSetupAlokasi()" style="background:var(--accent);color:#0a0d10;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🔧 Setup</button>
+      </div>
     </div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px" id="rekGrid"></div>
-  <div style="font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5">
-    Saldo per rekening = akumulasi Masuk − Keluar per channel. Untuk transaksi baru, pilih channel yg tepat (BCA Operasional / Pribadi / Kas Pajak).
-  </div>
-</div>
-
-<div class="periode">
-  <label>📅 PERIODE</label>
-  <select id="periodMode">
-    <option value="semua" selected>Semua</option>
-    <option value="ini">Bulan Ini</option>
-    <option value="pick">Pilih Bulan</option>
-  </select>
-  <input type="month" id="periodMonth" value="2026-07" style="display:none">
-</div>
-
-<div class="tabs">
-  <div class="tab on" data-tab="in">💰 Pemasukan</div>
-  <div class="tab" data-tab="out">💸 Pengeluaran</div>
-  <div class="tab" data-tab="piutang">📥 Piutang</div>
-  <div class="tab" data-tab="utang">📤 Utang</div>
-  <div class="tab" data-tab="ringkas">📊 Ringkasan</div>
-  <div class="tab" data-tab="pajak">🏦 Pajak</div>
-  <div class="tab" data-tab="sync">🔗 Sync</div>
-</div>
-
-<div id="tab-in" class="tab-panel">
-  <div class="card qf">
-    <div class="editing-tag" id="inEditTag">✎ Sedang mengedit</div>
-    <input type="text" inputmode="numeric" id="inJumlah" class="amt-in" placeholder="Rp 0">
-    <div class="g2"><input type="date" id="inDate"><select id="inKat"></select></div>
-    <div class="g2"><select id="inChannel"></select><input type="text" id="inNote" placeholder="Keterangan"></div>
-    <button class="save in" id="inSave">➕ Simpan Pemasukan</button>
-    <div class="editrow hidden" id="inEditBtns">
-      <button class="b-del" id="inDel">Hapus</button>
-      <button class="b-cancel" id="inCancel">Batal</button>
-    </div>
-  </div>
-  <div class="kpis">
-    <div class="kpi g"><div class="l">Total Pemasukan Periode</div><div class="v" id="in-total">Rp 0</div></div>
-    <div class="kpi y"><div class="l">Jumlah Transaksi</div><div class="v" id="in-count">0</div></div>
-  </div>
-  <div class="card"><div id="in-list"></div></div>
-</div>
-
-<div id="tab-out" class="tab-panel hidden">
-  <div class="card qf">
-    <div class="editing-tag" id="outEditTag">✎ Sedang mengedit</div>
-    <input type="text" inputmode="numeric" id="outJumlah" class="amt-in" placeholder="Rp 0">
-    <div class="g2"><input type="date" id="outDate"><select id="outKat"></select></div>
-    <div class="g2"><select id="outChannel"></select><input type="text" id="outNote" placeholder="Keterangan"></div>
-    <button class="save out" id="outSave">➖ Simpan Pengeluaran</button>
-    <div class="editrow hidden" id="outEditBtns">
-      <button class="b-del" id="outDel">Hapus</button>
-      <button class="b-cancel" id="outCancel">Batal</button>
-    </div>
-  </div>
-  <div class="kpis">
-    <div class="kpi r"><div class="l">Total Pengeluaran USAHA</div><div class="v" id="out-total">Rp 0</div></div>
-    <div class="kpi y"><div class="l">Jumlah Transaksi</div><div class="v" id="out-count">0</div></div>
-  </div>
-  <div class="card"><div id="out-list"></div><div id="pribadi-section"></div></div>
-</div>
-
-<div id="tab-piutang" class="tab-panel hidden">
-  <div class="card qf" style="border-left:3px solid var(--green)">
-    <div style="color:var(--green);font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:1px">📥 PIUTANG — Uang yang orang lain UTANG ke kita</div>
-    <div class="editing-tag" id="piutEditTag">✎ Sedang mengedit</div>
-    <input type="text" id="piutNama" placeholder="Nama pelanggan / pihak yang berhutang">
-    <input type="text" inputmode="numeric" id="piutJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:9px">
-    <div class="g2"><input type="date" id="piutDate"><input type="date" id="piutTempo" title="Jatuh Tempo"></div>
-    <input type="text" id="piutNote" placeholder="Keterangan">
-    <button class="save in" id="piutSave" style="margin-top:9px">➕ Simpan Piutang</button>
-    <div class="editrow hidden" id="piutEditBtns">
-      <button class="b-del" id="piutDel">Hapus</button>
-      <button class="b-cancel" id="piutCancel">Batal</button>
-    </div>
-  </div>
-  <div class="kpis" style="grid-template-columns:1fr 1fr">
-    <div class="kpi g"><div class="l">Sisa Piutang</div><div class="v" id="piut-sisa">Rp 0</div></div>
-    <div class="kpi y"><div class="l">Total Piutang</div><div class="v" id="piut-total">Rp 0</div></div>
-  </div>
-  <div class="card"><div id="piut-list"></div></div>
-</div>
-
-<div id="tab-utang" class="tab-panel hidden">
-  <div class="card qf" style="border-left:3px solid var(--red)">
-    <div style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:1px">📤 UTANG — Uang yang KITA utang ke supplier / bank</div>
-    <div class="editing-tag" id="utgEditTag">✎ Sedang mengedit</div>
-    <input type="text" id="utgNama" placeholder="Nama supplier / bank (cth: CENTRAL Kain)">
-    <input type="text" inputmode="numeric" id="utgJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:9px">
-    <div class="g2"><input type="date" id="utgDate"><input type="date" id="utgTempo" title="Jatuh Tempo"></div>
-    <input type="text" id="utgNote" placeholder="Keterangan">
-    <button class="save out" id="utgSave" style="margin-top:9px">➕ Simpan Utang</button>
-    <div class="editrow hidden" id="utgEditBtns">
-      <button class="b-del" id="utgDel">Hapus</button>
-      <button class="b-cancel" id="utgCancel">Batal</button>
-    </div>
-  </div>
-  <div class="kpis" style="grid-template-columns:1fr 1fr">
-    <div class="kpi r"><div class="l">Sisa Utang</div><div class="v" id="utg-sisa">Rp 0</div></div>
-    <div class="kpi y"><div class="l">Total Utang</div><div class="v" id="utg-total">Rp 0</div></div>
-  </div>
-  <div class="card"><div id="utg-list"></div></div>
-</div>
-
-<div id="tab-ringkas" class="tab-panel hidden">
-  <div class="kpis">
-    <div class="kpi g"><div class="l">Pemasukan</div><div class="v" id="rk-in">Rp 0</div></div>
-    <div class="kpi r"><div class="l">Pengeluaran</div><div class="v" id="rk-out">Rp 0</div></div>
-    <div class="kpi y"><div class="l">Laba Kotor</div><div class="v" id="rk-laba">Rp 0</div></div>
-    <div class="kpi b"><div class="l">Saldo Kas</div><div class="v" id="rk-saldo">Rp 0</div></div>
-  </div>
-  <div class="card"><h2>Pengeluaran per Kategori</h2><div id="by-kat"></div></div>
-  <div class="card"><h2>Pemasukan per Channel</h2><div id="by-ch"></div></div>
-</div>
-
-<div id="tab-pajak" class="tab-panel hidden">
-  <div class="card" style="padding:14px 15px;border-left:4px solid var(--green)">
-    <h2 style="margin:0 0 8px 0;font-size:13px;color:var(--green)">🇮🇩 PPh Final UMKM 0,5% (PP 55/2022)</h2>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
-      Skema pajak UMKM WP Orang Pribadi. Basis: <b>omzet bruto (peredaran bruto)</b>, tarif <b>0,5% final</b>, dibayar bulanan (paling lambat tgl 15 bulan berikut). Untuk WP OP dapat fasilitas <b>omzet ≤ Rp 500 juta/tahun tidak kena pajak</b>. Batas 0,5%: omzet setahun ≤ Rp 4,8 M.
-    </div>
-    <div class="kpis" style="grid-template-columns:1fr 1fr">
-      <div class="kpi g"><div class="l">Omzet Periode</div><div class="v" id="pj-sales">Rp 0</div></div>
-      <div class="kpi b"><div class="l">Omzet Tahun Berjalan (YTD)</div><div class="v" id="pj-ytd">Rp 0</div></div>
-    </div>
-    <div class="kpis" style="grid-template-columns:1fr 1fr">
-      <div class="kpi y"><div class="l">Sisa Kuota Bebas Pajak (Rp 500jt/th)</div><div class="v" id="pj-kuota">Rp 500.000.000</div></div>
-      <div class="kpi r"><div class="l">PPh Final 0,5% Periode</div><div class="v" id="pj-pph">Rp 0</div></div>
-    </div>
-    <div class="kpis" style="grid-template-columns:1fr">
-      <div class="kpi b"><div class="l">Total PPh Final YTD (yang harus dibayar tahun ini)</div><div class="v" id="pj-total">Rp 0</div></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px" id="rekGrid"></div>
+    <div style="font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5">
+      Saldo per rekening = akumulasi Masuk − Keluar per channel. Untuk transaksi baru, pilih channel yg tepat (BCA Operasional / Pribadi / Kas Pajak).
     </div>
   </div>
 
-  <div class="card" style="padding:14px 15px">
-    <h2 style="margin:0 0 10px 0;font-size:13px">💰 Kas Pajak (Sinking Fund) vs Kebutuhan</h2>
+  <div class="periode">
+    <label>📅 PERIODE</label>
+    <select id="periodMode">
+      <option value="semua" selected>Semua</option>
+      <option value="ini">Bulan Ini</option>
+      <option value="pick">Pilih Bulan</option>
+    </select>
+    <input type="month" id="periodMonth" value="2026-07" style="display:none">
+  </div>
+
+  <div class="tabs">
+    <div class="tab on" data-tab="in">💰 Pemasukan</div>
+    <div class="tab" data-tab="out">💸 Pengeluaran</div>
+    <div class="tab" data-tab="piutang">📥 Piutang</div>
+    <div class="tab" data-tab="utang">📤 Utang</div>
+    <div class="tab" data-tab="ringkas">📊 Ringkasan</div>
+    <div class="tab" data-tab="pajak">🏦 Pajak</div>
+    <div class="tab" data-tab="sync">🔗 Sync</div>
+  </div>
+
+  <div id="tab-in" class="tab-panel">
+    <div class="card qf">
+      <div class="editing-tag" id="inEditTag">✎ Sedang mengedit</div>
+      <input type="text" inputmode="numeric" id="inJumlah" class="amt-in" placeholder="Rp 0">
+      <div class="g2"><input type="date" id="inDate"><select id="inKat"></select></div>
+      <div class="g2"><select id="inChannel"></select><input type="text" id="inNote" placeholder="Keterangan"></div>
+      <button class="save in" id="inSave">➕ Simpan Pemasukan</button>
+      <div class="editrow hidden" id="inEditBtns">
+        <button class="b-del" id="inDel">Hapus</button>
+        <button class="b-cancel" id="inCancel">Batal</button>
+      </div>
+    </div>
     <div class="kpis">
-      <div class="kpi b"><div class="l">Saldo Kas Pajak</div><div class="v" id="pj-kas">Rp 0</div></div>
-      <div class="kpi" id="pj-status-box"><div class="l">Status</div><div class="v" id="pj-status" style="font-size:14px">-</div></div>
+      <div class="kpi g"><div class="l">Total Pemasukan Periode</div><div class="v" id="in-total">Rp 0</div></div>
+      <div class="kpi y"><div class="l">Jumlah Transaksi</div><div class="v" id="in-count">0</div></div>
     </div>
-    <div style="margin-top:10px;padding:10px;background:var(--panel2);border-radius:8px;font-size:12px;line-height:1.7" id="pj-rekom"></div>
+    <div class="card"><div id="in-list"></div></div>
   </div>
 
-  <div class="card" style="padding:14px 15px">
-    <h2 style="margin:0 0 10px 0;font-size:13px">📊 Setting Pajak</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Status WP</label>
-        <select id="pjWpStatus" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:13px">
-          <option value="op" selected>Orang Pribadi (WP OP)</option>
-          <option value="badan">Badan (PT/CV/UD)</option>
-        </select>
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Tarif Split ke Kas Pajak</label>
-        <select id="pjSplit" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:13px">
-          <option value="0.5">0,5% (sesuai tarif)</option>
-          <option value="1" selected>1% (aman, buffer 2×)</option>
-          <option value="2">2% (super aman)</option>
-        </select>
+  <div id="tab-out" class="tab-panel hidden">
+    <div class="card qf">
+      <div class="editing-tag" id="outEditTag">✎ Sedang mengedit</div>
+      <input type="text" inputmode="numeric" id="outJumlah" class="amt-in" placeholder="Rp 0">
+      <div class="g2"><input type="date" id="outDate"><select id="outKat"></select></div>
+      <div class="g2"><select id="outChannel"></select><input type="text" id="outNote" placeholder="Keterangan"></div>
+      <button class="save out" id="outSave">➖ Simpan Pengeluaran</button>
+      <div class="editrow hidden" id="outEditBtns">
+        <button class="b-del" id="outDel">Hapus</button>
+        <button class="b-cancel" id="outCancel">Batal</button>
       </div>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
-      💡 <b>Tips:</b> WP OP → Rp 500jt/tahun pertama BEBAS pajak. Setelahnya baru kena 0,5%. WP Badan tidak dapat fasilitas ini. Sisihkan 1% (2× tarif) supaya ada buffer buat sanksi/keterlambatan.
+    <div class="kpis">
+      <div class="kpi r"><div class="l">Total Pengeluaran USAHA</div><div class="v" id="out-total">Rp 0</div></div>
+      <div class="kpi y"><div class="l">Jumlah Transaksi</div><div class="v" id="out-count">0</div></div>
+    </div>
+    <div class="card"><div id="out-list"></div><div id="pribadi-section"></div></div>
+  </div>
+
+  <div id="tab-piutang" class="tab-panel hidden">
+    <div class="card qf" style="border-left:3px solid var(--green)">
+      <div style="color:var(--green);font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:1px">📥 PIUTANG — Uang yang orang lain UTANG ke kita</div>
+      <div class="editing-tag" id="piutEditTag">✎ Sedang mengedit</div>
+      <input type="text" id="piutNama" placeholder="Nama pelanggan / pihak yang berhutang">
+      <input type="text" inputmode="numeric" id="piutJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:9px">
+      <div class="g2"><input type="date" id="piutDate"><input type="date" id="piutTempo" title="Jatuh Tempo"></div>
+      <input type="text" id="piutNote" placeholder="Keterangan">
+      <button class="save in" id="piutSave" style="margin-top:9px">➕ Simpan Piutang</button>
+      <div class="editrow hidden" id="piutEditBtns">
+        <button class="b-del" id="piutDel">Hapus</button>
+        <button class="b-cancel" id="piutCancel">Batal</button>
+      </div>
+    </div>
+    <div class="kpis" style="grid-template-columns:1fr 1fr">
+      <div class="kpi g"><div class="l">Sisa Piutang</div><div class="v" id="piut-sisa">Rp 0</div></div>
+      <div class="kpi y"><div class="l">Total Piutang</div><div class="v" id="piut-total">Rp 0</div></div>
+    </div>
+    <div class="card"><div id="piut-list"></div></div>
+  </div>
+
+  <div id="tab-utang" class="tab-panel hidden">
+    <div class="card qf" style="border-left:3px solid var(--red)">
+      <div style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:1px">📤 UTANG — Uang yang KITA utang ke supplier / bank</div>
+      <div class="editing-tag" id="utgEditTag">✎ Sedang mengedit</div>
+      <input type="text" id="utgNama" placeholder="Nama supplier / bank (cth: CENTRAL Kain)">
+      <input type="text" inputmode="numeric" id="utgJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:9px">
+      <div class="g2"><input type="date" id="utgDate"><input type="date" id="utgTempo" title="Jatuh Tempo"></div>
+      <input type="text" id="utgNote" placeholder="Keterangan">
+      <button class="save out" id="utgSave" style="margin-top:9px">➕ Simpan Utang</button>
+      <div class="editrow hidden" id="utgEditBtns">
+        <button class="b-del" id="utgDel">Hapus</button>
+        <button class="b-cancel" id="utgCancel">Batal</button>
+      </div>
+    </div>
+    <div class="kpis" style="grid-template-columns:1fr 1fr">
+      <div class="kpi r"><div class="l">Sisa Utang</div><div class="v" id="utg-sisa">Rp 0</div></div>
+      <div class="kpi y"><div class="l">Total Utang</div><div class="v" id="utg-total">Rp 0</div></div>
+    </div>
+    <div class="card"><div id="utg-list"></div></div>
+  </div>
+
+  <div id="tab-ringkas" class="tab-panel hidden">
+    <div class="kpis">
+      <div class="kpi g"><div class="l">Pemasukan</div><div class="v" id="rk-in">Rp 0</div></div>
+      <div class="kpi r"><div class="l">Pengeluaran</div><div class="v" id="rk-out">Rp 0</div></div>
+      <div class="kpi y"><div class="l">Laba Kotor</div><div class="v" id="rk-laba">Rp 0</div></div>
+      <div class="kpi b"><div class="l">Saldo Kas</div><div class="v" id="rk-saldo">Rp 0</div></div>
+    </div>
+    <div class="card"><h2>Pengeluaran per Kategori</h2><div id="by-kat"></div></div>
+    <div class="card"><h2>Pemasukan per Channel</h2><div id="by-ch"></div></div>
+  </div>
+
+  <div id="tab-pajak" class="tab-panel hidden">
+    <div class="card" style="padding:14px 15px;border-left:4px solid var(--green)">
+      <h2 style="margin:0 0 8px 0;font-size:13px;color:var(--green)">🇮🇩 PPh Final UMKM 0,5% (PP 55/2022)</h2>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+        Skema pajak UMKM WP Orang Pribadi. Basis: <b>omzet bruto (peredaran bruto)</b>, tarif <b>0,5% final</b>, dibayar bulanan (paling lambat tgl 15 bulan berikut). Untuk WP OP dapat fasilitas <b>omzet ≤ Rp 500 juta/tahun tidak kena pajak</b>. Batas 0,5%: omzet setahun ≤ Rp 4,8 M.
+      </div>
+      <div class="kpis" style="grid-template-columns:1fr 1fr">
+        <div class="kpi g"><div class="l">Omzet Periode</div><div class="v" id="pj-sales">Rp 0</div></div>
+        <div class="kpi b"><div class="l">Omzet Tahun Berjalan (YTD)</div><div class="v" id="pj-ytd">Rp 0</div></div>
+      </div>
+      <div class="kpis" style="grid-template-columns:1fr 1fr">
+        <div class="kpi y"><div class="l">Sisa Kuota Bebas Pajak (Rp 500jt/th)</div><div class="v" id="pj-kuota">Rp 500.000.000</div></div>
+        <div class="kpi r"><div class="l">PPh Final 0,5% Periode</div><div class="v" id="pj-pph">Rp 0</div></div>
+      </div>
+      <div class="kpis" style="grid-template-columns:1fr">
+        <div class="kpi b"><div class="l">Total PPh Final YTD (yang harus dibayar tahun ini)</div><div class="v" id="pj-total">Rp 0</div></div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:14px 15px">
+      <h2 style="margin:0 0 10px 0;font-size:13px">💰 Kas Pajak (Sinking Fund) vs Kebutuhan</h2>
+      <div class="kpis">
+        <div class="kpi b"><div class="l">Saldo Kas Pajak</div><div class="v" id="pj-kas">Rp 0</div></div>
+        <div class="kpi" id="pj-status-box"><div class="l">Status</div><div class="v" id="pj-status" style="font-size:14px">-</div></div>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:var(--panel2);border-radius:8px;font-size:12px;line-height:1.7" id="pj-rekom"></div>
+    </div>
+
+    <div class="card" style="padding:14px 15px">
+      <h2 style="margin:0 0 10px 0;font-size:13px">📊 Setting Pajak</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Status WP</label>
+          <select id="pjWpStatus" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:13px">
+            <option value="op" selected>Orang Pribadi (WP OP)</option>
+            <option value="badan">Badan (PT/CV/UD)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Tarif Split ke Kas Pajak</label>
+          <select id="pjSplit" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:13px">
+            <option value="0.5">0,5% (sesuai tarif)</option>
+            <option value="1" selected>1% (aman, buffer 2×)</option>
+            <option value="2">2% (super aman)</option>
+          </select>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
+        💡 <b>Tips:</b> WP OP → Rp 500jt/tahun pertama BEBAS pajak. Setelahnya baru kena 0,5%. WP Badan tidak dapat fasilitas ini. Sisihkan 1% (2× tarif) supaya ada buffer buat sanksi/keterlambatan.
+      </div>
+    </div>
+
+    <div class="card" style="padding:14px 15px">
+      <h2 style="margin:0 0 10px 0;font-size:13px">📋 Rincian Omzet per Channel</h2>
+      <div id="pj-channel-list" style="font-size:12px"></div>
+    </div>
+
+    <div class="card" style="padding:14px 15px">
+      <h2 style="margin:0 0 10px 0;font-size:13px">📤 Export untuk Konsultan / DJP</h2>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">
+        Download CSV daftar omzet & estimasi PPh Final buat rekap SPT Masa PPh Final atau serahkan ke konsultan.
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="pjExportPPN" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1a1608;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer">📥 CSV Omzet PPh Final</button>
+        <button id="pjExportPPh" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer">📥 CSV Laba/Rugi</button>
+      </div>
     </div>
   </div>
 
-  <div class="card" style="padding:14px 15px">
-    <h2 style="margin:0 0 10px 0;font-size:13px">📋 Rincian Omzet per Channel</h2>
-    <div id="pj-channel-list" style="font-size:12px"></div>
+  <div id="tab-sync" class="tab-panel hidden">
+    <div class="sync-info">
+      <b style="color:var(--green)">🔗 Sync ke Dashboard Pembukuan</b><br>
+      ✅ Pengeluaran → Kas Keluar<br>
+      ✅ Modal/Piutang → Kas Masuk Non-Revenue<br>
+      ❌ Penjualan Shopee → SKIP (ambil dari Shopee Report)<br>
+      ✅ Penjualan non-Shopee → Kas Masuk Revenue
+    </div>
+    <div class="card">
+      <h2>Export</h2>
+      <div class="tools">
+        <button class="green" id="btnSyncJSON">💾 Download JSON</button>
+        <button class="primary" id="btnSyncCSV">📋 Download CSV</button>
+      </div>
+    </div>
   </div>
 
-  <div class="card" style="padding:14px 15px">
-    <h2 style="margin:0 0 10px 0;font-size:13px">📤 Export untuk Konsultan / DJP</h2>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">
-      Download CSV daftar omzet & estimasi PPh Final buat rekap SPT Masa PPh Final atau serahkan ke konsultan.
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button id="pjExportPPN" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1a1608;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer">📥 CSV Omzet PPh Final</button>
-      <button id="pjExportPPh" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer">📥 CSV Laba/Rugi</button>
-    </div>
-  </div>
-</div>
-
-<div id="tab-sync" class="tab-panel hidden">
-  <div class="sync-info">
-    <b style="color:var(--green)">🔗 Sync ke Dashboard Pembukuan</b><br>
-    ✅ Pengeluaran → Kas Keluar<br>
-    ✅ Modal/Piutang → Kas Masuk Non-Revenue<br>
-    ❌ Penjualan Shopee → SKIP (ambil dari Shopee Report)<br>
-    ✅ Penjualan non-Shopee → Kas Masuk Revenue
-  </div>
   <div class="card">
-    <h2>Export</h2>
+    <h2>Data & Backup</h2>
     <div class="tools">
-      <button class="green" id="btnSyncJSON">💾 Download JSON</button>
-      <button class="primary" id="btnSyncCSV">📋 Download CSV</button>
+      <button id="btnBackup">⬇ Backup</button>
+      <label style="cursor:pointer">⬆ Restore<input type="file" id="restoreFile" accept=".json" class="hidden"></label>
+      <label style="cursor:pointer">📥 Import CSV<input type="file" id="importCSV" accept=".csv" class="hidden"></label>
+      <button id="btnCsv">📋 Export CSV</button>
+      <button id="btnLoadPreload" class="primary">🔄 Reset & Load Preload</button>
+      <button id="btnReset" class="danger">🗑 Hapus Semua</button>
     </div>
+    <div class="note" id="note">✓ Data tersimpan otomatis di browser. Klik <b>🔄 Reset & Load Preload</b> untuk pakai preload Juni-Juli 2026 (Rp 999jt masuk, Rp 910jt keluar).</div>
   </div>
-</div>
-
-<div class="card">
-  <h2>Data & Backup</h2>
-  <div class="tools">
-    <button id="btnBackup">⬇ Backup</button>
-    <label style="cursor:pointer">⬆ Restore<input type="file" id="restoreFile" accept=".json" class="hidden"></label>
-    <label style="cursor:pointer">📥 Import CSV<input type="file" id="importCSV" accept=".csv" class="hidden"></label>
-    <button id="btnCsv">📋 Export CSV</button>
-    <button id="btnLoadPreload" class="primary">🔄 Reset & Load Preload</button>
-    <button id="btnReset" class="danger">🗑 Hapus Semua</button>
-  </div>
-  <div class="note" id="note">✓ Data tersimpan otomatis di browser. Klik <b>🔄 Reset & Load Preload</b> untuk pakai preload Juni-Juli 2026 (Rp 999jt masuk, Rp 910jt keluar).</div>
-</div>
-
-</div>
+</div> <!-- End of wrap -->
 
 <div class="overlay" id="cf"><div class="cfbox"><div class="m" id="cfMsg"></div><div class="cfbtns"><button id="cfNo">Batal</button><button id="cfYes">Ya</button></div></div></div>
 
@@ -1328,19 +1328,8 @@ bindAmt($('#inJumlah')); bindAmt($('#outJumlah')); bindAmt($('#piutJumlah')); bi
 const pjPPN = $('#pjExportPPN'); if(pjPPN) pjPPN.onclick = exportPPNCSV;
 const pjPPh = $('#pjExportPPh'); if(pjPPh) pjPPh.onclick = exportLRCSV;
 
-renderAll();
-</script>
-</body>
-</html>
- exportLRCSV;
-
-renderAll();
-</script>
-</body>
-</html>
- $('#periodMode'); const pmMon = $('#periodMonth');
+const pmSel = $('#periodMode'); const pmMon = $('#periodMonth');
 if(pmSel){
-  const orig = pmSel.onchange;
   pmSel.addEventListener('change', () => renderAll());
 }
 if(pmMon){
@@ -1351,4 +1340,3 @@ renderAll();
 </script>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                    
