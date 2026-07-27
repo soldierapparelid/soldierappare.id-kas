@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<!-- Ikon Custom Logo Elang dengan Anti-Cache -->
 <link rel="icon" type="image/png" sizes="512x512" href="https://soldierapparelid.github.io/soldierappareld.id-kas/logo.png?v=3">
 <link rel="apple-touch-icon" sizes="512x512" href="https://soldierapparelid.github.io/soldierappareld.id-kas/logo.png?v=3">
 <style>
@@ -326,10 +325,9 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
       <label style="cursor:pointer">⬆ Restore<input type="file" id="restoreFile" accept=".json" class="hidden"></label>
       <label style="cursor:pointer">📥 Import CSV<input type="file" id="importCSV" accept=".csv" class="hidden"></label>
       <button id="btnCsv">📋 Export CSV</button>
-      <button id="btnLoadPreload" class="primary">🔄 Reset & Load Preload</button>
-      <button id="btnReset" class="danger">🗑 Hapus Semua</button>
+      <!-- Tombol reset dimatikan agar user tidak salah pencet -->
     </div>
-    <div class="note" id="note">✓ Data tersimpan otomatis di browser. Klik <b>🔄 Reset & Load Preload</b> untuk pakai preload Juni-Juli 2026 (Rp 999jt masuk, Rp 910jt keluar).</div>
+    <div class="note" id="note">✓ Data tersimpan otomatis & RAHASIA di memori HP lu (TIDAK ADA DATA PUBLIK DI GITHUB).</div>
   </div>
 </div> <!-- End of wrap -->
 
@@ -400,18 +398,18 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
   </div>
 </div></div>
 
-<!-- Modal Kurangi Saldo Pribadi (konsumsi pribadi, tidak masuk L/R usaha) -->
+<!-- Modal Kurangi Saldo Pribadi -->
 <div class="overlay" id="priOv"><div class="cfbox">
   <div class="m">🏠 Catat Belanja Pribadi</div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:10px;text-align:center;line-height:1.5">
-    Kurangi saldo BCA Pribadi. <b style="color:var(--green)">TIDAK</b> masuk Ringkasan Pengeluaran & tidak ngefek ke PPh Final (basis pajak = omzet, bukan biaya).
+    Kurangi saldo BCA Pribadi. <b style="color:var(--green)">TIDAK</b> masuk Ringkasan Pengeluaran & tidak ngefek ke PPh Final.
   </div>
   <label style="font-size:11px;color:var(--accent);font-weight:700;display:block;margin:6px 0 4px">💰 Jumlah</label>
   <input type="text" inputmode="numeric" id="priJumlah" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:20px;font-weight:800;text-align:right">
   <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Tanggal:</label>
   <input type="date" id="priDate" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
   <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Keterangan (opsional):</label>
-  <input type="text" id="priNote" placeholder="Contoh: Cicilan mobil Agustus, Belanja groseri" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
+  <input type="text" id="priNote" placeholder="Contoh: Cicilan mobil Agustus" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
   <div class="cfbtns">
     <button id="priCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
     <button id="priApply" style="background:var(--muted);color:#0a0d10">✓ Kurangi Saldo Pribadi</button>
@@ -421,7 +419,6 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 <!-- Modal Transfer Antar Rekening -->
 <div class="overlay" id="trfOv"><div class="cfbox">
   <div class="m">🔀 Transfer Antar Rekening</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:10px;text-align:center;line-height:1.5">Pindahin uang antar rekening milik lo. Netral, ga masuk L/R.</div>
   <label style="font-size:11px;color:var(--red);font-weight:700;display:block;margin:6px 0 4px">📤 Dari Rekening</label>
   <select id="trfFrom" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:14px"></select>
   <label style="font-size:11px;color:var(--green);font-weight:700;display:block;margin:8px 0 4px">📥 Ke Rekening</label>
@@ -438,10 +435,10 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
   </div>
 </div></div>
 
-<!-- Preload data (3 baris setup alokasi Rp 121jt) -->
+<!-- DATA KOSONG (SUDAH DIHAPUS DARI PUBLIK DEMI KEAMANAN) -->
 <script>
-const __PRELOAD_JUNI_DATA__ = [{"id": "SETUP_OPS", "tanggal": "2026-06-01", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Operasional", "jumlah": -18598914, "catatan": "Saldo Awal BCA Operasional (per 1 Juni 2026)"}, {"id": "SETUP_PJK", "tanggal": "2026-06-01", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Kas Pajak", "jumlah": 45000000, "catatan": "Saldo Awal Kas Pajak (sinking fund PPN/PPh)"}, {"id": "SETUP_PRI", "tanggal": "2026-06-01", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Pribadi", "jumlah": 20000000, "catatan": "Saldo Awal BCA Pribadi (dipisah dari owner)"}, {"id": "k0001", "tanggal": "2026-06-15", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 81000000, "catatan": "Soldier"}, {"id": "k0002", "tanggal": "2026-06-15", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 21000000, "catatan": "Unitraq"}, {"id": "sync0001", "tanggal": "2026-06-15", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 50000000, "catatan": "Cicilan ke CENTRAL"}, {"id": "k0003", "tanggal": "2026-06-16", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 1300000, "catatan": "Lazada"}, {"id": "sync0002", "tanggal": "2026-06-16", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 2780000, "catatan": "Beli pet"}, {"id": "sync0003", "tanggal": "2026-06-17", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 6700000, "catatan": "Velkro dll"}, {"id": "sync0004", "tanggal": "2026-06-17", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 3300000, "catatan": "Dp topi"}, {"id": "sync0005", "tanggal": "2026-06-17", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 1472000, "catatan": "Beli karet"}, {"id": "sync0006", "tanggal": "2026-06-18", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 503000, "catatan": "Token"}, {"id": "sync0007", "tanggal": "2026-06-18", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 3100000, "catatan": "Servis mesin"}, {"id": "sync0008", "tanggal": "2026-06-18", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 600000, "catatan": "Sablonnplastik"}, {"id": "k0004", "tanggal": "2026-06-19", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 3000000, "catatan": "Dp kaos kopassus"}, {"id": "sync0009", "tanggal": "2026-06-19", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 1200000, "catatan": "Oprasional"}, {"id": "sync0010", "tanggal": "2026-06-19", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 35000, "catatan": "Bon mesin servis"}, {"id": "sync0011", "tanggal": "2026-06-19", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 500000, "catatan": "Tarik kekeu"}, {"id": "sync0012", "tanggal": "2026-06-19", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 4402000, "catatan": "Bayar topi"}, {"id": "sync0013", "tanggal": "2026-06-20", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 150000, "catatan": "Pajak dan capcurt"}, {"id": "sync0014", "tanggal": "2026-06-20", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 8310000, "catatan": "Mang atep"}, {"id": "sync0015", "tanggal": "2026-06-20", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 2966000, "catatan": "Mang ajang"}, {"id": "sync0016", "tanggal": "2026-06-20", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 7018000, "catatan": "Jahit dea"}, {"id": "sync0017", "tanggal": "2026-06-20", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 7027500, "catatan": "Teteh jahit"}, {"id": "sync0018", "tanggal": "2026-06-20", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 10000000, "catatan": "Gajih anak anak"}, {"id": "k0005", "tanggal": "2026-06-21", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 27000000, "catatan": "Unitraq"}, {"id": "k0006", "tanggal": "2026-06-21", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 17200000, "catatan": "Sld"}, {"id": "k0007", "tanggal": "2026-06-21", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 68000000, "catatan": "Sld shope"}, {"id": "sync0019", "tanggal": "2026-06-21", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 8083950, "catatan": "Beli pet dll"}, {"id": "k0008", "tanggal": "2026-06-22", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 15000000, "catatan": "Cicilan dari Abang 2 bdu"}, {"id": "sync0020", "tanggal": "2026-06-22", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 2985440, "catatan": "Beli resleting"}, {"id": "sync0021", "tanggal": "2026-06-22", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 50000000, "catatan": "Cicilan ke CENTRAL"}, {"id": "sync0022", "tanggal": "2026-06-22", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 3000000, "catatan": "Dp topi"}, {"id": "sync0023", "tanggal": "2026-06-22", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 2000000, "catatan": "Tarik tunai"}, {"id": "sync0024", "tanggal": "2026-06-22", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 3300000, "catatan": "Velkro"}, {"id": "sync0025", "tanggal": "2026-06-22", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 436000, "catatan": "Tas serut"}, {"id": "sync0026", "tanggal": "2026-06-23", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 1329800, "catatan": "Plastik"}, {"id": "sync0027", "tanggal": "2026-06-23", "tipe": "out", "kategori": "Ongkir / Kirim", "channel": "BCA Operasional", "jumlah": 550000, "catatan": "Servis motor"}, {"id": "sync0028", "tanggal": "2026-06-23", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 9231000, "catatan": "Bahan squba loreng"}, {"id": "sync0029", "tanggal": "2026-06-23", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 1000000, "catatan": "Dp sablon plastik"}, {"id": "sync0030", "tanggal": "2026-06-23", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 2200000, "catatan": "Bayar rel"}, {"id": "sync0031", "tanggal": "2026-06-24", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 150934, "catatan": "Stoper"}, {"id": "sync0032", "tanggal": "2026-06-24", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 2200000, "catatan": "Bayar topi"}, {"id": "sync0033", "tanggal": "2026-06-24", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 300000, "catatan": "Beli imitasi"}, {"id": "sync0034", "tanggal": "2026-06-24", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 1370000, "catatan": "Bqyqr nasi"}, {"id": "sync0035", "tanggal": "2026-06-24", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 2610000, "catatan": "Bayar bank"}, {"id": "sync0036", "tanggal": "2026-06-25", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 1140000, "catatan": "Velkro"}, {"id": "sync0037", "tanggal": "2026-06-26", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 2453000, "catatan": "Bordir"}, {"id": "k0009", "tanggal": "2026-06-27", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 2900000, "catatan": "Cicilan dari Tuan 3"}, {"id": "sync0038", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 4520000, "catatan": "Mang atep"}, {"id": "sync0039", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 2293900, "catatan": "Mang ajang potong"}, {"id": "sync0040", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 441173, "catatan": "Sablon"}, {"id": "sync0041", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 10000000, "catatan": "Gajihan anak anak"}, {"id": "sync0042", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 1300000, "catatan": "Dll"}, {"id": "sync0043", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 1300000, "catatan": "Utangel"}, {"id": "sync0044", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 5922000, "catatan": "Jahit teteh"}, {"id": "sync0045", "tanggal": "2026-06-27", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 1500000, "catatan": "Dp patch matras"}, {"id": "k0010", "tanggal": "2026-06-28", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 49000000, "catatan": "Shope sld"}, {"id": "k0011", "tanggal": "2026-06-28", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 30000000, "catatan": "Shope unitraq"}, {"id": "k0012", "tanggal": "2026-06-28", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 4000000, "catatan": "Tiktok sld"}, {"id": "sync0046", "tanggal": "2026-06-28", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 5000000, "catatan": "Keperluan"}, {"id": "k0013", "tanggal": "2026-06-29", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 2200000, "catatan": "Cicilan dari Kaos kopassus"}, {"id": "sync0047", "tanggal": "2026-06-29", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 19093600, "catatan": "Cicilan ke Central"}, {"id": "sync0048", "tanggal": "2026-06-29", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 5627680, "catatan": "Cicilan ke Central"}, {"id": "sync0049", "tanggal": "2026-06-29", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 44211160, "catatan": "Cicilan ke CENTRAL"}, {"id": "sync0050", "tanggal": "2026-06-29", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 1395550, "catatan": "Plastik"}, {"id": "sync0051", "tanggal": "2026-06-29", "tipe": "out", "kategori": "Ongkir / Kirim", "channel": "BCA Operasional", "jumlah": 215000, "catatan": "Ongkir"}, {"id": "sync0052", "tanggal": "2026-06-29", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 1000000, "catatan": "Keuekeu"}, {"id": "sync0053", "tanggal": "2026-06-29", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 2529000, "catatan": "Beli rreflektif"}, {"id": "sync0054", "tanggal": "2026-06-30", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 170000, "catatan": "Kopi"}, {"id": "sync0055", "tanggal": "2026-06-30", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 677500, "catatan": "Prin dtf"}, {"id": "sync0056", "tanggal": "2026-07-01", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 1370000, "catatan": "Nasi ketring"}, {"id": "k0014", "tanggal": "2026-07-02", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 2900000, "catatan": "Cicilan dari Tuan 3"}, {"id": "sync0057", "tanggal": "2026-07-02", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 114700, "catatan": "Kancing"}, {"id": "sync0058", "tanggal": "2026-07-02", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 1679000, "catatan": "Cat sablon"}, {"id": "sync0059", "tanggal": "2026-07-02", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 290000, "catatan": "Kain keras"}, {"id": "sync0060", "tanggal": "2026-07-02", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 3644000, "catatan": "Bayar topi"}, {"id": "sync0061", "tanggal": "2026-07-02", "tipe": "out", "kategori": "Ongkir / Kirim", "channel": "BCA Operasional", "jumlah": 102500, "catatan": "Ongkir ofline"}, {"id": "sync0062", "tanggal": "2026-07-03", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 718760, "catatan": "Dumper+pet"}, {"id": "k0015", "tanggal": "2026-07-04", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 18500000, "catatan": "Cicilan dari Abang 2 bdu"}, {"id": "sync0063", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 1025000, "catatan": "Sablon plastik"}, {"id": "sync0064", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 1280000, "catatan": "Bordir topi"}, {"id": "sync0065", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 3057700, "catatan": "Mang ajang potong"}, {"id": "sync0066", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 3057700, "catatan": "Bayar jahit teteh"}, {"id": "sync0067", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 7889000, "catatan": "Mang atep jahit"}, {"id": "sync0068", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 10000000, "catatan": "Anak anak kerja"}, {"id": "sync0069", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 851873, "catatan": "Listrik"}, {"id": "sync0070", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 530250, "catatan": "Bayar indihome"}, {"id": "sync0071", "tanggal": "2026-07-04", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 8520100, "catatan": "Upah jaihit dea"}, {"id": "k0016", "tanggal": "2026-07-05", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 22000000, "catatan": "Unitaq"}, {"id": "k0017", "tanggal": "2026-07-05", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 70000000, "catatan": "Soldier"}, {"id": "k0018", "tanggal": "2026-07-05", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 5000000, "catatan": "Tiktok sld"}, {"id": "sync0072", "tanggal": "2026-07-05", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 100000, "catatan": "Makan"}, {"id": "sync0073", "tanggal": "2026-07-05", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 1000000, "catatan": "Tarik tunai"}, {"id": "sync0074", "tanggal": "2026-07-06", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 2000000, "catatan": "Dp plastik"}, {"id": "sync0075", "tanggal": "2026-07-06", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 3000000, "catatan": "Dp topi padi"}, {"id": "sync0076", "tanggal": "2026-07-06", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 388160, "catatan": "Ring bdu"}, {"id": "sync0077", "tanggal": "2026-07-06", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 1000000, "catatan": "Keukeu"}, {"id": "sync0078", "tanggal": "2026-07-06", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 2428120, "catatan": "Pet,tinta,"}, {"id": "sync0079", "tanggal": "2026-07-06", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 503000, "catatan": "Listrik token"}, {"id": "k0019", "tanggal": "2026-07-07", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 8000000, "catatan": "Cicilan dari Troy"}, {"id": "sync0080", "tanggal": "2026-07-07", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 13376000, "catatan": "Bahan squba loreng ragam"}, {"id": "sync0081", "tanggal": "2026-07-07", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 1430000, "catatan": "Nasi"}, {"id": "sync0082", "tanggal": "2026-07-07", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 260000, "catatan": "Sempel"}, {"id": "sync0083", "tanggal": "2026-07-08", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 6034920, "catatan": "knito katun"}, {"id": "sync0084", "tanggal": "2026-07-08", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 2000000, "catatan": "Keukeu"}, {"id": "sync0085", "tanggal": "2026-07-09", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 2900000, "catatan": "Kepala resleting"}, {"id": "sync0086", "tanggal": "2026-07-09", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 1580000, "catatan": "Velkro"}, {"id": "sync0087", "tanggal": "2026-07-09", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 394000, "catatan": "Stoper"}, {"id": "sync0088", "tanggal": "2026-07-09", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 1100000, "catatan": "Listrik a oleh"}, {"id": "sync0089", "tanggal": "2026-07-10", "tipe": "out", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 1500000, "catatan": "Dp matras"}, {"id": "sync0090", "tanggal": "2026-07-10", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 350000, "catatan": "Bayar gemini"}, {"id": "sync0091", "tanggal": "2026-07-11", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 10427000, "catatan": "Jahit mang atep"}, {"id": "sync0092", "tanggal": "2026-07-11", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 2686400, "catatan": "Potong mang ajang"}, {"id": "sync0093", "tanggal": "2026-07-11", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 2460000, "catatan": "Plastik"}, {"id": "sync0094", "tanggal": "2026-07-11", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 5050500, "catatan": "Jahitan teteh"}, {"id": "sync0095", "tanggal": "2026-07-11", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 3699000, "catatan": "Jahitan dea"}, {"id": "sync0096", "tanggal": "2026-07-11", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 10000000, "catatan": "Gajihan anak anak"}, {"id": "k0020", "tanggal": "2026-07-12", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 30000000, "catatan": "Unitraq"}, {"id": "k0021", "tanggal": "2026-07-12", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 98000000, "catatan": "Sld"}, {"id": "k0022", "tanggal": "2026-07-12", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 7000000, "catatan": "Tiktok"}, {"id": "sync0097", "tanggal": "2026-07-12", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 3000000, "catatan": "Dp selmi"}, {"id": "sync0098", "tanggal": "2026-07-12", "tipe": "out", "kategori": "Ongkir / Kirim", "channel": "BCA Operasional", "jumlah": 1500000, "catatan": "Bayar servis mesin"}, {"id": "sync0099", "tanggal": "2026-07-13", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 290000, "catatan": "Kain keras"}, {"id": "sync0100", "tanggal": "2026-07-13", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 811950, "catatan": "Karet TPR"}, {"id": "sync0101", "tanggal": "2026-07-13", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 3600000, "catatan": "Bayar bordir"}, {"id": "sync0102", "tanggal": "2026-07-13", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 847410, "catatan": "Lakban dus"}, {"id": "sync0103", "tanggal": "2026-07-13", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 290000, "catatan": "Bayar prin"}, {"id": "sync0104", "tanggal": "2026-07-14", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 13043000, "catatan": "Bahan loreng squba"}, {"id": "sync0105", "tanggal": "2026-07-14", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 2500000, "catatan": "Busa,tali,krtas pola,velkro"}, {"id": "sync0106", "tanggal": "2026-07-14", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 1430000, "catatan": "Nasi"}, {"id": "k0023", "tanggal": "2026-07-15", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Pribadi", "jumlah": 609170, "catatan": "Rebalance alokasi"}, {"id": "k0024", "tanggal": "2026-07-15", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 4335000, "catatan": "Bayar kes ofline"}, {"id": "k0025", "tanggal": "2026-07-15", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Pribadi", "jumlah": 645226, "catatan": "Rebalance alokasi"}, {"id": "k0026", "tanggal": "2026-07-15", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Kas Pajak", "jumlah": 1404315, "catatan": "Rebalance alokasi"}, {"id": "sync0107", "tanggal": "2026-07-15", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 464422, "catatan": "Rebalance alokasi"}, {"id": "sync0108", "tanggal": "2026-07-15", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 144748, "catatan": "Rebalance alokasi"}, {"id": "sync0109", "tanggal": "2026-07-15", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 2049540, "catatan": "Rebalance alokasi"}, {"id": "sync0110", "tanggal": "2026-07-16", "tipe": "out", "kategori": "Konsumsi Pribadi", "channel": "BCA Pribadi", "jumlah": 360000, "catatan": "Beli celana"}, {"id": "sync0111", "tanggal": "2026-07-13", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 50000000, "catatan": "Bayar ke central kain"}, {"id": "k0027", "tanggal": "2026-07-16", "tipe": "in", "kategori": "Lainnya", "channel": "BCA Operasional", "jumlah": 3915000, "catatan": "Ofline"}, {"id": "sync0112", "tanggal": "2026-07-16", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 2134952, "catatan": "Rebalance alokasi"}, {"id": "k0028", "tanggal": "2026-07-16", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Pribadi", "jumlah": 964350, "catatan": "Rebalance alokasi"}, {"id": "k0029", "tanggal": "2026-07-16", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Kas Pajak", "jumlah": 1170602, "catatan": "Rebalance alokasi"}, {"id": "sync0113", "tanggal": "2026-07-16", "tipe": "out", "kategori": "Konsumsi Pribadi", "channel": "BCA Pribadi", "jumlah": 360000, "catatan": "Celna"}, {"id": "sync0114", "tanggal": "2026-07-16", "tipe": "out", "kategori": "Internet / Pulsa", "channel": "BCA Operasional", "jumlah": 150000, "catatan": "Perbaikan internet"}, {"id": "sync0115", "tanggal": "2026-07-17", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 1150000, "catatan": "Bayar matras"}, {"id": "k0030", "tanggal": "2026-07-17", "tipe": "in", "kategori": "Pelunasan Piutang", "channel": "BCA Operasional", "jumlah": 10000000, "catatan": "Terima dari Sonia vista"}, {"id": "sync0116", "tanggal": "2026-07-17", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 4863600, "catatan": "Rebalance alokasi"}, {"id": "k0031", "tanggal": "2026-07-17", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Pribadi", "jumlah": 1777800, "catatan": "Rebalance alokasi"}, {"id": "k0032", "tanggal": "2026-07-17", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Kas Pajak", "jumlah": 3085800, "catatan": "Rebalance alokasi"}, {"id": "sync0117", "tanggal": "2026-07-17", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 1700000, "catatan": "Beli kepala resleting"}, {"id": "sync0118", "tanggal": "2026-07-17", "tipe": "out", "kategori": "Konsumsi Pribadi", "channel": "BCA Pribadi", "jumlah": 120000, "catatan": "Kopi"}, {"id": "sync0119", "tanggal": "2026-07-17", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 450000, "catatan": "Bayar lubang kancing"}, {"id": "sync0120", "tanggal": "2026-07-18", "tipe": "out", "kategori": "Konsumsi Pribadi", "channel": "BCA Pribadi", "jumlah": 1467000, "catatan": "Belnja makanan kucing"}, {"id": "sync0121", "tanggal": "2026-07-18", "tipe": "out", "kategori": "Produksi / Jahit", "channel": "BCA Operasional", "jumlah": 3494600, "catatan": "Jahit dea"}, {"id": "sync0122", "tanggal": "2026-07-18", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 3150500, "catatan": "M ajang potong"}, {"id": "sync0123", "tanggal": "2026-07-18", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 7646000, "catatan": "Jahit mang atep"}, {"id": "sync0124", "tanggal": "2026-07-18", "tipe": "out", "kategori": "Konsumsi Pribadi", "channel": "BCA Pribadi", "jumlah": 1800000, "catatan": "Ibu"}, {"id": "sync0125", "tanggal": "2026-07-18", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 10000000, "catatan": "Gajih anak anak"}, {"id": "sync0126", "tanggal": "2026-07-18", "tipe": "out", "kategori": "Konsumsi Pribadi", "channel": "BCA Pribadi", "jumlah": 961000, "catatan": "Toped"}, {"id": "k0033", "tanggal": "2026-07-19", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 78000000, "catatan": "Soldier shopee"}, {"id": "k0034", "tanggal": "2026-07-19", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 39000000, "catatan": "Untreq shope dan tiktok"}, {"id": "sync0127", "tanggal": "2026-07-19", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 50901886, "catatan": "Rebalance alokasi"}, {"id": "k0035", "tanggal": "2026-07-19", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Pribadi", "jumlah": 19003853, "catatan": "Rebalance alokasi"}, {"id": "k0036", "tanggal": "2026-07-19", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Kas Pajak", "jumlah": 31898033, "catatan": "Rebalance alokasi"}, {"id": "sync0128", "tanggal": "2026-07-19", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 400500, "catatan": "Beli tali webing"}, {"id": "k0037", "tanggal": "2026-07-20", "tipe": "in", "kategori": "Penjualan", "channel": "BCA Operasional", "jumlah": 12000000, "catatan": "Pelunasan troy"}, {"id": "sync0129", "tanggal": "2026-07-20", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Operasional", "jumlah": 6263730, "catatan": "Rebalance alokasi"}, {"id": "k0038", "tanggal": "2026-07-20", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Pribadi", "jumlah": 1971915, "catatan": "Rebalance alokasi"}, {"id": "k0039", "tanggal": "2026-07-20", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Kas Pajak", "jumlah": 4291815, "catatan": "Rebalance alokasi"}, {"id": "sync0130", "tanggal": "2026-07-20", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 60000000, "catatan": "Bayar ke central kain"}, {"id": "sync0131", "tanggal": "2026-07-20", "tipe": "out", "kategori": "Operasional", "channel": "BCA Operasional", "jumlah": 1152000, "catatan": "Keukeu dan ongkir"}, {"id": "sync0132", "tanggal": "2026-07-20", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 17864000, "catatan": "Bahan loreng sage ragam"}, {"id": "sync0133", "tanggal": "2026-07-20", "tipe": "out", "kategori": "Pajak", "channel": "BCA Kas Pajak", "jumlah": 7966467, "catatan": "Pajak dan konsultan"}, {"id": "sync0134", "tanggal": "2026-07-20", "tipe": "out", "kategori": "Transfer Antar Rekening", "channel": "BCA Kas Pajak", "jumlah": 78000000, "catatan": "Transfer → BCA Operasional kelebihan pajak"}, {"id": "k0040", "tanggal": "2026-07-20", "tipe": "in", "kategori": "Transfer Antar Rekening", "channel": "BCA Operasional", "jumlah": 78000000, "catatan": "Transfer dari BRI"}, {"id": "sync0135", "tanggal": "2026-07-21", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 5348000, "catatan": "Bahan diadora embos"}, {"id": "sync0136", "tanggal": "2026-07-21", "tipe": "out", "kategori": "Konsumsi Karyawan", "channel": "BCA Operasional", "jumlah": 1430000, "catatan": "Ketring nasi"}, {"id": "sync0137", "tanggal": "2026-07-21", "tipe": "out", "kategori": "Packaging", "channel": "BCA Operasional", "jumlah": 649570, "catatan": "Plastik paking"}, {"id": "sync0138", "tanggal": "2026-07-21", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 2920000, "catatan": "Velkro"}, {"id": "sync0139", "tanggal": "2026-07-21", "tipe": "out", "kategori": "Maintenance / Servis", "channel": "BCA Operasional", "jumlah": 2000000, "catatan": "Dp matras"}, {"id": "sync0140", "tanggal": "2026-07-22", "tipe": "out", "kategori": "Bayar Utang", "channel": "BCA Operasional", "jumlah": 2610000, "catatan": "Bayar ke BNI Pinjaman Modal Usaha"}, {"id": "sync0141", "tanggal": "2026-07-22", "tipe": "out", "kategori": "Listrik / Air", "channel": "BCA Operasional", "jumlah": 500000, "catatan": "Token listtrik"}, {"id": "sync0142", "tanggal": "2026-07-23", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 3000000, "catatan": "Dp topi"}, {"id": "sync0143", "tanggal": "2026-07-24", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Operasional", "jumlah": 4641309, "catatan": "Beli pet,reflektif"}, {"id": "sync0144", "tanggal": "2026-07-24", "tipe": "out", "kategori": "Transfer Antar Rekening", "channel": "BCA Operasional", "jumlah": 5695000, "catatan": "Split → Kas Pajak (20%)"}, {"id": "k0041", "tanggal": "2026-07-24", "tipe": "in", "kategori": "Transfer Antar Rekening", "channel": "BCA Kas Pajak", "jumlah": 5695000, "catatan": "Split dari BCA Operasional (20%)"}, {"id": "sync0145", "tanggal": "2026-07-24", "tipe": "out", "kategori": "Transfer Antar Rekening", "channel": "BCA Operasional", "jumlah": 2847500, "catatan": "Split → Mandiri (10%)"}, {"id": "k0042", "tanggal": "2026-07-24", "tipe": "in", "kategori": "Transfer Antar Rekening", "channel": "BCA Pribadi", "jumlah": 2847500, "catatan": "Split dari BCA Operasional (10%)"}, {"id": "sync0146", "tanggal": "2026-07-24", "tipe": "out", "kategori": "Beli Bahan / HPP", "channel": "BCA Pribadi", "jumlah": 2073000, "catatan": "Belanja"}, {"id": "sync0147", "tanggal": "2026-07-24", "tipe": "out", "kategori": "Ongkir / Kirim", "channel": "BCA Operasional", "jumlah": 516250, "catatan": "Ongkir ofline"}, {"id": "sync0148", "tanggal": "2026-07-25", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Pribadi", "jumlah": 1800000, "catatan": "Resiko"}, {"id": "sync0149", "tanggal": "2026-07-25", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 2808700, "catatan": "Potong"}, {"id": "sync0150", "tanggal": "2026-07-25", "tipe": "out", "kategori": "Konsumsi Pribadi", "channel": "BCA Pribadi", "jumlah": 1050000, "catatan": "Makan dan jajan"}, {"id": "sync0151", "tanggal": "2026-07-25", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 9839000, "catatan": "Mang atep jahit"}, {"id": "sync0152", "tanggal": "2026-07-25", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 12072000, "catatan": "Gajihan anak anak"}, {"id": "sync0153", "tanggal": "2026-07-25", "tipe": "out", "kategori": "Gaji / Upah", "channel": "BCA Operasional", "jumlah": 5378000, "catatan": "Teteh jahit"}, {"id": "sync0154", "tanggal": "2026-07-26", "tipe": "out", "kategori": "Transfer Antar Rekening", "channel": "BCA Operasional", "jumlah": 5200000, "catatan": "Split → Kas Pajak (20%)"}, {"id": "k0043", "tanggal": "2026-07-26", "tipe": "in", "kategori": "Transfer Antar Rekening", "channel": "BCA Kas Pajak", "jumlah": 5200000, "catatan": "Split dari BCA Operasional (20%)"}, {"id": "sync0155", "tanggal": "2026-07-26", "tipe": "out", "kategori": "Transfer Antar Rekening", "channel": "BCA Operasional", "jumlah": 2600000, "catatan": "Split → Mandiri (10%)"}, {"id": "k0044", "tanggal": "2026-07-26", "tipe": "in", "kategori": "Transfer Antar Rekening", "channel": "BCA Pribadi", "jumlah": 2600000, "catatan": "Split dari BCA Operasional (10%)"}, {"id": "k0045", "tanggal": "2026-07-26", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Operasional", "jumlah": 4086913, "catatan": "Rebalance alokasi"}, {"id": "sync0156", "tanggal": "2026-07-26", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Pribadi", "jumlah": 25279611, "catatan": "Rebalance alokasi"}, {"id": "k0046", "tanggal": "2026-07-26", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Kas Pajak", "jumlah": 21192698, "catatan": "Rebalance alokasi"}, {"id": "sync0157", "tanggal": "2026-07-26", "tipe": "out", "kategori": "Transfer Antar Rekening", "channel": "BCA Operasional", "jumlah": 12000000, "catatan": "Split → Kas Pajak (20%)"}, {"id": "k0047", "tanggal": "2026-07-26", "tipe": "in", "kategori": "Transfer Antar Rekening", "channel": "BCA Kas Pajak", "jumlah": 12000000, "catatan": "Split dari BCA Operasional (20%)"}, {"id": "sync0158", "tanggal": "2026-07-26", "tipe": "out", "kategori": "Transfer Antar Rekening", "channel": "BCA Operasional", "jumlah": 6000000, "catatan": "Split → Mandiri (10%)"}, {"id": "k0048", "tanggal": "2026-07-26", "tipe": "in", "kategori": "Transfer Antar Rekening", "channel": "BCA Pribadi", "jumlah": 6000000, "catatan": "Split dari BCA Operasional (10%)"}, {"id": "k0049", "tanggal": "2026-07-26", "tipe": "in", "kategori": "Modal Masuk", "channel": "BCA Operasional", "jumlah": 18000000, "catatan": "Rebalance alokasi"}, {"id": "sync0159", "tanggal": "2026-07-26", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Pribadi", "jumlah": 6000000, "catatan": "Rebalance alokasi"}, {"id": "sync0160", "tanggal": "2026-07-26", "tipe": "out", "kategori": "Tarik Modal (Prive)", "channel": "BCA Kas Pajak", "jumlah": 12000000, "catatan": "Rebalance alokasi"}];
-const __PRELOAD_PI_DATA__ = [{"id": "pi_central", "tipe": "utang", "nama": "CENTRAL Kain", "jumlah": 278932440, "tanggal": "2026-06-15", "tempo": "", "catatan": "7x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-06-15", "jumlah": 50000000}, {"tanggal": "2026-06-22", "jumlah": 50000000}, {"tanggal": "2026-06-29", "jumlah": 19093600}, {"tanggal": "2026-06-29", "jumlah": 5627680}, {"tanggal": "2026-06-29", "jumlah": 44211160}, {"tanggal": "2026-07-13", "jumlah": 50000000}, {"tanggal": "2026-07-20", "jumlah": 60000000}], "status": "lunas"}, {"id": "pi_kaos_kopassu", "tipe": "piutang", "nama": "Kaos Kopassus", "jumlah": 5200000, "tanggal": "2026-06-19", "tempo": "", "catatan": "2x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-06-19", "jumlah": 3000000}, {"tanggal": "2026-06-29", "jumlah": 2200000}], "status": "lunas"}, {"id": "pi_abang_(bdu_2", "tipe": "piutang", "nama": "Abang (BDU 2pcs)", "jumlah": 33500000, "tanggal": "2026-06-22", "tempo": "", "catatan": "2x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-06-22", "jumlah": 15000000}, {"tanggal": "2026-07-04", "jumlah": 18500000}], "status": "lunas"}, {"id": "pi_tuan_3", "tipe": "piutang", "nama": "Tuan 3", "jumlah": 5800000, "tanggal": "2026-06-27", "tempo": "", "catatan": "2x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-06-27", "jumlah": 2900000}, {"tanggal": "2026-07-02", "jumlah": 2900000}], "status": "lunas"}, {"id": "pi_troy", "tipe": "piutang", "nama": "Troy", "jumlah": 20000000, "tanggal": "2026-07-07", "tempo": "", "catatan": "2x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-07-07", "jumlah": 8000000}, {"tanggal": "2026-07-20", "jumlah": 12000000}], "status": "lunas"}, {"id": "pi_kas_ofline", "tipe": "piutang", "nama": "Kas Ofline", "jumlah": 4335000, "tanggal": "2026-07-15", "tempo": "", "catatan": "1x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-07-15", "jumlah": 4335000}], "status": "lunas"}, {"id": "pi_sonia_vista", "tipe": "piutang", "nama": "Sonia Vista", "jumlah": 10000000, "tanggal": "2026-07-17", "tempo": "", "catatan": "1x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-07-17", "jumlah": 10000000}], "status": "lunas"}, {"id": "pi_bni", "tipe": "utang", "nama": "BNI Pinjaman Modal Usaha", "jumlah": 89583335, "tanggal": "2026-07-15", "tempo": "2030-02-01", "catatan": "Pinjaman awal Rp 100jt (Maret 2026). 48 bulan × Rp 2.610.000/bln.", "bayar": [{"tanggal": "2026-07-22", "jumlah": 2610000}], "status": "belum"}, {"id": "pi_utangel", "tipe": "utang", "nama": "Utangel (personal)", "jumlah": 1300000, "tanggal": "2026-06-27", "tempo": "", "catatan": "1x cicilan (auto-detect kas-command)", "bayar": [{"tanggal": "2026-06-27", "jumlah": 1300000}], "status": "lunas"}];
+const __PRELOAD_JUNI_DATA__ = [];
+const __PRELOAD_PI_DATA__ = [];
 </script>
 
 <script>
@@ -449,15 +446,13 @@ const __PRELOAD_PI_DATA__ = [{"id": "pi_central", "tipe": "utang", "nama": "CENT
 const KEY = 'soldier_kas_v2';
 const KAT_MASUK = ['Penjualan','Pelunasan Piutang','Modal Masuk','Refund','Bunga Bank','Hadiah / Bonus','Transfer Antar Rekening','Lainnya'];
 const KAT_KELUAR = ['Beli Bahan / HPP','Produksi / Jahit','Sablon / Bordir','Packaging','Iklan / Marketing','Gaji / Upah','Konsumsi Karyawan','Transport / Bensin','Internet / Pulsa','Listrik / Air','Ongkir / Kirim','Sewa Tempat','Perlengkapan Kantor','Maintenance / Servis','Operasional','Bayar Utang','Beban Bunga','Tarik Modal (Prive)','Pajak','Transfer Antar Rekening','Konsumsi Pribadi','Lainnya'];
-// Channel Pribadi = harta owner, TIDAK dihitung di L/R usaha (SAK EMKM prinsip entitas terpisah)
 const PRIBADI_CH = 'BCA Pribadi';
-// isBiz(t) = apakah tx ini transaksi USAHA (masuk L/R & basis pajak)?
 function isBiz(t){
-  if(t.channel === PRIBADI_CH) return false;                          // Personal — skip
-  if(t.kategori === 'Transfer Antar Rekening') return false;          // Internal transfer — netral
-  if(t.tipe === 'in' && EQUITY_KAT.includes(t.kategori)) return false; // Modal Masuk — equity, not revenue
-  if(t.tipe === 'out' && EQUITY_KAT.includes(t.kategori)) return false;// Prive — equity, not expense
-  if(t.kategori === 'Konsumsi Pribadi') return false;                 // Explicit personal marker
+  if(t.channel === PRIBADI_CH) return false;
+  if(t.kategori === 'Transfer Antar Rekening') return false;
+  if(t.tipe === 'in' && EQUITY_KAT.includes(t.kategori)) return false;
+  if(t.tipe === 'out' && EQUITY_KAT.includes(t.kategori)) return false;
+  if(t.kategori === 'Konsumsi Pribadi') return false;
   return true;
 }
 const TRANSFER_KAT = 'Transfer Antar Rekening';
@@ -477,27 +472,11 @@ const readAmt = el => +el.value.replace(/[^\d]/g,'')||0;
 const fillSel = (el, arr, val) => { el.innerHTML = arr.map(o=>'<option '+(o===val?'selected':'')+'>'+o+'</option>').join(''); };
 const fdate = s => !s?'':new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'2-digit'});
 
-// VERSIONING: kalau versi preload berubah, auto-replace data (biar user tinggal buka file, saldo match)
-const PRELOAD_VERSION = '6.0-pribadi-umkm05-full-jul26';
-
 let MEM = null;
 function load(){ try{ const r=localStorage.getItem(KEY); if(r)return JSON.parse(r); }catch(e){} return MEM||{tx:[],pi:[]}; }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); MEM=null; }catch(e){ MEM=DB; } }
 let DB = load();
 let inEdit=null, outEdit=null, piutEdit=null, utgEdit=null;
-
-// AUTO-FORCE REPLACE: DIMATIKAN agar data tidak kereset saat update kodingan
-const savedVer = localStorage.getItem(KEY+'_ver');
-if(savedVer !== PRELOAD_VERSION && __PRELOAD_JUNI_DATA__.length){
-  // Cuma backup aja, JANGAN ditimpa DB-nya
-  try{ localStorage.setItem(KEY+'_backup_'+savedVer, JSON.stringify(DB)); }catch(e){}
-  localStorage.setItem(KEY+'_ver', PRELOAD_VERSION);
-} else if((!DB.tx || DB.tx.length===0) && __PRELOAD_JUNI_DATA__.length){
-  // Fallback: kalau localStorage kosong melompong, baru load preload
-  DB.tx = __PRELOAD_JUNI_DATA__.slice();
-  DB.pi = __PRELOAD_PI_DATA__.slice();
-  save();
-}
 
 function inPeriode(dateStr){
   const mode = $('#periodMode').value;
@@ -519,7 +498,6 @@ function terbayar(x){ return (x.bayar&&x.bayar.length)?x.bayar.reduce((s,b)=>s+(
 function sisaOf(x){ return Math.max(0,x.jumlah-terbayar(x)); }
 function statusOf(x){ const t=terbayar(x); return sisaOf(x)<=0&&x.jumlah>0?'lunas':(t>0?'cicil':'belum'); }
 
-// Saldo per rekening
 const REK_UTAMA = ['BCA Operasional','BCA Pribadi','BCA Kas Pajak','Kas Fisik'];
 const REK_META = {
   'BCA Operasional': {color:'var(--accent)', icon:'📊', desc:'Cash flow harian usaha'},
@@ -558,7 +536,6 @@ function renderSaldoPerRek(){
   document.getElementById('rekSelisih').textContent = 'Total: '+rp(Object.values(bal).reduce((s,v)=>s+v,0));
 }
 
-// Modal Setup Alokasi
 window.openSetupAlokasi = function(){
   const total = saldo();
   $('#alkSaldoTotal').textContent = rp(total);
@@ -595,13 +572,11 @@ $('#alkApply').onclick = ()=>{
     alert('❌ Total alokasi ('+rp(tgt_total)+') tidak match total saldo ('+rp(cur_total)+').\n\nSelisih: '+rp(Math.abs(tgt_total-cur_total)));
     return;
   }
-  // Compute current per-rekening balance
   const cur = {'BCA Operasional':0,'BCA Pribadi':0,'BCA Kas Pajak':0,'Kas Fisik':0,'Belum di-Tag':0};
   DB.tx.forEach(t => {
     const ch = REK_UTAMA.includes(t.channel) ? t.channel : 'Belum di-Tag';
     cur[ch] += (t.tipe==='in' ? t.jumlah : -t.jumlah);
   });
-  // Deltas per rekening (target - current)
   const tgl = today();
   const entries = [];
   REK_UTAMA.forEach(rek => {
@@ -613,7 +588,6 @@ $('#alkApply').onclick = ()=>{
       entries.push({id:uid(),tanggal:tgl,tipe:'out',kategori:'Tarik Modal (Prive)',channel:rek,jumlah:-delta,catatan:'Rebalance alokasi'});
     }
   });
-  // Zero out "Belum di-Tag" if any — move to Ops so it doesn't stay
   if(Math.abs(cur['Belum di-Tag']) > 100){
     const d = cur['Belum di-Tag'];
     entries.push({id:uid(),tanggal:tgl,tipe: d>0?'out':'in', kategori: d>0?'Tarik Modal (Prive)':'Modal Masuk', channel:'Umum', jumlah:Math.abs(d), catatan:'Bersihkan Belum di-Tag ke Ops'});
@@ -625,7 +599,6 @@ $('#alkApply').onclick = ()=>{
   alert('✅ Rebalance diterapkan! '+entries.length+' entri delta ditambahkan.');
 };
 
-// ==== SPLIT DANA 20/10/70 ====
 window.openSplitDana = function(){
   $('#spTotal').value = '';
   $('#spDate').value = today();
@@ -670,7 +643,6 @@ $('#spApply').onclick = () => {
   if(pjkPct + priPct > 100){ alert('Total % > 100. Kurangi.'); return; }
   const pjk = Math.round(total * pjkPct/100);
   const pri = Math.round(total * priPct/100);
-  // Generate transfer pairs
   const entries = [];
   if(pjk > 0){
     entries.push({id:uid(),tanggal:tgl,tipe:'out',kategori:TRANSFER_KAT,channel:from,jumlah:pjk,catatan:'Split → Kas Pajak ('+pjkPct+'%)'});
@@ -683,10 +655,9 @@ $('#spApply').onclick = () => {
   entries.forEach(e => DB.tx.push(e));
   save(); renderAll();
   $('#splitOv').classList.remove('on');
-  alert('✅ Split diterapkan!\n\n🏦 Kas Pajak: +'+rp(pjk)+'\n🏠 Pribadi: +'+rp(pri)+'\n📊 Sisa di '+from+': +'+rp(total-pjk-pri));
+  alert('✅ Split diterapkan!');
 };
 
-// ==== KURANGI SALDO PRIBADI (konsumsi pribadi, tidak masuk L/R usaha) ====
 window.openPribadi = function(){
   $('#priJumlah').value = '';
   $('#priDate').value = today();
@@ -711,10 +682,9 @@ $('#priApply').onclick = () => {
   });
   save(); renderAll();
   $('#priOv').classList.remove('on');
-  alert('✅ Saldo BCA Pribadi berkurang '+rp(j)+'\n\n📌 CATATAN:\nTx ini TIDAK dihitung di Ringkasan Pengeluaran usaha.\n(Basis PPh Final UMKM = omzet, bukan biaya).\nCuma affect saldo BCA Pribadi.');
+  alert('✅ Saldo BCA Pribadi berkurang '+rp(j));
 };
 
-// ==== TRANSFER ANTAR REKENING ====
 window.openTransfer = function(){
   fillSel($('#trfFrom'), REK_UTAMA, 'BCA Operasional');
   fillSel($('#trfTo'), REK_UTAMA, 'BCA Kas Pajak');
@@ -740,10 +710,9 @@ $('#trfApply').onclick = () => {
   DB.tx.push({id:uid(),tanggal:tgl,tipe:'in',kategori:TRANSFER_KAT,channel:to,jumlah:j,catatan:'Transfer dari '+from+(note?' · '+note:'')});
   save(); renderAll();
   $('#trfOv').classList.remove('on');
-  alert('✅ Transfer '+rp(j)+' dari '+from+' → '+to);
+  alert('✅ Transfer '+rp(j)+' berhasil');
 };
 
-// Pemasukan
 function renderIn(){
   const tx = DB.tx.filter(t=>t.tipe==='in'&&inPeriode(t.tanggal)).sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
   $('#in-total').textContent = rp(tx.reduce((s,t)=>s+t.jumlah,0));
@@ -774,9 +743,7 @@ $('#inSave').onclick = ()=>{
 $('#inCancel').onclick=inFormReset;
 $('#inDel').onclick=()=>{if(inEdit)delTx(inEdit);};
 
-// Pengeluaran
 function renderOut(){
-  // Kas Keluar HANYA tampilkan tx USAHA (exclude BCA Pribadi & Konsumsi Pribadi)
   const tx=DB.tx.filter(t=>t.tipe==='out' && inPeriode(t.tanggal) && t.channel!=='BCA Pribadi' && t.kategori!=='Konsumsi Pribadi').sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
   $('#out-total').textContent=rp(tx.reduce((s,t)=>s+t.jumlah,0));
   $('#out-count').textContent=tx.length;
@@ -785,7 +752,6 @@ function renderOut(){
     return '<div class="row"><div class="rtap" onclick="editOut(\''+t.id+'\')"><div class="ic out">⬆</div><div class="mid"><div class="t1">'+esc(t.kategori)+badge+'</div><div class="t2">'+esc([fdate(t.tanggal),t.channel,t.catatan].filter(Boolean).join(' · '))+'</div></div></div><div class="amt out">−'+fmt(t.jumlah)+'</div><button class="delbtn" onclick="delTx(\''+t.id+'\')">✕</button></div>';
   }).join(''):'<div class="empty">Belum ada pengeluaran usaha.</div>';
 
-  // Tampilkan section "Riwayat Belanja Pribadi" (info aja, ga masuk laporan)
   const pribadi = DB.tx.filter(t=>t.tipe==='out' && inPeriode(t.tanggal) && (t.channel==='BCA Pribadi' || t.kategori==='Konsumsi Pribadi')).sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
   const prTotal = pribadi.reduce((s,t)=>s+t.jumlah,0);
   const prEl = $('#pribadi-section');
@@ -830,7 +796,6 @@ $('#outSave').onclick=()=>{
 $('#outCancel').onclick=outFormReset;
 $('#outDel').onclick=()=>{if(outEdit)delTx(outEdit);};
 
-// Piutang
 function renderPiutang(){
   const list=DB.pi.filter(x=>x.tipe==='piutang').sort((a,b)=>{
     const sa=statusOf(a),sb=statusOf(b),ord={belum:0,cicil:1,lunas:2};
@@ -862,7 +827,6 @@ $('#piutSave').onclick=()=>{
 $('#piutCancel').onclick=piutFormReset;
 $('#piutDel').onclick=()=>{if(piutEdit)delPi(piutEdit);};
 
-// Utang
 function renderUtang(){
   const list=DB.pi.filter(x=>x.tipe==='utang').sort((a,b)=>{
     const sa=statusOf(a),sb=statusOf(b),ord={belum:0,cicil:1,lunas:2};
@@ -874,7 +838,6 @@ function renderUtang(){
   $('#utg-list').innerHTML=list.length?list.map(x=>renderPiUtRow(x,'utang')).join(''):'<div class="empty">Belum ada utang.</div>';
 }
 
-// Unified row renderer with expandable bon history
 function renderPiUtRow(x, tipe){
   const t = terbayar(x), s = sisaOf(x), st = statusOf(x);
   const pct = x.jumlah ? Math.round(t/x.jumlah*100) : 0;
@@ -890,7 +853,6 @@ function renderPiUtRow(x, tipe){
   const icEmoji = isPiut ? '📥' : '📤';
   const editFn = isPiut ? 'editPiutang' : 'editUtang';
 
-  // Histori bon
   let histori = '';
   if(bayar.length){
     let cum = 0;
@@ -952,7 +914,6 @@ $('#utgDel').onclick=()=>{if(utgEdit)delPi(utgEdit);};
 window.delTx=function(id){askConfirm('Hapus transaksi?',()=>{DB.tx=DB.tx.filter(x=>x.id!==id);if(inEdit===id)inFormReset();if(outEdit===id)outFormReset();renderAll();});};
 window.delPi=function(id){askConfirm('Hapus item ini?',()=>{DB.pi=DB.pi.filter(x=>x.id!==id);if(piutEdit===id)piutFormReset();if(utgEdit===id)utgFormReset();renderAll();});};
 
-// ==== BAYAR CICILAN PIUTANG/UTANG ====
 let byId = null;
 window.openBayar = function(id){
   const x = DB.pi.find(y => y.id === id);
@@ -965,9 +926,7 @@ window.openBayar = function(id){
   $('#bySisa').innerHTML = 'Total: <b>'+rp(x.jumlah)+'</b> · Sudah bayar: <b style="color:var(--green)">'+rp(t)+'</b> · Sisa: <b style="color:var(--red)">'+rp(s)+'</b>';
   $('#byJumlah').value = 'Rp '+s.toLocaleString('id-ID');
   $('#byDate').value = today();
-  // Fill channel dropdown
   fillSel($('#byChannel'), CHANNELS, x.tipe === 'piutang' ? 'BCA Operasional' : 'BCA Operasional');
-  // Riwayat pembayaran
   const bayar = x.bayar || [];
   let histori = '<div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">📜 Riwayat Pembayaran ('+bayar.length+'x)</div>';
   if(bayar.length){
@@ -984,13 +943,11 @@ window.openBayar = function(id){
   $('#byo').classList.add('on');
 };
 
-// Bind jumlah input auto-format
 $('#byJumlah').addEventListener('input', () => {
   const d = $('#byJumlah').value.replace(/[^\d]/g, '');
   $('#byJumlah').value = d ? 'Rp '+(+d).toLocaleString('id-ID') : '';
 });
 
-// Quick pick % buttons
 $$('#byo .quickpc').forEach(b => {
   b.onclick = () => {
     const x = DB.pi.find(y => y.id === byId);
@@ -1010,10 +967,8 @@ $('#byYes').onclick = () => {
   if(!j){ alert('Isi jumlah pembayaran.'); return; }
   const tgl = $('#byDate').value || today();
   const ch = $('#byChannel').value;
-  // Add to bayar array (with channel for histori bon)
   x.bayar = x.bayar || [];
   x.bayar.push({ tanggal: tgl, jumlah: j, channel: ch, id: uid() });
-  // Auto-add transaksi ke Kas Command
   DB.tx.push({
     id: uid(),
     tanggal: tgl,
@@ -1025,17 +980,11 @@ $('#byYes').onclick = () => {
   });
   $('#byo').classList.remove('on');
   renderAll();
-  alert('✅ Pembayaran tercatat!\n\n'+
-    (x.tipe==='piutang'?'Terima':'Bayar')+' '+rp(j)+' '+
-    (x.tipe==='piutang'?'dari':'ke')+' '+x.nama+'\n\n'+
-    'Sisa: '+rp(sisaOf(x))+'\n'+
-    'Otomatis dicatat sebagai '+(x.tipe==='piutang'?'Pemasukan':'Pengeluaran')+' di Kas Command.');
+  alert('✅ Pembayaran tercatat!');
 };
 
-// Ringkasan
 function renderRingkas(){
   const tx=DB.tx.filter(t=>inPeriode(t.tanggal));
-  // Ringkasan HANYA transaksi usaha (exclude BCA Pribadi, Modal, Prive, Transfer, Konsumsi Pribadi)
   const bizIn = tx.filter(t=>t.tipe==='in' && isBiz(t));
   const bizOut = tx.filter(t=>t.tipe==='out' && isBiz(t));
   const masuk = bizIn.reduce((s,t)=>s+t.jumlah,0);
@@ -1066,7 +1015,7 @@ $('#btnBackup').onclick=()=>dl('kas-command-backup-'+today()+'.json',JSON.string
 $('#restoreFile').onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload=()=>{try{const d=JSON.parse(r.result);if(d.tx||d.pi){askConfirm('Ganti semua data dengan backup?',()=>{DB={tx:d.tx||[],pi:d.pi||[]};renderAll();},'Ya, Ganti');}else alert('Format tidak valid.');}catch(e){alert('Gagal.');}};
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(d.tx||d.pi){askConfirm('Ganti semua data dengan file backup yang dimasukkan?',()=>{DB={tx:d.tx||[],pi:d.pi||[]};renderAll();},'Ya, Ganti');}else alert('Format tidak valid.');}catch(e){alert('Gagal.');}};
   r.readAsText(f); e.target.value='';
 };
 $('#importCSV').onchange=e=>{
@@ -1094,37 +1043,7 @@ $('#btnCsv').onclick=()=>{
   DB.tx.forEach(t=>rows.push([t.tanggal,t.tipe==='in'?'Masuk':'Keluar',t.kategori,t.channel,t.jumlah,t.catatan||'']));
   dl('kas-command-'+today()+'.csv','﻿'+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
 };
-$('#btnReset').onclick=()=>askConfirm('HAPUS SEMUA DATA?',()=>{
-  try{ localStorage.removeItem(KEY); localStorage.removeItem(KEY+'_ver'); }catch(e){}
-  DB={tx:[],pi:[]}; save();
-  inFormReset();outFormReset();piutFormReset();utgFormReset();
-  renderAll();
-},'Ya, Hapus');
-$('#btnLoadPreload').onclick=()=>{
-  // Hitung total preload dinamis
-  const preloadTotal = __PRELOAD_JUNI_DATA__.reduce((s,t)=>s+(t.tipe==='in'?t.jumlah:-t.jumlah),0);
-  const bal={'BCA Operasional':0,'BCA Pribadi':0,'BCA Kas Pajak':0,'Kas Fisik':0};
-  __PRELOAD_JUNI_DATA__.forEach(t=>{ if(bal.hasOwnProperty(t.channel)) bal[t.channel] += (t.tipe==='in'?t.jumlah:-t.jumlah); });
-  const msg = 'GANTI SEMUA data dengan preload terbaru (v'+PRELOAD_VERSION+')?\n\n'+
-    'Total: '+rp(preloadTotal)+'\n'+
-    'BCA Operasional: '+rp(bal['BCA Operasional'])+'\n'+
-    'BCA Pribadi: '+rp(bal['BCA Pribadi'])+'\n'+
-    'BCA Kas Pajak: '+rp(bal['BCA Kas Pajak']);
-  askConfirm(msg,()=>{
-    // Wipe localStorage total biar clean
-    try{
-      localStorage.removeItem(KEY);
-      localStorage.setItem(KEY+'_ver', PRELOAD_VERSION);
-    }catch(e){}
-    DB={tx:__PRELOAD_JUNI_DATA__.slice(),pi:__PRELOAD_PI_DATA__.slice()};
-    save();  // PENTING: persist ke localStorage
-    inFormReset();outFormReset();piutFormReset();utgFormReset();
-    renderAll();
-    alert('✅ Preload v'+PRELOAD_VERSION+' dimuat!\n\nTotal saldo: '+rp(preloadTotal)+'\n\nData tersimpan di localStorage.');
-  },'Ya, Load Preload');
-};
 
-// Sync — CSV USAHA ONLY (exclude BCA Pribadi + Konsumsi Pribadi, aman untuk laporan pajak)
 $('#btnSyncCSV').onclick=()=>{
   const tx=DB.tx.filter(t => inPeriode(t.tanggal) && t.channel!=='BCA Pribadi' && t.kategori!=='Konsumsi Pribadi');
   const rows=[['Tanggal','Tipe','Kategori','Channel','Jumlah','Keterangan']];
@@ -1138,7 +1057,6 @@ $('#btnSyncCSV').onclick=()=>{
   alert('✅ CSV sync (USAHA ONLY).\n\n'+(rows.length-1)+' transaksi didownload.\n\n🏠 '+skippedPribadi+' tx pribadi dikecualikan (aman dari DJP).\n\nUpload ke Dashboard Pembukuan.');
 };
 $('#btnSyncJSON').onclick=()=>{
-  // JSON sync USAHA ONLY — exclude BCA Pribadi & Konsumsi Pribadi (aman untuk DJP)
   const tx=DB.tx.filter(t => inPeriode(t.tanggal) && t.channel!=='BCA Pribadi' && t.kategori!=='Konsumsi Pribadi');
   const income=[],expense=[];
   const KAT_MAP={'beli bahan':{kat:'Bahan Baku',jenis:'operasi'},'produksi':{kat:'TKL Jahit',jenis:'operasi'},'jahit':{kat:'TKL Jahit',jenis:'operasi'},'sablon':{kat:'TKL Sablon',jenis:'operasi'},'packaging':{kat:'BOP',jenis:'operasi'},'iklan':{kat:'Beban Iklan',jenis:'operasi'},'gaji':{kat:'Beban Gaji',jenis:'operasi'},'upah':{kat:'Beban Gaji',jenis:'operasi'},'listrik':{kat:'Beban Listrik',jenis:'operasi'},'ongkir':{kat:'Beban Ongkir',jenis:'operasi'},'maintenance':{kat:'Beban Maintenance',jenis:'operasi'},'operasional':{kat:'Beban Gaji',jenis:'operasi'},'bayar utang':{kat:'Bayar Utang',jenis:'utang'},'tarik modal':{kat:'Prive',jenis:'prive'},'pajak':{kat:'Beban Pajak',jenis:'operasi'},'beban bunga':{kat:'Beban Bunga',jenis:'operasi'}};
@@ -1161,47 +1079,36 @@ $('#btnSyncJSON').onclick=()=>{
   alert('✅ JSON sync. Buka Dashboard → Ringkasan → ⬆ Restore JSON.');
 };
 
-// Periode
 $('#periodMode').addEventListener('change',function(){
   $('#periodMonth').style.display=this.value==='pick'?'inline-block':'none';
   renderAll();
 });
 $('#periodMonth').addEventListener('change',renderAll);
 
-// ==== TAB PAJAK: PPh Final UMKM 0,5% (PP 55/2022) ====
 function renderPajak(){
   const txP = DB.tx.filter(t => inPeriode(t.tanggal));
-  // Omzet PERIODE (yg dipilih)
   const sales = txP.filter(t => t.tipe==='in' && t.kategori==='Penjualan' && isBiz(t));
   const salesTotal = sales.reduce((s,t)=>s+t.jumlah,0);
-  // Omzet YTD (tahun berjalan) — untuk kuota Rp 500jt WP OP
-  const currentYear = new Date().toISOString().slice(0,4); // "2026"
+  const currentYear = new Date().toISOString().slice(0,4);
   const ytdSales = DB.tx.filter(t => t.tipe==='in' && t.kategori==='Penjualan' && isBiz(t) && String(t.tanggal).startsWith(currentYear));
   const ytdTotal = ytdSales.reduce((s,t)=>s+t.jumlah,0);
 
-  // Settings
   const wpStatus = (localStorage.getItem('pj_wp_status') || 'op');
   $('#pjWpStatus').value = wpStatus;
   const splitPct = parseFloat(localStorage.getItem('pj_split_pct') || '1');
   $('#pjSplit').value = splitPct;
 
-  // KUOTA BEBAS PAJAK (WP OP only): Rp 500jt/tahun
   const KUOTA_BEBAS = 500_000_000;
   const kuotaBebas = wpStatus === 'op' ? KUOTA_BEBAS : 0;
   const sisaKuota = Math.max(0, kuotaBebas - ytdTotal);
 
-  // Basis PPh periode ini = omzet periode dikurangi sisa kuota (yang belum kepakai)
-  // Simplified: hitung PPh cumulative → selisih ytd
   const basisYtd = Math.max(0, ytdTotal - kuotaBebas);
   const pphYtd = Math.round(basisYtd * 0.005);
-  // PPh periode ini = kalau periode = bulan tertentu, hitung basisnya (aproksimasi):
-  // basisPeriode = max(0, salesTotal - max(0, kuotaBebas - (ytdTotal - salesTotal)))
   const kuotaTerpakaiSebelumnya = Math.max(0, Math.min(kuotaBebas, ytdTotal - salesTotal));
   const kuotaTersisa = Math.max(0, kuotaBebas - kuotaTerpakaiSebelumnya);
   const basisPeriode = Math.max(0, salesTotal - kuotaTersisa);
   const pphPeriode = Math.round(basisPeriode * 0.005);
 
-  // Kas Pajak saldo
   const kasPajak = DB.tx.filter(t => t.channel==='BCA Kas Pajak').reduce((s,t)=>s+(t.tipe==='in'?t.jumlah:-t.jumlah),0);
   const selisih = kasPajak - pphYtd;
 
@@ -1212,7 +1119,6 @@ function renderPajak(){
   $('#pj-total').textContent = rp(pphYtd);
   $('#pj-kas').textContent = rp(kasPajak);
 
-  // Status box
   const box = $('#pj-status-box');
   const stEl = $('#pj-status');
   if(pphYtd === 0){
@@ -1229,7 +1135,6 @@ function renderPajak(){
     box.className = 'kpi r'; stEl.innerHTML = '⚠ KURANG<br><span style="font-size:11px">defisit '+rp(-selisih)+'</span>'; stEl.style.color = 'var(--red)';
   }
 
-  // Rekomendasi
   const rekomEl = $('#pj-rekom');
   let rekomHtml = '<b style="color:var(--accent)">📌 Rekomendasi:</b><br>';
   if(salesTotal === 0){
@@ -1241,7 +1146,7 @@ function renderPajak(){
       rekomHtml += '<br><span style="color:var(--accent)">Sudah lewat kuota di periode ini — PPh Final periode: <b>'+rp(pphPeriode)+'</b>.</span>';
     }
   } else {
-    const anjuranBuffer = Math.round(pphPeriode * splitPct * 2); // 2× tarif split
+    const anjuranBuffer = Math.round(pphPeriode * splitPct * 2); 
     rekomHtml += 'Basis PPh periode: <b>'+rp(basisPeriode)+'</b>. Kena PPh Final 0,5% = <b>'+rp(pphPeriode)+'</b>.<br>';
     if(selisih < 0){
       rekomHtml += '<span style="color:var(--red)"><b>⚠ Kas Pajak KURANG '+rp(-selisih)+'</b></span>. ';
@@ -1253,7 +1158,6 @@ function renderPajak(){
   rekomHtml += '<br><br><span style="color:var(--muted);font-size:11px">📅 <b>Batas bayar:</b> paling lambat tgl 15 bulan berikutnya (via e-billing DJP). <b>SPT Tahunan:</b> 31 Maret (OP) / 30 April (Badan). Tarif 0,5% berlaku max 7 tahun (OP), 4 tahun (Koperasi/CV/Firma), 3 tahun (PT).</span>';
   rekomEl.innerHTML = rekomHtml;
 
-  // Rincian per channel
   const chList = {};
   sales.forEach(t => { chList[t.channel] = (chList[t.channel]||0) + t.jumlah; });
   const chEl = $('#pj-channel-list');
@@ -1271,7 +1175,6 @@ function renderPajak(){
   }
 }
 
-// Setup listener setting pajak
 document.addEventListener('DOMContentLoaded', () => {
   const wp = document.getElementById('pjWpStatus');
   const sp = document.getElementById('pjSplit');
@@ -1279,7 +1182,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if(sp) sp.addEventListener('change', () => { localStorage.setItem('pj_split_pct', sp.value); renderPajak(); });
 });
 
-// Export CSV Omzet PPh Final UMKM 0,5% (buat konsultan / rekap SPT Masa)
 function exportPPNCSV(){
   const txP = DB.tx.filter(t => inPeriode(t.tanggal) && t.tipe==='in' && t.kategori==='Penjualan' && isBiz(t));
   const rows = [['Tanggal','Channel','Deskripsi','Omzet Bruto','PPh Final 0,5%']];
