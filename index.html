@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="icon" type="image/png" sizes="512x512" href="https://soldierapparelid.github.io/soldierappareld.id-kas/logo.png">
-<link rel="apple-touch-icon" sizes="512x512" href="https://soldierapparelid.github.io/soldierappareld.id-kas/logo.png">
-<link rel="apple-touch-icon" sizes="512x512" href="logo.png?v=2">
+<!-- Ikon Custom Logo Elang dengan Anti-Cache -->
+<link rel="icon" type="image/png" sizes="512x512" href="https://soldierapparelid.github.io/soldierappareld.id-kas/logo.png?v=3">
+<link rel="apple-touch-icon" sizes="512x512" href="https://soldierapparelid.github.io/soldierappareld.id-kas/logo.png?v=3">
 <style>
 :root{--bg:#0b0f14;--panel:#141a22;--panel2:#1b232d;--border:#2a3441;--text:#eef2f7;--muted:#8b98a8;--accent:#f4b942;--accent2:#ffd166;--green:#22c55e;--greenbg:rgba(34,197,94,.15);--red:#ef4444;--redbg:rgba(239,68,68,.15);--blue:#3b82f6;--bluebg:rgba(59,130,246,.15);--purple:#a78bfa;--purplebg:rgba(167,139,250,.15);--shadow:0 4px 20px rgba(0,0,0,.35)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -95,7 +95,7 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 <body>
 <div class="wrap">
   <header>
-    <img src="logo.png" alt="Logo" style="width:46px;height:46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);">
+    <img src="logo.png?v=3" alt="Logo" style="width:46px;height:46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);">
     <div><h1>Kas Command</h1><small>Kas Pribadi + Pembukuan UMKM</small></div>
     <span class="ver">v3</span>
   </header>
@@ -486,16 +486,14 @@ function save(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); MEM=null; }c
 let DB = load();
 let inEdit=null, outEdit=null, piutEdit=null, utgEdit=null;
 
-// AUTO-FORCE REPLACE: kalau versi tersimpan beda dengan versi preload → replace
+// AUTO-FORCE REPLACE: DIMATIKAN agar data tidak kereset saat update kodingan
 const savedVer = localStorage.getItem(KEY+'_ver');
 if(savedVer !== PRELOAD_VERSION && __PRELOAD_JUNI_DATA__.length){
-  // Backup data lama ke localStorage terpisah (jaga-jaga)
+  // Cuma backup aja, JANGAN ditimpa DB-nya
   try{ localStorage.setItem(KEY+'_backup_'+savedVer, JSON.stringify(DB)); }catch(e){}
-  DB = {tx: __PRELOAD_JUNI_DATA__.slice(), pi: __PRELOAD_PI_DATA__.slice()};
   localStorage.setItem(KEY+'_ver', PRELOAD_VERSION);
-  save();
 } else if((!DB.tx || DB.tx.length===0) && __PRELOAD_JUNI_DATA__.length){
-  // Fallback: kalau localStorage kosong, load preload
+  // Fallback: kalau localStorage kosong melompong, baru load preload
   DB.tx = __PRELOAD_JUNI_DATA__.slice();
   DB.pi = __PRELOAD_PI_DATA__.slice();
   save();
