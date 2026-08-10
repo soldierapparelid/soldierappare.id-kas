@@ -8,8 +8,9 @@
 <meta http-equiv="expires" content="0">
 <meta name="theme-color" content="#090d16">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="icon" type="image/png" sizes="192x192" href="logo.png?v=4">
-<link rel="apple-touch-icon" sizes="192x192" href="logo.png?v=4">
+<!-- KODE DI BAWAH INI UNTUK LOGO DI LUAR APLIKASI (TAB/HOME SCREEN) -->
+<link rel="icon" type="image/jpeg" sizes="192x192" href="sdsf.jpg">
+<link rel="apple-touch-icon" sizes="192x192" href="sdsf.jpg">
 <style>
 :root {
   --bg: #090d16;
@@ -386,13 +387,14 @@ header .ver {
 }
 </style>
 <script>
-(function(){var KV='20260810f';try{fetch(location.href.split('?')[0]+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){if(h.indexOf("KV='"+KV+"'")<0)location.replace(location.href.split('?')[0]+'?v='+Date.now())}).catch(function(){})}catch(e){}})();
+(function(){var KV='20260810g';try{fetch(location.href.split('?')[0]+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){if(h.indexOf("KV='"+KV+"'")<0)location.replace(location.href.split('?')[0]+'?v='+Date.now())}).catch(function(){})}catch(e){}})();
 </script>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div style="width:46px;height:46px;flex:0 0 46px;border-radius:12px;background:rgba(245,158,11,0.15);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;">💼</div>
+    <!-- KODE DI BAWAH INI UNTUK LOGO DI DALAM APLIKASI. Saya kasih onerror agar diganti icon cadangan kalau filenya lupa diupload -->
+    <img src="sdsf.jpg" alt="Logo" onerror="this.outerHTML='<div style=\'width:46px;height:46px;flex:0 0 46px;border-radius:12px;background:rgba(245,158,11,0.15);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;\'>💼</div>'" style="width:46px;height:46px;flex:0 0 46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);background:#000;">
     <div><h1>Kas Command</h1><small>Kas Pribadi + Pembukuan UMKM</small></div>
     <span class="ver">v3 Pro</span>
   </header>
