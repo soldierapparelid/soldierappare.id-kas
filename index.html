@@ -8,7 +8,6 @@
 <meta http-equiv="expires" content="0">
 <meta name="theme-color" content="#090d16">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<!-- KODE DI BAWAH INI UNTUK LOGO DI LUAR APLIKASI (TAB/HOME SCREEN) -->
 <link rel="icon" type="image/png" sizes="192x192" href="sdsf.PNG">
 <link rel="apple-touch-icon" sizes="192x192" href="sdsf.PNG">
 <style>
@@ -279,18 +278,6 @@ header .ver {
 .amt { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 14px; }
 .amt.in { color: var(--green); }
 .amt.out { color: var(--red); }
-.delbtn {
-  width: 32px; height: 32px;
-  flex: 0 0 32px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-.delbtn:hover { background: var(--redbg); color: var(--red); border-color: var(--red); }
 
 .empty { text-align: center; color: var(--muted); font-size: 13px; padding: 24px 12px; font-weight: 500; }
 .badge {
@@ -387,14 +374,13 @@ header .ver {
 }
 </style>
 <script>
-(function(){var KV='20260810g';try{fetch(location.href.split('?')[0]+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){if(h.indexOf("KV='"+KV+"'")<0)location.replace(location.href.split('?')[0]+'?v='+Date.now())}).catch(function(){})}catch(e){}})();
+(function(){var KV='20260810h';try{fetch(location.href.split('?')[0]+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){if(h.indexOf("KV='"+KV+"'")<0)location.replace(location.href.split('?')[0]+'?v='+Date.now())}).catch(function(){})}catch(e){}})();
 </script>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <!-- KODE DI BAWAH INI UNTUK LOGO DI DALAM APLIKASI. Saya kasih onerror agar diganti icon cadangan kalau filenya lupa diupload -->
-   <img src="sdsf.PNG" alt="Logo" onerror="this.outerHTML='<div style=\'width:46px;height:46px;flex:0 0 46px;border-radius:12px;background:rgba(245,158,11,0.15);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;\'>💼</div>'" style="width:46px;height:46px;flex:0 0 46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);background:#000;">
+    <img src="sdsf.PNG" alt="Logo" onerror="this.outerHTML='<div style=\'width:46px;height:46px;flex:0 0 46px;border-radius:12px;background:rgba(245,158,11,0.15);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;\'>💼</div>'" style="width:46px;height:46px;flex:0 0 46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);background:#000;">
     <div><h1>Kas Command</h1><small>Kas Pribadi + Pembukuan UMKM</small></div>
     <span class="ver">v3 Pro</span>
   </header>
@@ -642,10 +628,25 @@ header .ver {
   <input type="date" id="byDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px">
   <label style="font-size:11px;color:var(--muted);display:block;margin:12px 0 4px">Bayar dari/ke rekening</label>
   <select id="byChannel" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px"></select>
-  <div id="byHistori" style="margin-top:14px;font-size:11px;color:var(--muted);max-height:150px;overflow-y:auto"></div>
   <div class="cfbtns">
     <button id="byNo" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
     <button id="byYes" style="background:var(--green);color:#04140a">✓ Catat Bayar</button>
+  </div>
+</div></div>
+
+<!-- Modal Tambah Tagihan / Hutang Baru -->
+<div class="overlay" id="ttOv"><div class="cfbox">
+  <div class="m" id="ttTitle">Tambah Tagihan</div>
+  <div id="ttInfo" style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:12px"></div>
+  <label style="font-size:11px;color:var(--muted);display:block;margin:8px 0 4px">Tambahan Hutang (Rp)</label>
+  <input type="text" inputmode="numeric" id="ttJumlah" class="amt-in" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:22px;font-weight:800;text-align:right">
+  <label style="font-size:11px;color:var(--muted);display:block;margin:12px 0 4px">Tanggal Penambahan</label>
+  <input type="date" id="ttDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px">
+  <label style="font-size:11px;color:var(--muted);display:block;margin:12px 0 4px">Keterangan / Catatan Tambahan</label>
+  <input type="text" id="ttCatatan" placeholder="Contoh: Ambil barang lagi" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px">
+  <div class="cfbtns">
+    <button id="ttNo" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
+    <button id="ttYes" style="background:var(--accent);color:#0d131e">✓ Tambahkan</button>
   </div>
 </div></div>
 
@@ -776,6 +777,12 @@ function save(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); MEM=null; }c
 let DB = load();
 let inEdit=null, outEdit=null, piutEdit=null, utgEdit=null;
 
+// FUNGSI PERHITUNGAN BARU UNTUK BUKU HUTANG/PIUTANG
+function pokokOf(x){ return x.jumlah + (x.tambahan||[]).reduce((s,t)=>s+(+t.jumlah||0),0); }
+function terbayar(x){ return (x.bayar&&x.bayar.length)?x.bayar.reduce((s,b)=>s+(+b.jumlah||0),0):(x.status==='lunas'?x.jumlah:0); }
+function sisaOf(x){ return Math.max(0, pokokOf(x)-terbayar(x)); }
+function statusOf(x){ const t=terbayar(x), p=pokokOf(x); return sisaOf(x)<=0&&p>0?'lunas':(t>0?'cicil':'belum'); }
+
 function inPeriode(dateStr){
   const mode = $('#periodMode').value;
   if(mode==='semua') return true;
@@ -792,9 +799,6 @@ $$('.tab').forEach(t => t.onclick = () => {
 });
 
 function saldo(){ return DB.tx.reduce((s,t)=>s+(t.tipe==='in'?t.jumlah:-t.jumlah),0); }
-function terbayar(x){ return (x.bayar&&x.bayar.length)?x.bayar.reduce((s,b)=>s+(+b.jumlah||0),0):(x.status==='lunas'?x.jumlah:0); }
-function sisaOf(x){ return Math.max(0,x.jumlah-terbayar(x)); }
-function statusOf(x){ const t=terbayar(x); return sisaOf(x)<=0&&x.jumlah>0?'lunas':(t>0?'cicil':'belum'); }
 
 const REK_UTAMA = ['BCA Operasional','BCA Pribadi','BCA Kas Pajak','Kas Fisik'];
 const REK_META = {
@@ -908,7 +912,6 @@ $('#alkApply').onclick = ()=>{
   alert('✅ Rebalance diterapkan!');
 };
 
-// FIX UNTUK SPLIT DANA MASUK OTOMATIS
 window.openSplitDana = function(){
   $('#spTotal').value = '';
   $('#spDate').value = today();
@@ -963,24 +966,13 @@ $('#spApply').onclick = () => {
   const pri = Math.round(total * priPct/100);
   const opsPct = 100 - pjkPct - priPct;
   
-  // 1. Catat Pemasukan Utama (Income)
-  DB.tx.push({
-    id: uid(),
-    tanggal: tgl,
-    tipe: 'in',
-    kategori: katMasuk,
-    channel: from,
-    jumlah: total,
-    catatan: 'Dana Masuk (di-split ' + opsPct + '% Ops / ' + pjkPct + '% Pajak / ' + priPct + '% Pribadi)'
-  });
+  DB.tx.push({ id: uid(), tanggal: tgl, tipe: 'in', kategori: katMasuk, channel: from, jumlah: total, catatan: 'Dana Masuk (di-split ' + opsPct + '% Ops / ' + pjkPct + '% Pajak / ' + priPct + '% Pribadi)' });
   
-  // 2. Transfer bagian Pajak ke BCA Kas Pajak
   if(pjk > 0){
     DB.tx.push({id:uid(),tanggal:tgl,tipe:'out',kategori:TRANSFER_KAT,channel:from,jumlah:pjk,catatan:'Split → Kas Pajak ('+pjkPct+'%)'});
     DB.tx.push({id:uid(),tanggal:tgl,tipe:'in',kategori:TRANSFER_KAT,channel:'BCA Kas Pajak',jumlah:pjk,catatan:'Split dari '+from+' ('+pjkPct+'%)'});
   }
   
-  // 3. Transfer bagian Pribadi ke BCA Pribadi
   if(pri > 0){
     DB.tx.push({id:uid(),tanggal:tgl,tipe:'out',kategori:TRANSFER_KAT,channel:from,jumlah:pri,catatan:'Split → BCA Pribadi ('+priPct+'%)'});
     DB.tx.push({id:uid(),tanggal:tgl,tipe:'in',kategori:TRANSFER_KAT,channel:'BCA Pribadi',jumlah:pri,catatan:'Split dari '+from+' ('+priPct+'%)'});
@@ -1007,12 +999,7 @@ $('#priApply').onclick = () => {
   if(j <= 0){ alert('Isi jumlah dulu.'); return; }
   const tgl = $('#priDate').value || today();
   const note = $('#priNote').value.trim() || 'Konsumsi Pribadi';
-  DB.tx.push({
-    id: uid(), tanggal: tgl, tipe: 'out',
-    kategori: 'Konsumsi Pribadi',
-    channel: 'BCA Pribadi',
-    jumlah: j, catatan: note
-  });
+  DB.tx.push({ id: uid(), tanggal: tgl, tipe: 'out', kategori: 'Konsumsi Pribadi', channel: 'BCA Pribadi', jumlah: j, catatan: note });
   save(); renderAll();
   $('#priOv').classList.remove('on');
   alert('✅ Saldo BCA Pribadi berkurang '+rp(j));
@@ -1142,7 +1129,7 @@ function renderPiutang(){
     return ord[sa]-ord[sb]||(a.tempo||'').localeCompare(b.tempo||'');
   });
   const sisa=list.reduce((s,x)=>s+sisaOf(x),0);
-  const total=list.reduce((s,x)=>s+x.jumlah,0);
+  const total=list.reduce((s,x)=>s+pokokOf(x),0);
   $('#piut-sisa').textContent=rp(sisa); $('#piut-total').textContent=rp(total);
   $('#piut-list').innerHTML=list.length?list.map(x=>renderPiUtRow(x,'piutang')).join(''):'<div class="empty">Belum ada piutang.</div>';
 }
@@ -1156,14 +1143,14 @@ window.editPiutang=function(id){
 };
 
 function piutFormReset(){
-  piutEdit=null; $('#piutEditTag').style.display='none'; $('#piutEditBtns').classList.add('hidden'); $('#piutSave').textContent='➕ Simpan Piutang';
+  piutEdit=null; $('#piutEditTag').style.display='none'; $('#piutEditBtns').classList.add('hidden'); $('#piutSave').textContent='➕ Simpan Piutang Awal';
   $('#piutNama').value=''; $('#piutJumlah').value=''; $('#piutDate').value=today(); $('#piutTempo').value=''; $('#piutNote').value='';
 }
 
 $('#piutSave').onclick=()=>{
   const nama=$('#piutNama').value.trim(); if(!nama){alert('Isi nama');return;}
   const j=readAmt($('#piutJumlah')); if(!j){alert('Isi jumlah');return;}
-  const rec={id:piutEdit||uid(),tipe:'piutang',nama,jumlah:j,tanggal:$('#piutDate').value||today(),tempo:$('#piutTempo').value||'',catatan:$('#piutNote').value.trim(),bayar:(piutEdit?(DB.pi.find(x=>x.id===piutEdit)?.bayar||[]):[]),status:'belum'};
+  const rec={id:piutEdit||uid(),tipe:'piutang',nama,jumlah:j,tanggal:$('#piutDate').value||today(),tempo:$('#piutTempo').value||'',catatan:$('#piutNote').value.trim(),bayar:(piutEdit?(DB.pi.find(x=>x.id===piutEdit)?.bayar||[]):[]),tambahan:(piutEdit?(DB.pi.find(x=>x.id===piutEdit)?.tambahan||[]):[]),status:'belum'};
   if(piutEdit) DB.pi[DB.pi.findIndex(x=>x.id===piutEdit)]=rec; else DB.pi.push(rec);
   piutFormReset(); renderAll();
 };
@@ -1176,59 +1163,83 @@ function renderUtang(){
     return ord[sa]-ord[sb]||(a.tempo||'').localeCompare(b.tempo||'');
   });
   const sisa=list.reduce((s,x)=>s+sisaOf(x),0);
-  const total=list.reduce((s,x)=>s+x.jumlah,0);
+  const total=list.reduce((s,x)=>s+pokokOf(x),0);
   $('#utg-sisa').textContent=rp(sisa); $('#utg-total').textContent=rp(total);
   $('#utg-list').innerHTML=list.length?list.map(x=>renderPiUtRow(x,'utang')).join(''):'<div class="empty">Belum ada utang.</div>';
 }
 
 function renderPiUtRow(x, tipe){
-  const t = terbayar(x), s = sisaOf(x), st = statusOf(x);
-  const pct = x.jumlah ? Math.round(t/x.jumlah*100) : 0;
-  const meta = [fdate(x.tanggal), x.tempo?'tempo '+fdate(x.tempo):'', x.catatan].filter(Boolean).join(' · ');
-  const bayar = (x.bayar||[]).slice().sort((a,b)=>String(a.tanggal).localeCompare(String(b.tanggal)));
+  const p = pokokOf(x), t = terbayar(x), s = sisaOf(x), st = statusOf(x);
+  const pct = p ? Math.round(t/p*100) : 0;
+  const meta = [x.tempo?'tempo '+fdate(x.tempo):''].filter(Boolean).join(' · ');
+  
   const isPiut = tipe === 'piutang';
   const barCol = isPiut ? 'var(--green)' : 'var(--red)';
   const btnBg = isPiut ? 'var(--greenbg)' : 'var(--redbg)';
   const btnCol = isPiut ? 'var(--green)' : 'var(--red)';
   const btnBrd = isPiut ? 'var(--green)' : 'var(--red)';
-  const btnLbl = isPiut ? '💰 Tagih' : '💳 Bayar';
+  const btnLbl = isPiut ? '💰 Terima Cicilan' : '💳 Bayar Cicilan';
   const icClass = isPiut ? 'in' : 'out';
   const icEmoji = isPiut ? '📥' : '📤';
   const editFn = isPiut ? 'editPiutang' : 'editUtang';
 
+  const bayar = (x.bayar||[]).map(b=>({...b, type:'bayar'}));
+  const tambahan = (x.tambahan||[]).map(tb=>({...tb, type:'tambah'}));
+  const historiItems = [...bayar, ...tambahan].sort((a,b)=>String(a.tanggal).localeCompare(String(b.tanggal)));
+
   let histori = '';
-  if(bayar.length){
-    let cum = 0;
-    histori = '<div style="margin-top:10px;padding:10px;background:var(--panel2);border-radius:10px;border:1px dashed var(--border)">'+
-      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:700">📋 Riwayat Cicilan ('+bayar.length+'x)</div>'+
-      bayar.map((b,i) => {
-        cum += (+b.jumlah||0);
-        const sisaSetelah = Math.max(0, x.jumlah - cum);
-        return '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dotted var(--border);font-size:12px">'+
-          '<span style="background:'+btnBg+';color:'+btnCol+';padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">#'+(i+1)+'</span>'+
-          '<span><b>'+fdate(b.tanggal)+'</b>'+(b.channel?' <span style="color:var(--muted);font-size:10px">· '+esc(b.channel)+'</span>':'')+'</span>'+
-          '<span style="text-align:right"><b style="color:'+btnCol+'">'+rp(b.jumlah)+'</b><br><span style="font-size:10px;color:var(--muted)">sisa '+rp(sisaSetelah)+'</span></span>'+
+  if(historiItems.length > 0){
+    let cum = x.jumlah;
+    let histHtml = '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:6px 0;border-bottom:1px dotted var(--border);font-size:12px">'+
+      '<span style="background:var(--panel2);padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;color:var(--text)">Awal</span>'+
+      '<span><b>'+fdate(x.tanggal)+'</b>'+(x.catatan?' <span style="color:var(--muted);font-size:10px">· '+esc(x.catatan)+'</span>':'')+'</span>'+
+      '<span style="text-align:right"><b style="color:var(--text)">'+rp(x.jumlah)+'</b></span>'+
+      '</div>';
+
+    histHtml += historiItems.map((h) => {
+      if(h.type === 'tambah') {
+        cum += (+h.jumlah||0);
+        return '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:6px 0;border-bottom:1px dotted var(--border);font-size:12px">'+
+          '<span style="background:rgba(245,158,11,0.15);color:var(--accent);padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">➕</span>'+
+          '<span><b>'+fdate(h.tanggal)+'</b>'+(h.catatan?' <span style="color:var(--muted);font-size:10px">· '+esc(h.catatan)+'</span>':'')+'</span>'+
+          '<span style="text-align:right"><b style="color:var(--accent)">+'+rp(h.jumlah)+'</b><br><span style="font-size:10px;color:var(--muted)">Total jd: '+rp(cum)+'</span></span>'+
           '</div>';
-      }).join('')+
+      } else {
+        cum -= (+h.jumlah||0);
+        return '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:6px 0;border-bottom:1px dotted var(--border);font-size:12px">'+
+          '<span style="background:'+btnBg+';color:'+btnCol+';padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">💳</span>'+
+          '<span><b>'+fdate(h.tanggal)+'</b>'+(h.channel?' <span style="color:var(--muted);font-size:10px">· '+esc(h.channel)+'</span>':'')+'</span>'+
+          '<span style="text-align:right"><b style="color:'+btnCol+'">-'+rp(h.jumlah)+'</b><br><span style="font-size:10px;color:var(--muted)">Sisa jd: '+rp(Math.max(0,cum))+'</span></span>'+
+          '</div>';
+      }
+    }).join('');
+
+    histori = '<div style="margin-top:14px;padding:12px;background:var(--panel2);border-radius:12px;border:1px dashed var(--border)">'+
+      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:800">📜 Riwayat Berjalan Buku</div>'+
+      histHtml +
       '</div>';
   }
 
-  return '<div class="row" style="align-items:flex-start;flex-wrap:wrap;padding:12px 0;flex-direction:column">'+
+  return '<div class="row" style="align-items:flex-start;flex-wrap:wrap;padding:16px 0;flex-direction:column">'+
     '<div style="display:flex;width:100%;align-items:flex-start;gap:10px">'+
-    '<div class="rtap" onclick="'+editFn+'(\''+x.id+'\')" style="align-items:flex-start;flex:1">'+
-    '<div class="ic '+icClass+'">'+icEmoji+'</div>'+
-    '<div class="mid">'+
-    '<div class="t1">'+esc(x.nama)+' <span class="status '+st+'">'+st+'</span></div>'+
-    '<div class="t2" style="margin-top:2px">Total '+rp(x.jumlah)+' · Dibayar '+rp(t)+' ('+pct+'%) · Sisa <b style="color:'+(s>0?'var(--red)':'var(--green)')+'">'+rp(s)+'</b></div>'+
-    (meta?'<div class="t2">'+esc(meta)+'</div>':'')+
-    '<div style="height:8px;background:#0d131e;border-radius:4px;overflow:hidden;margin-top:6px;width:100%">'+
-    '<div style="height:100%;background:'+barCol+';width:'+pct+'%;transition:width .3s"></div>'+
+      '<div class="rtap" onclick="'+editFn+'(\''+x.id+'\')" style="align-items:flex-start;flex:1">'+
+        '<div class="ic '+icClass+'">'+icEmoji+'</div>'+
+        '<div class="mid">'+
+          '<div class="t1">'+esc(x.nama)+' <span class="status '+st+'">'+st+'</span></div>'+
+          '<div class="t2" style="margin-top:4px;font-size:12px">Total Pinjaman: <b>'+rp(p)+'</b></div>'+
+          '<div class="t2">Sudah Dibayar: '+rp(t)+' ('+pct+'%)</div>'+
+          '<div class="t2">Sisa Belum Dibayar: <b style="color:'+(s>0?'var(--red)':'var(--green)')+';font-size:13px">'+rp(s)+'</b></div>'+
+          (meta?'<div class="t2" style="margin-top:4px">'+esc(meta)+'</div>':'')+
+          '<div style="height:8px;background:#0d131e;border-radius:4px;overflow:hidden;margin-top:8px;width:100%">'+
+            '<div style="height:100%;background:'+barCol+';width:'+pct+'%;transition:width .3s"></div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
     '</div>'+
-    '</div></div>'+
-    '<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">'+
-    (s>0?'<button class="paybtn" onclick="event.stopPropagation();openBayar(\''+x.id+'\')" style="background:'+btnBg+';color:'+btnCol+';border:1px solid '+btnBrd+'">'+btnLbl+'</button>':'<span style="font-size:10px;color:var(--green);font-weight:800;padding:6px 10px">✓ LUNAS</span>')+
-    '<button class="delbtn" onclick="event.stopPropagation();delPi(\''+x.id+'\')">✕</button>'+
-    '</div>'+
+    '<div style="display:flex;gap:6px;margin-top:12px;width:100%;justify-content:flex-end;align-items:stretch;flex-wrap:wrap">'+
+      '<button onclick="event.stopPropagation();delPi(\''+x.id+'\')" style="margin-right:auto;background:transparent;border:none;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;padding:8px">🗑 Hapus</button>'+
+      '<button class="paybtn" onclick="event.stopPropagation();openTambahTagihan(\''+x.id+'\')" style="background:transparent;color:var(--text);border:1px solid var(--border)">➕ Tambah Pinjaman</button>'+
+      (s>0?'<button class="paybtn" onclick="event.stopPropagation();openBayar(\''+x.id+'\')" style="background:'+btnBg+';color:'+btnCol+';border:1px solid '+btnBrd+'">'+btnLbl+'</button>':'<span style="font-size:10px;color:var(--green);font-weight:800;padding:8px 12px;border:1px solid var(--green);border-radius:10px">✓ LUNAS</span>')+
     '</div>'+
     (histori?'<div style="width:100%">'+histori+'</div>':'')+
     '</div>';
@@ -1243,14 +1254,14 @@ window.editUtang=function(id){
 };
 
 function utgFormReset(){
-  utgEdit=null; $('#utgEditTag').style.display='none'; $('#utgEditBtns').classList.add('hidden'); $('#utgSave').textContent='➕ Simpan Utang';
+  utgEdit=null; $('#utgEditTag').style.display='none'; $('#utgEditBtns').classList.add('hidden'); $('#utgSave').textContent='➕ Simpan Utang Awal';
   $('#utgNama').value=''; $('#utgJumlah').value=''; $('#utgDate').value=today(); $('#utgTempo').value=''; $('#utgNote').value='';
 }
 
 $('#utgSave').onclick=()=>{
   const nama=$('#utgNama').value.trim(); if(!nama){alert('Isi nama');return;}
   const j=readAmt($('#utgJumlah')); if(!j){alert('Isi jumlah');return;}
-  const rec={id:utgEdit||uid(),tipe:'utang',nama,jumlah:j,tanggal:$('#utgDate').value||today(),tempo:$('#utgTempo').value||'',catatan:$('#utgNote').value.trim(),bayar:(utgEdit?(DB.pi.find(x=>x.id===utgEdit)?.bayar||[]):[]),status:'belum'};
+  const rec={id:utgEdit||uid(),tipe:'utang',nama,jumlah:j,tanggal:$('#utgDate').value||today(),tempo:$('#utgTempo').value||'',catatan:$('#utgNote').value.trim(),bayar:(utgEdit?(DB.pi.find(x=>x.id===utgEdit)?.bayar||[]):[]),tambahan:(utgEdit?(DB.pi.find(x=>x.id===utgEdit)?.tambahan||[]):[]),status:'belum'};
   if(utgEdit) DB.pi[DB.pi.findIndex(x=>x.id===utgEdit)]=rec; else DB.pi.push(rec);
   utgFormReset(); renderAll();
 };
@@ -1268,24 +1279,11 @@ window.openBayar = function(id){
   const s = sisaOf(x);
   const t = terbayar(x);
   const jenis = x.tipe === 'piutang' ? 'Tagih dari' : 'Bayar ke';
-  $('#byTitle').textContent = '💰 '+jenis+': '+x.nama;
-  $('#bySisa').innerHTML = 'Total: <b>'+rp(x.jumlah)+'</b> · Sudah bayar: <b style="color:var(--green)">'+rp(t)+'</b> · Sisa: <b style="color:var(--red)">'+rp(s)+'</b>';
+  $('#byTitle').textContent = '💳 '+jenis+': '+x.nama;
+  $('#bySisa').innerHTML = 'Total Hutang: <b>'+rp(pokokOf(x))+'</b> · Sudah bayar: <b style="color:var(--green)">'+rp(t)+'</b><br>Sisa Harus Dibayar: <b style="color:var(--red);font-size:14px">'+rp(s)+'</b>';
   $('#byJumlah').value = 'Rp '+s.toLocaleString('id-ID');
   $('#byDate').value = today();
   fillSel($('#byChannel'), CHANNELS, 'BCA Operasional');
-  const bayar = x.bayar || [];
-  let histori = '<div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:700">📜 Riwayat Pembayaran ('+bayar.length+'x)</div>';
-  if(bayar.length){
-    histori += bayar.map(b =>
-      '<div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--panel2);border-radius:8px;margin-bottom:4px;font-size:12px">'+
-      '<span>'+fdate(b.tanggal)+'</span>'+
-      '<span style="font-weight:700;color:var(--green)">Rp '+fmt(b.jumlah)+'</span>'+
-      '</div>'
-    ).join('');
-  } else {
-    histori += '<div style="text-align:center;color:var(--muted);font-size:11px;padding:8px">Belum ada pembayaran</div>';
-  }
-  $('#byHistori').innerHTML = histori;
   $('#byo').classList.add('on');
 };
 
@@ -1322,11 +1320,48 @@ $('#byYes').onclick = () => {
     kategori: x.tipe === 'piutang' ? 'Pelunasan Piutang' : 'Bayar Utang',
     channel: ch,
     jumlah: j,
-    catatan: (x.tipe === 'piutang' ? 'Terima dari ' : 'Bayar ke ') + x.nama
+    catatan: (x.tipe === 'piutang' ? 'Terima cicilan dari ' : 'Bayar cicilan ke ') + x.nama
   });
   $('#byo').classList.remove('on');
   renderAll();
-  alert('✅ Pembayaran tercatat!');
+  alert('✅ Pembayaran cicilan tercatat!');
+};
+
+// LOGIC UNTUK TAMBAH TAGIHAN (HUTANG BARU DI ORANG YANG SAMA)
+let ttId = null;
+window.openTambahTagihan = function(id){
+  const x = DB.pi.find(y => y.id === id);
+  if(!x) return;
+  ttId = id;
+  const jenis = x.tipe === 'piutang' ? 'Tambah Piutang ke' : 'Tambah Hutang ke';
+  $('#ttTitle').textContent = '➕ '+jenis+': '+x.nama;
+  $('#ttInfo').innerHTML = 'Total Saat Ini: <b>'+rp(pokokOf(x))+'</b> · Sisa Blm Dibayar: <b style="color:var(--red)">'+rp(sisaOf(x))+'</b>';
+  $('#ttJumlah').value = '';
+  $('#ttDate').value = today();
+  $('#ttCatatan').value = '';
+  $('#ttOv').classList.add('on');
+};
+
+$('#ttJumlah').addEventListener('input', () => {
+  const d = $('#ttJumlah').value.replace(/[^\d]/g, '');
+  $('#ttJumlah').value = d ? 'Rp '+(+d).toLocaleString('id-ID') : '';
+});
+
+$('#ttNo').onclick = () => $('#ttOv').classList.remove('on');
+
+$('#ttYes').onclick = () => {
+  const x = DB.pi.find(y => y.id === ttId);
+  if(!x) return;
+  const j = readAmt($('#ttJumlah'));
+  if(!j){ alert('Isi jumlah tambahan pinjaman.'); return; }
+  const tgl = $('#ttDate').value || today();
+  const note = $('#ttCatatan').value.trim();
+  x.tambahan = x.tambahan || [];
+  x.tambahan.push({ tanggal: tgl, jumlah: j, catatan: note, id: uid() });
+  
+  $('#ttOv').classList.remove('on');
+  renderAll();
+  alert('✅ Pinjaman baru berhasil ditambahkan ke riwayat!');
 };
 
 function renderRingkas(){
