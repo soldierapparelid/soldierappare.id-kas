@@ -6,95 +6,387 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<meta name="theme-color" content="#0a0d10">
+<meta name="theme-color" content="#090d16">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" type="image/png" sizes="192x192" href="logo.png?v=4">
 <link rel="apple-touch-icon" sizes="192x192" href="logo.png?v=4">
 <style>
-:root{--bg:#0b0f14;--panel:#141a22;--panel2:#1b232d;--border:#2a3441;--text:#eef2f7;--muted:#8b98a8;--accent:#f4b942;--accent2:#ffd166;--green:#22c55e;--greenbg:rgba(34,197,94,.15);--red:#ef4444;--redbg:rgba(239,68,68,.15);--blue:#3b82f6;--bluebg:rgba(59,130,246,.15);--purple:#a78bfa;--purplebg:rgba(167,139,250,.15);--shadow:0 4px 20px rgba(0,0,0,.35)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5;padding-bottom:30px;font-size:14px}
-.wrap{max-width:680px;margin:0 auto;padding:14px}
-header{display:flex;align-items:center;gap:11px;margin:4px 0 14px}
-header h1{font-size:16px;letter-spacing:2px;text-transform:uppercase;font-weight:800}
-header small{display:block;color:var(--muted);font-size:11px}
-header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:4px 8px;border-radius:5px}
-.saldo{background:linear-gradient(135deg,#1e293b 0%,#0f172a 60%,#1a1608 100%);border:1px solid var(--border);border-radius:18px;padding:20px 22px;margin-bottom:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.saldo::before{content:"";position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(244,185,66,.15),transparent 70%);border-radius:50%}
-.saldo .lab{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.saldo .amt{font-size:34px;font-weight:900;margin-top:4px;background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px;position:relative;z-index:1}
-.saldo .meta{font-size:12px;color:var(--muted);margin-top:4px}
-.periode{display:flex;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:14px}
-.periode label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.periode select,.periode input{background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;flex:1}
-.tabs{display:flex;gap:6px;margin-bottom:14px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:5px;overflow-x:auto}
-.tab{flex:1;text-align:center;padding:10px 6px;border-radius:8px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;min-width:80px}
-.tab.on{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1a1608;font-weight:800;box-shadow:0 2px 8px rgba(244,185,66,.3)}
-.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
-.kpi{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:13px 14px;transition:transform .15s}
-.kpi:hover{transform:translateY(-1px);border-color:rgba(244,185,66,.4)}
-.kpi .l{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
-.kpi .v{font-size:16px;font-weight:800;margin-top:3px}
-.kpi.g .v{color:var(--green)}.kpi.r .v{color:var(--red)}.kpi.y .v{color:var(--accent)}.kpi.b .v{color:var(--blue)}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.card h2{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:11px;font-weight:700}
-.qf input,.qf select{width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:15px;outline:none;font-family:inherit}
-.qf input:focus,.qf select:focus{border-color:var(--accent)}
-.qf .amt-in{font-size:24px;font-weight:800;text-align:right;margin-bottom:9px}
-.qf .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
-.qf .save{width:100%;padding:14px;border-radius:11px;font-weight:800;font-size:15px;cursor:pointer;border:none;margin-top:3px}
-.qf .save.in{background:linear-gradient(135deg,var(--green),#16a34a);color:#04140a;box-shadow:0 2px 10px rgba(34,197,94,.25)}
-.qf .save.out{background:linear-gradient(135deg,var(--red),#dc2626);color:#fff;box-shadow:0 2px 10px rgba(239,68,68,.25)}
-.qf .save:active{transform:scale(.98)}
-.qf .editrow{display:flex;gap:9px;margin-top:9px}
-.qf .editrow button{flex:1;padding:13px;border-radius:11px;font-weight:800;font-size:14px;cursor:pointer;border:none}
-.qf .b-cancel{background:transparent;border:1px solid var(--border)!important;color:var(--muted)}
-.qf .b-del{background:var(--redbg);color:var(--red);border:1px solid var(--red)!important;flex:0 0 auto!important;padding:13px 16px}
-.editing-tag{font-size:13px;font-weight:800;color:#fff;background:var(--red);padding:8px 12px;border-radius:8px;margin-bottom:8px;display:none;text-align:center;animation:editPulse 1.5s infinite}@keyframes editPulse{0%,100%{opacity:1}50%{opacity:.6}}
-.row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #1b232c}
-.row:last-child{border:none}
-.rtap{display:flex;align-items:center;gap:11px;flex:1;min-width:0;cursor:pointer}
-.ic{width:38px;height:38px;flex:0 0 38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
-.ic.in{background:var(--greenbg)}.ic.out{background:var(--redbg)}
-.mid{flex:1;min-width:0}.mid .t1{font-size:14px;font-weight:600}.mid .t2{font-size:11px;color:var(--muted)}
-.amt{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14px}
-.amt.in{color:var(--green)}.amt.out{color:var(--red)}
-.delbtn{width:32px;height:32px;flex:0 0 32px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:14px}
-.empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 10px}
-.badge{display:inline-block;padding:1px 6px;font-size:9px;border-radius:3px;letter-spacing:.5px;margin-left:4px;font-weight:700;background:rgba(201,162,58,.18);color:var(--accent)}
-.tools{display:flex;flex-wrap:wrap;gap:8px}
-.tools button,.tools label{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600}
-.tools button.primary{background:var(--accent);color:#0a0d10;border-color:var(--accent);font-weight:800}
-.tools button.green{background:var(--green);color:#04140a;border-color:var(--green);font-weight:800}
-.tools button.danger{background:var(--redbg);color:var(--red);border-color:var(--red)}
-.note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.7}
-.status{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;text-transform:uppercase}
-.status.belum{background:var(--redbg);color:var(--red)}
-.status.cicil{background:rgba(201,162,58,.18);color:var(--accent)}
-.status.lunas{background:var(--greenbg);color:var(--green)}
-.paybtn{background:var(--greenbg);color:var(--green);border:1px solid var(--green);border-radius:9px;padding:8px 13px;font-size:12px;font-weight:700;cursor:pointer}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:60;padding:22px}
-.overlay.on{display:flex}
-.cfbox{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:440px;width:100%}
-.cfbox .m{font-size:15px;margin-bottom:6px;line-height:1.5;text-align:center;font-weight:700}
-.cfbtns{display:flex;gap:10px;margin-top:16px}
-.cfbtns button{flex:1;padding:13px;border-radius:11px;font-weight:800;border:none;cursor:pointer;font-size:14px}
-#cfNo{background:transparent;border:1px solid var(--border)!important;color:var(--muted)}
-#cfYes{background:var(--red);color:#fff}
-.hidden{display:none!important}
-.sync-info{background:linear-gradient(135deg,#1a2a1a,#161f16);border:1px solid var(--green);border-radius:10px;padding:12px;margin-bottom:12px;font-size:12px}
-@media (max-width: 640px) {
-  .wrap{padding:10px}
-  .saldo .amt{font-size:24px}
-  .tab{font-size:11px;padding:8px 4px;min-width:70px}
-  .qf .g2{grid-template-columns:1fr}
+:root {
+  --bg: #090d16;
+  --panel: rgba(20, 27, 38, 0.85);
+  --panel2: #141c28;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(245, 158, 11, 0.4);
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #f59e0b;
+  --accent2: #fbbf24;
+  --green: #10b981;
+  --greenbg: rgba(16, 185, 129, 0.12);
+  --red: #f43f5e;
+  --redbg: rgba(244, 63, 94, 0.12);
+  --blue: #3b82f6;
+  --bluebg: rgba(59, 130, 246, 0.12);
+  --purple: #8b5cf6;
+  --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  --glow: 0 0 20px rgba(245, 158, 11, 0.15);
 }
-@supports (padding: max(0px)) {
-  body{padding-left:max(0px, env(safe-area-inset-left));padding-right:max(0px, env(safe-area-inset-right));padding-bottom:max(0px, env(safe-area-inset-bottom))}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  padding-bottom: 40px;
+  font-size: 14px;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.04) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 16px; }
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 0 18px;
+  padding: 4px 0;
+}
+header h1 {
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff 0%, var(--muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+header small { display: block; color: var(--muted); font-size: 11px; font-weight: 500; }
+header .ver {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.saldo {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 60%, #17120a 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+.saldo::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.2), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.saldo .lab { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.saldo .amt {
+  font-size: 36px;
+  font-weight: 900;
+  margin-top: 4px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
+}
+.saldo .meta { font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 500; }
+
+.periode {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(8px);
+}
+.periode label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.periode select, .periode input {
+  background: #0d131e;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  flex: 1;
+  outline: none;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.periode select:focus, .periode input:focus { border-color: var(--accent); }
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 85px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
+.tab.on {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #0d131e;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpi {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 15px 16px;
+  transition: transform 0.2s, border-color 0.2s;
+  backdrop-filter: blur(8px);
+}
+.kpi:hover { transform: translateY(-2px); border-color: rgba(245, 158, 11, 0.3); }
+.kpi .l { font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.kpi .v { font-size: 17px; font-weight: 800; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.kpi.g .v { color: var(--green); }
+.kpi.r .v { color: var(--red); }
+.kpi.y .v { color: var(--accent); }
+.kpi.b .v { color: var(--blue); }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+.card h2 { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; font-weight: 800; }
+
+.qf input, .qf select {
+  width: 100%;
+  background: #0d131e;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.qf input:focus, .qf select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+.qf .amt-in { font-size: 26px; font-weight: 800; text-align: right; margin-bottom: 10px; font-variant-numeric: tabular-nums; color: var(--accent); }
+.qf .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.qf .save {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  margin-top: 4px;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.qf .save.in {
+  background: linear-gradient(135deg, var(--green), #059669);
+  color: #04140a;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+.qf .save.out {
+  background: linear-gradient(135deg, var(--red), #e11d48);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.3);
+}
+.qf .save:active { transform: scale(0.98); }
+
+.qf .editrow { display: flex; gap: 10px; margin-top: 10px; }
+.qf .editrow button { flex: 1; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; border: none; }
+.qf .b-cancel { background: transparent; border: 1px solid var(--border) !important; color: var(--muted); }
+.qf .b-del { background: var(--redbg); color: var(--red); border: 1px solid var(--red) !important; flex: 0 0 auto !important; padding: 12px 18px; }
+
+.editing-tag {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--red);
+  padding: 8px 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: none;
+  text-align: center;
+  animation: editPulse 1.5s infinite;
+}
+@keyframes editPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.row:last-child { border: none; }
+.rtap { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; cursor: pointer; }
+.ic {
+  width: 40px; height: 40px;
+  flex: 0 0 40px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.ic.in { background: var(--greenbg); color: var(--green); }
+.ic.out { background: var(--redbg); color: var(--red); }
+.mid { flex: 1; min-width: 0; }
+.mid .t1 { font-size: 14px; font-weight: 700; color: var(--text); }
+.mid .t2 { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.amt { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 14px; }
+.amt.in { color: var(--green); }
+.amt.out { color: var(--red); }
+.delbtn {
+  width: 32px; height: 32px;
+  flex: 0 0 32px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.delbtn:hover { background: var(--redbg); color: var(--red); border-color: var(--red); }
+
+.empty { text-align: center; color: var(--muted); font-size: 13px; padding: 24px 12px; font-weight: 500; }
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 9px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  margin-left: 6px;
+  font-weight: 800;
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent);
+}
+
+.tools { display: flex; flex-wrap: wrap; gap: 10px; }
+.tools button, .tools label {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.tools button:hover, .tools label:hover { border-color: var(--accent); }
+.tools button.primary { background: var(--accent); color: #0d131e; border-color: var(--accent); font-weight: 800; }
+.tools button.green { background: var(--green); color: #04140a; border-color: var(--green); font-weight: 800; }
+.tools button.danger { background: var(--redbg); color: var(--red); border-color: var(--red); }
+
+.note { font-size: 11px; color: var(--muted); margin-top: 12px; line-height: 1.6; }
+.status { font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+.status.belum { background: var(--redbg); color: var(--red); }
+.status.cicil { background: rgba(245, 158, 11, 0.15); color: var(--accent); }
+.status.lunas { background: var(--greenbg); color: var(--green); }
+
+.paybtn {
+  background: var(--greenbg);
+  color: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.paybtn:active { transform: scale(0.96); }
+
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; padding: 20px;
+}
+.overlay.on { display: flex; animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.cfbox {
+  background: #121924;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.cfbox .m { font-size: 16px; margin-bottom: 8px; line-height: 1.5; text-align: center; font-weight: 800; }
+.cfbtns { display: flex; gap: 10px; margin-top: 18px; }
+.cfbtns button { flex: 1; padding: 13px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; font-size: 14px; }
+#cfNo { background: transparent; border: 1px solid var(--border) !important; color: var(--muted); }
+#cfYes { background: var(--red); color: #fff; }
+
+.hidden { display: none !important; }
+.sync-info {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+  border: 1px solid var(--green);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .wrap { padding: 12px; }
+  .saldo .amt { font-size: 28px; }
+  .tab { font-size: 11px; padding: 8px 6px; min-width: 75px; }
+  .qf .g2 { grid-template-columns: 1fr; }
 }
 </style>
 <script>
-(function(){var KV='20260810c';try{fetch(location.href.split('?')[0]+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){if(h.indexOf("KV='"+KV+"'")<0)location.replace(location.href.split('?')[0]+'?v='+Date.now())}).catch(function(){})}catch(e){}})();
+(function(){var KV='20260810d';try{fetch(location.href.split('?')[0]+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){if(h.indexOf("KV='"+KV+"'")<0)location.replace(location.href.split('?')[0]+'?v='+Date.now())}).catch(function(){})}catch(e){}})();
 </script>
 </head>
 <body>
@@ -102,28 +394,29 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
   <header>
     <img src="logo.png?v=3" alt="Logo" style="width:46px;height:46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);">
     <div><h1>Kas Command</h1><small>Kas Pribadi + Pembukuan UMKM</small></div>
-    <span class="ver">v3</span>
+    <span class="ver">v3 Pro</span>
   </header>
+
   <div class="saldo">
     <div class="lab">Saldo Kas Total (Real Time)</div>
     <div class="amt" id="saldo">Rp 0</div>
     <div class="meta" id="saldoMeta">Belum ada transaksi</div>
   </div>
 
-  <div class="card" style="padding:12px 15px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
       <h2 style="margin:0;font-size:11px">💳 Alokasi Saldo per Rekening</h2>
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-        <span id="rekSelisih" style="font-size:10px;color:var(--muted)"></span>
-        <button onclick="openSplitDana()" style="background:var(--green);color:#04140a;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">⚡ Split 20/10/70</button>
-        <button onclick="openTransfer()" style="background:var(--blue);color:#04121a;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🔀 Transfer</button>
-        <button onclick="openPribadi()" style="background:transparent;border:1px solid var(--muted);color:var(--muted);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🏠 Pribadi</button>
-        <button onclick="openSetupAlokasi()" style="background:var(--accent);color:#0a0d10;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer">🔧 Setup</button>
+        <span id="rekSelisih" style="font-size:10px;color:var(--muted);font-weight:700"></span>
+        <button onclick="openSplitDana()" style="background:var(--green);color:#04140a;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">⚡ Split 20/10/70</button>
+        <button onclick="openTransfer()" style="background:var(--blue);color:#ffffff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">🔀 Transfer</button>
+        <button onclick="openPribadi()" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">🏠 Pribadi</button>
+        <button onclick="openSetupAlokasi()" style="background:var(--accent);color:#0d131e;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">🔧 Setup</button>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px" id="rekGrid"></div>
-    <div style="font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5">
-      Saldo per rekening = akumulasi Masuk − Keluar per channel. Untuk transaksi baru, pilih channel yg tepat (BCA Operasional / Pribadi / Kas Pajak).
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px" id="rekGrid"></div>
+    <div style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5">
+      Saldo per rekening = akumulasi Masuk − Keluar per channel. Pilih channel yang tepat saat transaksi.
     </div>
   </div>
 
@@ -134,7 +427,7 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
       <option value="ini">Bulan Ini</option>
       <option value="pick">Pilih Bulan</option>
     </select>
-    <input type="month" id="periodMonth" value="2026-07" style="display:none">
+    <input type="month" id="periodMonth" style="display:none">
   </div>
 
   <div class="tabs">
@@ -187,13 +480,13 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 
   <div id="tab-piutang" class="tab-panel hidden">
     <div class="card qf" style="border-left:3px solid var(--green)">
-      <div style="color:var(--green);font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:1px">📥 PIUTANG — Uang yang orang lain UTANG ke kita</div>
+      <div style="color:var(--green);font-size:12px;font-weight:800;margin-bottom:8px;letter-spacing:1px">📥 PIUTANG — Uang yang orang lain UTANG ke kita</div>
       <div class="editing-tag" id="piutEditTag">✎ Sedang mengedit</div>
       <input type="text" id="piutNama" placeholder="Nama pelanggan / pihak yang berhutang">
-      <input type="text" inputmode="numeric" id="piutJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:9px">
-      <div class="g2"><input type="date" id="piutDate"><input type="date" id="piutTempo" title="Jatuh Tempo"></div>
-      <input type="text" id="piutNote" placeholder="Keterangan">
-      <button class="save in" id="piutSave" style="margin-top:9px">➕ Simpan Piutang</button>
+      <input type="text" inputmode="numeric" id="piutJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:10px">
+      <div class="g2" style="margin-top:10px"><input type="date" id="piutDate"><input type="date" id="piutTempo" title="Jatuh Tempo"></div>
+      <input type="text" id="piutNote" placeholder="Keterangan" style="margin-top:10px">
+      <button class="save in" id="piutSave" style="margin-top:10px">➕ Simpan Piutang</button>
       <div class="editrow hidden" id="piutEditBtns">
         <button class="b-del" id="piutDel">Hapus</button>
         <button class="b-cancel" id="piutCancel">Batal</button>
@@ -208,13 +501,13 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 
   <div id="tab-utang" class="tab-panel hidden">
     <div class="card qf" style="border-left:3px solid var(--red)">
-      <div style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:1px">📤 UTANG — Uang yang KITA utang ke supplier / bank</div>
+      <div style="color:var(--red);font-size:12px;font-weight:800;margin-bottom:8px;letter-spacing:1px">📤 UTANG — Uang yang KITA utang ke supplier / bank</div>
       <div class="editing-tag" id="utgEditTag">✎ Sedang mengedit</div>
       <input type="text" id="utgNama" placeholder="Nama supplier / bank (cth: CENTRAL Kain)">
-      <input type="text" inputmode="numeric" id="utgJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:9px">
-      <div class="g2"><input type="date" id="utgDate"><input type="date" id="utgTempo" title="Jatuh Tempo"></div>
-      <input type="text" id="utgNote" placeholder="Keterangan">
-      <button class="save out" id="utgSave" style="margin-top:9px">➕ Simpan Utang</button>
+      <input type="text" inputmode="numeric" id="utgJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:10px">
+      <div class="g2" style="margin-top:10px"><input type="date" id="utgDate"><input type="date" id="utgTempo" title="Jatuh Tempo"></div>
+      <input type="text" id="utgNote" placeholder="Keterangan" style="margin-top:10px">
+      <button class="save out" id="utgSave" style="margin-top:10px">➕ Simpan Utang</button>
       <div class="editrow hidden" id="utgEditBtns">
         <button class="b-del" id="utgDel">Hapus</button>
         <button class="b-cancel" id="utgCancel">Batal</button>
@@ -239,10 +532,10 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
   </div>
 
   <div id="tab-pajak" class="tab-panel hidden">
-    <div class="card" style="padding:14px 15px;border-left:4px solid var(--green)">
+    <div class="card" style="padding:16px;border-left:4px solid var(--green)">
       <h2 style="margin:0 0 8px 0;font-size:13px;color:var(--green)">🇮🇩 PPh Final UMKM 0,5% (PP 55/2022)</h2>
       <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
-        Skema pajak UMKM WP Orang Pribadi. Basis: <b>omzet bruto (peredaran bruto)</b>, tarif <b>0,5% final</b>, dibayar bulanan (paling lambat tgl 15 bulan berikut). Untuk WP OP dapat fasilitas <b>omzet ≤ Rp 500 juta/tahun tidak kena pajak</b>. Batas 0,5%: omzet setahun ≤ Rp 4,8 M.
+        Skema pajak UMKM WP Orang Pribadi. Basis: <b>omzet bruto (peredaran bruto)</b>, tarif <b>0,5% final</b>, dibayar bulanan. WP OP mendapat fasilitas <b>omzet ≤ Rp 500 juta/tahun tidak kena pajak</b>.
       </div>
       <div class="kpis" style="grid-template-columns:1fr 1fr">
         <div class="kpi g"><div class="l">Omzet Periode</div><div class="v" id="pj-sales">Rp 0</div></div>
@@ -253,56 +546,50 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
         <div class="kpi r"><div class="l">PPh Final 0,5% Periode</div><div class="v" id="pj-pph">Rp 0</div></div>
       </div>
       <div class="kpis" style="grid-template-columns:1fr">
-        <div class="kpi b"><div class="l">Total PPh Final YTD (yang harus dibayar tahun ini)</div><div class="v" id="pj-total">Rp 0</div></div>
+        <div class="kpi b"><div class="l">Total PPh Final YTD (harus dibayar tahun ini)</div><div class="v" id="pj-total">Rp 0</div></div>
       </div>
     </div>
 
-    <div class="card" style="padding:14px 15px">
+    <div class="card" style="padding:16px">
       <h2 style="margin:0 0 10px 0;font-size:13px">💰 Kas Pajak (Sinking Fund) vs Kebutuhan</h2>
       <div class="kpis">
         <div class="kpi b"><div class="l">Saldo Kas Pajak</div><div class="v" id="pj-kas">Rp 0</div></div>
         <div class="kpi" id="pj-status-box"><div class="l">Status</div><div class="v" id="pj-status" style="font-size:14px">-</div></div>
       </div>
-      <div style="margin-top:10px;padding:10px;background:var(--panel2);border-radius:8px;font-size:12px;line-height:1.7" id="pj-rekom"></div>
+      <div style="margin-top:10px;padding:12px;background:var(--panel2);border-radius:10px;font-size:12px;line-height:1.7" id="pj-rekom"></div>
     </div>
 
-    <div class="card" style="padding:14px 15px">
+    <div class="card" style="padding:16px">
       <h2 style="margin:0 0 10px 0;font-size:13px">📊 Setting Pajak</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
           <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Status WP</label>
-          <select id="pjWpStatus" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:13px">
+          <select id="pjWpStatus" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
             <option value="op" selected>Orang Pribadi (WP OP)</option>
             <option value="badan">Badan (PT/CV/UD)</option>
           </select>
         </div>
         <div>
           <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Tarif Split ke Kas Pajak</label>
-          <select id="pjSplit" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:13px">
+          <select id="pjSplit" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
             <option value="0.5">0,5% (sesuai tarif)</option>
             <option value="1" selected>1% (aman, buffer 2×)</option>
             <option value="2">2% (super aman)</option>
           </select>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
-        💡 <b>Tips:</b> WP OP → Rp 500jt/tahun pertama BEBAS pajak. Setelahnya baru kena 0,5%. WP Badan tidak dapat fasilitas ini. Sisihkan 1% (2× tarif) supaya ada buffer buat sanksi/keterlambatan.
-      </div>
     </div>
 
-    <div class="card" style="padding:14px 15px">
+    <div class="card" style="padding:16px">
       <h2 style="margin:0 0 10px 0;font-size:13px">📋 Rincian Omzet per Channel</h2>
       <div id="pj-channel-list" style="font-size:12px"></div>
     </div>
 
-    <div class="card" style="padding:14px 15px">
+    <div class="card" style="padding:16px">
       <h2 style="margin:0 0 10px 0;font-size:13px">📤 Export untuk Konsultan / DJP</h2>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">
-        Download CSV daftar omzet & estimasi PPh Final buat rekap SPT Masa PPh Final atau serahkan ke konsultan.
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="pjExportPPN" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1a1608;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer">📥 CSV Omzet PPh Final</button>
-        <button id="pjExportPPh" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer">📥 CSV Laba/Rugi</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button id="pjExportPPN" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0d131e;border:none;border-radius:10px;padding:11px 16px;font-size:12px;font-weight:800;cursor:pointer">📥 CSV Omzet PPh Final</button>
+        <button id="pjExportPPh" style="background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 16px;font-size:12px;font-weight:800;cursor:pointer">📥 CSV Laba/Rugi</button>
       </div>
     </div>
   </div>
@@ -327,13 +614,12 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
   <div class="card">
     <h2>Data & Backup</h2>
     <div class="tools">
-      <button id="btnBackup">⬇ Backup</button>
-      <label style="cursor:pointer">⬆ Restore<input type="file" id="restoreFile" accept=".json" class="hidden"></label>
+      <button id="btnBackup">⬇ Backup JSON</button>
+      <label style="cursor:pointer">⬆ Restore JSON<input type="file" id="restoreFile" accept=".json" class="hidden"></label>
       <label style="cursor:pointer">📥 Import CSV<input type="file" id="importCSV" accept=".csv" class="hidden"></label>
       <button id="btnCsv">📋 Export CSV</button>
-      <!-- Tombol reset dimatikan agar user tidak salah pencet -->
     </div>
-    <div class="note" id="note">✓ Data tersimpan otomatis & RAHASIA di memori HP lu (TIDAK ADA DATA PUBLIK DI GITHUB).</div>
+    <div class="note" id="note">✓ Data tersimpan otomatis & RAHASIA di memori HP/Browser Anda.</div>
   </div>
 </div> <!-- End of wrap -->
 
@@ -342,19 +628,19 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 <!-- Modal Bayar Cicilan Piutang/Utang -->
 <div class="overlay" id="byo"><div class="cfbox">
   <div class="m" id="byTitle">Catat Pembayaran</div>
-  <div id="bySisa" style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:10px"></div>
+  <div id="bySisa" style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:12px"></div>
   <label style="font-size:11px;color:var(--muted);display:block;margin:8px 0 4px">Jumlah bayar (Rp)</label>
-  <input type="text" inputmode="numeric" id="byJumlah" class="amt-in" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:20px;font-weight:800;text-align:right">
-  <div style="display:flex;gap:6px;margin-top:8px">
-    <button type="button" data-pc="0.25" class="quickpc" style="flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px;font-size:11px;cursor:pointer">25%</button>
-    <button type="button" data-pc="0.5" class="quickpc" style="flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px;font-size:11px;cursor:pointer">Setengah</button>
-    <button type="button" data-pc="1" class="quickpc" style="flex:1;background:var(--greenbg);border:1px solid var(--green);color:var(--green);border-radius:8px;padding:8px;font-size:11px;cursor:pointer;font-weight:700">Lunasi Sisa</button>
+  <input type="text" inputmode="numeric" id="byJumlah" class="amt-in" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:22px;font-weight:800;text-align:right">
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button type="button" data-pc="0.25" class="quickpc" style="flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px;font-size:11px;cursor:pointer;font-weight:700">25%</button>
+    <button type="button" data-pc="0.5" class="quickpc" style="flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px;font-size:11px;cursor:pointer;font-weight:700">Setengah</button>
+    <button type="button" data-pc="1" class="quickpc" style="flex:1;background:var(--greenbg);border:1px solid var(--green);color:var(--green);border-radius:10px;padding:8px;font-size:11px;cursor:pointer;font-weight:800">Lunasi Sisa</button>
   </div>
-  <label style="font-size:11px;color:var(--muted);display:block;margin:10px 0 4px">Tanggal bayar</label>
-  <input type="date" id="byDate" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:14px">
-  <label style="font-size:11px;color:var(--muted);display:block;margin:10px 0 4px">Bayar dari rekening</label>
-  <select id="byChannel" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:14px"></select>
-  <div id="byHistori" style="margin-top:12px;font-size:11px;color:var(--muted);max-height:150px;overflow-y:auto"></div>
+  <label style="font-size:11px;color:var(--muted);display:block;margin:12px 0 4px">Tanggal bayar</label>
+  <input type="date" id="byDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px">
+  <label style="font-size:11px;color:var(--muted);display:block;margin:12px 0 4px">Bayar dari/ke rekening</label>
+  <select id="byChannel" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px"></select>
+  <div id="byHistori" style="margin-top:14px;font-size:11px;color:var(--muted);max-height:150px;overflow-y:auto"></div>
   <div class="cfbtns">
     <button id="byNo" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
     <button id="byYes" style="background:var(--green);color:#04140a">✓ Catat Bayar</button>
@@ -364,88 +650,90 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 <!-- Modal Setup Alokasi -->
 <div class="overlay" id="alkOverlay"><div class="cfbox">
   <div class="m">🔧 Setup Alokasi Saldo per Rekening</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-align:center">
+  <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">
     Saldo total: <b id="alkSaldoTotal" style="color:var(--accent)">Rp 0</b>
   </div>
-  <label style="font-size:11px;color:var(--accent);font-weight:700;display:block;margin:6px 0 4px">📊 BCA Operasional</label>
-  <input type="text" inputmode="numeric" id="alkOps" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:15px;text-align:right;font-weight:800">
-  <label style="font-size:11px;color:var(--blue);font-weight:700;display:block;margin:8px 0 4px">🏠 BCA Pribadi</label>
-  <input type="text" inputmode="numeric" id="alkPri" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:15px;text-align:right;font-weight:800">
-  <label style="font-size:11px;color:var(--red);font-weight:700;display:block;margin:8px 0 4px">🏦 BCA Kas Pajak</label>
-  <input type="text" inputmode="numeric" id="alkPjk" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:15px;text-align:right;font-weight:800">
-  <label style="font-size:11px;color:var(--green);font-weight:700;display:block;margin:8px 0 4px">💵 Kas Fisik</label>
-  <input type="text" inputmode="numeric" id="alkTun" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:15px;text-align:right;font-weight:800">
-  <div id="alkCheck" style="text-align:center;font-size:11px;margin:8px 0;padding:8px;border-radius:6px;background:var(--panel2)">Isi angka di atas...</div>
+  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:6px 0 4px">📊 BCA Operasional</label>
+  <input type="text" inputmode="numeric" id="alkOps" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
+  <label style="font-size:11px;color:var(--blue);font-weight:800;display:block;margin:10px 0 4px">🏠 BCA Pribadi</label>
+  <input type="text" inputmode="numeric" id="alkPri" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
+  <label style="font-size:11px;color:var(--red);font-weight:800;display:block;margin:10px 0 4px">🏦 BCA Kas Pajak</label>
+  <input type="text" inputmode="numeric" id="alkPjk" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
+  <label style="font-size:11px;color:var(--green);font-weight:800;display:block;margin:10px 0 4px">💵 Kas Fisik</label>
+  <input type="text" inputmode="numeric" id="alkTun" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
+  <div id="alkCheck" style="text-align:center;font-size:11px;margin:12px 0;padding:10px;border-radius:8px;background:var(--panel2);font-weight:700">Isi angka di atas...</div>
   <div class="cfbtns">
     <button id="alkCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
     <button id="alkApply" style="background:var(--green);color:#04140a">✓ Terapkan</button>
   </div>
 </div></div>
 
-<!-- Modal Split Dana 20/10/70 -->
+<!-- Modal Split Dana 20/10/70 (FIXED) -->
 <div class="overlay" id="splitOv"><div class="cfbox">
   <div class="m">⚡ Split Dana Masuk Otomatis</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:10px;text-align:center;line-height:1.5">Masukin dana yg baru cair (Shopee, TikTok, klien). Sistem auto-sisihkan ke Kas Pajak & Pribadi.</div>
-  <label style="font-size:11px;color:var(--accent);font-weight:700;display:block;margin:6px 0 4px">💰 Total Dana Masuk</label>
-  <input type="text" inputmode="numeric" id="spTotal" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:20px;font-weight:800;text-align:right">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Dari rekening (dana ini udah nyampe di sini):</label>
-  <select id="spFrom" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px"></select>
-  <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Tanggal:</label>
-  <input type="date" id="spDate" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px">
-    <div><label style="font-size:10px;color:var(--red);font-weight:700">🏦 Pajak %</label><input type="number" id="spPjkPct" value="20" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:700"></div>
-    <div><label style="font-size:10px;color:var(--blue);font-weight:700">🏠 Pribadi %</label><input type="number" id="spPriPct" value="10" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:700"></div>
-    <div><label style="font-size:10px;color:var(--accent);font-weight:700">📊 Ops (sisa)</label><input type="text" id="spOpsPct" value="70%" disabled style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:700"></div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-align:center;line-height:1.5">
+    Catat dana cair (Shopee, TikTok, Klien). Sistem otomatis menambah dana & mentransfer ke Kas Pajak & Pribadi.
   </div>
-  <div id="spPreview" style="margin-top:12px;padding:10px;background:var(--panel2);border-radius:8px;font-size:11px;line-height:1.7"></div>
+  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:6px 0 4px">💰 Total Dana Masuk</label>
+  <input type="text" inputmode="numeric" id="spTotal" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:22px;font-weight:800;text-align:right">
+  
+  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Kategori Pemasukan:</label>
+  <select id="spKat" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px"></select>
+
+  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Masuk ke Rekening Tujuan:</label>
+  <select id="spFrom" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px"></select>
+  
+  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Tanggal:</label>
+  <input type="date" id="spDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
+  
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
+    <div><label style="font-size:10px;color:var(--red);font-weight:800">🏦 Pajak %</label><input type="number" id="spPjkPct" value="20" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:800"></div>
+    <div><label style="font-size:10px;color:var(--blue);font-weight:800">🏠 Pribadi %</label><input type="number" id="spPriPct" value="10" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:800"></div>
+    <div><label style="font-size:10px;color:var(--accent);font-weight:800">📊 Ops (sisa)</label><input type="text" id="spOpsPct" value="70%" disabled style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:800"></div>
+  </div>
+  <div id="spPreview" style="margin-top:14px;padding:12px;background:var(--panel2);border-radius:10px;font-size:11px;line-height:1.7"></div>
   <div class="cfbtns">
     <button id="spCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
-    <button id="spApply" style="background:var(--green);color:#04140a">✓ Jalankan Split</button>
+    <button id="spApply" style="background:var(--green);color:#04140a">✓ Tambah & Split Dana</button>
   </div>
 </div></div>
 
-<!-- Modal Kurangi Saldo Pribadi -->
+<!-- Modal Belanja Pribadi -->
 <div class="overlay" id="priOv"><div class="cfbox">
   <div class="m">🏠 Catat Belanja Pribadi</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:10px;text-align:center;line-height:1.5">
+  <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-align:center;line-height:1.5">
     Kurangi saldo BCA Pribadi. <b style="color:var(--green)">TIDAK</b> masuk Ringkasan Pengeluaran & tidak ngefek ke PPh Final.
   </div>
-  <label style="font-size:11px;color:var(--accent);font-weight:700;display:block;margin:6px 0 4px">💰 Jumlah</label>
-  <input type="text" inputmode="numeric" id="priJumlah" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:20px;font-weight:800;text-align:right">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Tanggal:</label>
-  <input type="date" id="priDate" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Keterangan (opsional):</label>
-  <input type="text" id="priNote" placeholder="Contoh: Cicilan mobil Agustus" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
+  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:6px 0 4px">💰 Jumlah</label>
+  <input type="text" inputmode="numeric" id="priJumlah" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:22px;font-weight:800;text-align:right">
+  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Tanggal:</label>
+  <input type="date" id="priDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
+  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Keterangan (opsional):</label>
+  <input type="text" id="priNote" placeholder="Contoh: Belanja harian" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
   <div class="cfbtns">
     <button id="priCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
-    <button id="priApply" style="background:var(--muted);color:#0a0d10">✓ Kurangi Saldo Pribadi</button>
+    <button id="priApply" style="background:var(--muted);color:#0d131e">✓ Kurangi Saldo Pribadi</button>
   </div>
 </div></div>
 
 <!-- Modal Transfer Antar Rekening -->
 <div class="overlay" id="trfOv"><div class="cfbox">
   <div class="m">🔀 Transfer Antar Rekening</div>
-  <label style="font-size:11px;color:var(--red);font-weight:700;display:block;margin:6px 0 4px">📤 Dari Rekening</label>
-  <select id="trfFrom" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:14px"></select>
-  <label style="font-size:11px;color:var(--green);font-weight:700;display:block;margin:8px 0 4px">📥 Ke Rekening</label>
-  <select id="trfTo" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:14px"></select>
-  <label style="font-size:11px;color:var(--accent);font-weight:700;display:block;margin:8px 0 4px">💰 Jumlah</label>
-  <input type="text" inputmode="numeric" id="trfJumlah" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:18px;font-weight:800;text-align:right">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Tanggal:</label>
-  <input type="date" id="trfDate" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:8px 0 4px">Catatan (opsional):</label>
-  <input type="text" id="trfNote" placeholder="Contoh: Sisihkan pajak Juli" style="width:100%;background:#0c1116;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
+  <label style="font-size:11px;color:var(--red);font-weight:800;display:block;margin:6px 0 4px">📤 Dari Rekening</label>
+  <select id="trfFrom" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px"></select>
+  <label style="font-size:11px;color:var(--green);font-weight:800;display:block;margin:10px 0 4px">📥 Ke Rekening</label>
+  <select id="trfTo" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px"></select>
+  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:10px 0 4px">💰 Jumlah</label>
+  <input type="text" inputmode="numeric" id="trfJumlah" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:20px;font-weight:800;text-align:right">
+  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Tanggal:</label>
+  <input type="date" id="trfDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
+  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Catatan (opsional):</label>
+  <input type="text" id="trfNote" placeholder="Contoh: Sisihkan pajak Juli" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
   <div class="cfbtns">
     <button id="trfCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
-    <button id="trfApply" style="background:var(--blue);color:#04121a">✓ Transfer</button>
+    <button id="trfApply" style="background:var(--blue);color:#ffffff">✓ Transfer</button>
   </div>
 </div></div>
-
-<!-- DATA KOSONG (SUDAH DIHAPUS DARI PUBLIK DEMI KEAMANAN) -->
-<script>
-const __PRELOAD_JUNI_DATA__ = [];
-const __PRELOAD_PI_DATA__ = [];
-</script>
 
 <script>
 "use strict";
@@ -453,6 +741,7 @@ const KEY = 'soldier_kas_v2';
 const KAT_MASUK = ['Penjualan','Pelunasan Piutang','Modal Masuk','Refund','Bunga Bank','Hadiah / Bonus','Transfer Antar Rekening','Lainnya'];
 const KAT_KELUAR = ['Beli Bahan / HPP','Produksi / Jahit','Sablon / Bordir','Packaging','Iklan / Marketing','Gaji / Upah','Konsumsi Karyawan','Transport / Bensin','Internet / Pulsa','Listrik / Air','Ongkir / Kirim','Sewa Tempat','Perlengkapan Kantor','Maintenance / Servis','Operasional','Bayar Utang','Beban Bunga','Tarik Modal (Prive)','Pajak','Transfer Antar Rekening','Konsumsi Pribadi','Lainnya'];
 const PRIBADI_CH = 'BCA Pribadi';
+
 function isBiz(t){
   if(t.channel === PRIBADI_CH) return false;
   if(t.kategori === 'Transfer Antar Rekening') return false;
@@ -461,6 +750,7 @@ function isBiz(t){
   if(t.kategori === 'Konsumsi Pribadi') return false;
   return true;
 }
+
 const TRANSFER_KAT = 'Transfer Antar Rekening';
 const CHANNELS = ['BCA Operasional','BCA Pribadi','BCA Kas Pajak','Kas Fisik','Shopee','TikTok Shop','Lazada','Website','Offline','Umum'];
 const EQUITY_KAT = ['Modal Masuk','Tarik Modal (Prive)'];
@@ -475,7 +765,7 @@ const today = () => new Date().toISOString().slice(0,10);
 const esc = s => String(s||'').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const bindAmt = el => el && el.addEventListener('input', ()=>{ const d=el.value.replace(/[^\d]/g,''); el.value=d?'Rp '+(+d).toLocaleString('id-ID'):''; });
 const readAmt = el => +el.value.replace(/[^\d]/g,'')||0;
-const fillSel = (el, arr, val) => { el.innerHTML = arr.map(o=>'<option '+(o===val?'selected':'')+'>'+o+'</option>').join(''); };
+const fillSel = (el, arr, val) => { if(el) el.innerHTML = arr.map(o=>'<option '+(o===val?'selected':'')+'>'+o+'</option>').join(''); };
 const fdate = s => !s?'':new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'2-digit'});
 
 let MEM = null;
@@ -508,9 +798,10 @@ const REK_UTAMA = ['BCA Operasional','BCA Pribadi','BCA Kas Pajak','Kas Fisik'];
 const REK_META = {
   'BCA Operasional': {color:'var(--accent)', icon:'📊', desc:'Cash flow harian usaha'},
   'BCA Pribadi': {color:'var(--blue)', icon:'🏠', desc:'Gaji owner + prive'},
-  'BCA Kas Pajak': {color:'var(--red)', icon:'🏦', desc:'JANGAN DIPAKAI selain bayar pajak'},
+  'BCA Kas Pajak': {color:'var(--red)', icon:'🏦', desc:'Khusus bayar pajak'},
   'Kas Fisik': {color:'var(--green)', icon:'💵', desc:'Uang tunai di laci'}
 };
+
 function renderSaldoPerRek(){
   const grid = document.getElementById('rekGrid');
   if(!grid) return;
@@ -528,14 +819,14 @@ function renderSaldoPerRek(){
     const meta = REK_META[r];
     const v = bal[r];
     const color = v<0 ? 'var(--red)' : meta.color;
-    html += '<div style="background:var(--panel2);border:1px solid var(--border);border-left:3px solid '+meta.color+';border-radius:8px;padding:10px">'+
-      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">'+meta.icon+' '+r+'</div>'+
+    html += '<div style="background:var(--panel2);border:1px solid var(--border);border-left:3px solid '+meta.color+';border-radius:12px;padding:12px">'+
+      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">'+meta.icon+' '+r+'</div>'+
       '<div style="font-size:16px;font-weight:800;color:'+color+';margin-top:4px">'+rp(v)+'</div>'+
       '<div style="font-size:9px;color:var(--muted);margin-top:2px">'+meta.desc+'</div></div>';
   });
   if(bal['Belum di-Tag'] !== 0){
-    html += '<div style="background:var(--panel2);border:1px dashed var(--muted);border-radius:8px;padding:10px;grid-column:span 2">'+
-      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">⚠ Belum di-Tag (channel Shopee/Umum)</div>'+
+    html += '<div style="background:var(--panel2);border:1px dashed var(--muted);border-radius:12px;padding:12px;grid-column:span 2">'+
+      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">⚠ Belum di-Tag (channel Shopee/Umum)</div>'+
       '<div style="font-size:16px;font-weight:800;color:var(--muted);margin-top:4px">'+rp(bal['Belum di-Tag'])+'</div></div>';
   }
   grid.innerHTML = html;
@@ -545,13 +836,22 @@ function renderSaldoPerRek(){
 window.openSetupAlokasi = function(){
   const total = saldo();
   $('#alkSaldoTotal').textContent = rp(total);
-  $('#alkOps').value = 'Rp '+Math.round(total*0.46).toLocaleString('id-ID');
-  $('#alkPri').value = 'Rp '+Math.round(total*0.17).toLocaleString('id-ID');
-  $('#alkPjk').value = 'Rp '+Math.round(total*0.37).toLocaleString('id-ID');
-  $('#alkTun').value = 'Rp 0';
+  
+  const cur = {'BCA Operasional':0,'BCA Pribadi':0,'BCA Kas Pajak':0,'Kas Fisik':0,'Belum di-Tag':0};
+  DB.tx.forEach(t => {
+    const ch = REK_UTAMA.includes(t.channel) ? t.channel : 'Belum di-Tag';
+    cur[ch] += (t.tipe==='in' ? t.jumlah : -t.jumlah);
+  });
+  
+  $('#alkOps').value = 'Rp ' + Math.max(0, cur['BCA Operasional']).toLocaleString('id-ID');
+  $('#alkPri').value = 'Rp ' + Math.max(0, cur['BCA Pribadi']).toLocaleString('id-ID');
+  $('#alkPjk').value = 'Rp ' + Math.max(0, cur['BCA Kas Pajak']).toLocaleString('id-ID');
+  $('#alkTun').value = 'Rp ' + Math.max(0, cur['Kas Fisik']).toLocaleString('id-ID');
+  
   updateAlkCheck();
   $('#alkOverlay').classList.add('on');
 };
+
 function updateAlkCheck(){
   const total = readAmt($('#alkOps'))+readAmt($('#alkPri'))+readAmt($('#alkPjk'))+readAmt($('#alkTun'));
   const s = saldo();
@@ -560,6 +860,7 @@ function updateAlkCheck(){
   if(Math.abs(diff)<100){ el.style.background='var(--greenbg)'; el.style.color='var(--green)'; el.textContent='✓ Total '+rp(total)+' MATCH'; }
   else { el.style.background='var(--redbg)'; el.style.color='var(--red)'; el.textContent='⚠ Total '+rp(total)+' beda '+rp(Math.abs(diff)); }
 }
+
 ['alkOps','alkPri','alkPjk','alkTun'].forEach(id=>{
   const el = document.getElementById(id);
   if(el) el.addEventListener('input', ()=>{ const d=el.value.replace(/[^\d]/g,''); el.value=d?'Rp '+(+d).toLocaleString('id-ID'):''; updateAlkCheck(); });
@@ -602,18 +903,21 @@ $('#alkApply').onclick = ()=>{
   entries.forEach(e => DB.tx.push(e));
   save(); renderAll();
   $('#alkOverlay').classList.remove('on');
-  alert('✅ Rebalance diterapkan! '+entries.length+' entri delta ditambahkan.');
+  alert('✅ Rebalance diterapkan!');
 };
 
+// FIX UNTUK SPLIT DANA MASUK OTOMATIS
 window.openSplitDana = function(){
   $('#spTotal').value = '';
   $('#spDate').value = today();
+  fillSel($('#spKat'), KAT_MASUK, 'Penjualan');
   fillSel($('#spFrom'), REK_UTAMA, 'BCA Operasional');
   $('#spPjkPct').value = 20;
   $('#spPriPct').value = 10;
   updateSplitPreview();
   $('#splitOv').classList.add('on');
 };
+
 function updateSplitPreview(){
   const total = readAmt($('#spTotal'));
   const pjkPct = Math.max(0, Math.min(100, +$('#spPjkPct').value||0));
@@ -627,10 +931,12 @@ function updateSplitPreview(){
   if(opsPct < 0){ preview.innerHTML = '<span style="color:var(--red)">⚠ Total % > 100. Kurangi Pajak atau Pribadi.</span>'; return; }
   if(total <= 0){ preview.innerHTML = '<span style="color:var(--muted)">Isi jumlah dana masuk...</span>'; return; }
   preview.innerHTML =
-    '<div style="display:flex;justify-content:space-between"><span style="color:var(--red)">🏦 Transfer ke Kas Pajak ('+pjkPct+'%)</span><b style="color:var(--red)">'+rp(pjk)+'</b></div>'+
-    '<div style="display:flex;justify-content:space-between"><span style="color:var(--blue)">🏠 Transfer ke BCA Pribadi ('+priPct+'%)</span><b style="color:var(--blue)">'+rp(pri)+'</b></div>'+
-    '<div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:6px;margin-top:6px"><span style="color:var(--accent)">📊 Sisa di rekening asal ('+opsPct+'%)</span><b style="color:var(--accent)">'+rp(ops)+'</b></div>';
+    '<div style="display:flex;justify-content:space-between"><span style="color:var(--green)">➕ Dana Masuk Utama (Income)</span><b style="color:var(--green)">'+rp(total)+'</b></div>'+
+    '<div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--red)">🏦 Auto-Transfer ke Kas Pajak ('+pjkPct+'%)</span><b style="color:var(--red)">−'+rp(pjk)+'</b></div>'+
+    '<div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--blue)">🏠 Auto-Transfer ke BCA Pribadi ('+priPct+'%)</span><b style="color:var(--blue)">−'+rp(pri)+'</b></div>'+
+    '<div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:6px;margin-top:6px"><span style="color:var(--accent)">📊 Sisa Bersih di Rekening Tujuan ('+opsPct+'%)</span><b style="color:var(--accent)">'+rp(ops)+'</b></div>';
 }
+
 $('#spTotal').addEventListener('input', () => {
   const d = $('#spTotal').value.replace(/[^\d]/g,'');
   $('#spTotal').value = d ? 'Rp '+(+d).toLocaleString('id-ID') : '';
@@ -639,29 +945,48 @@ $('#spTotal').addEventListener('input', () => {
 $('#spPjkPct').addEventListener('input', updateSplitPreview);
 $('#spPriPct').addEventListener('input', updateSplitPreview);
 $('#spCancel').onclick = () => $('#splitOv').classList.remove('on');
+
 $('#spApply').onclick = () => {
   const total = readAmt($('#spTotal'));
   const from = $('#spFrom').value;
+  const katMasuk = $('#spKat').value || 'Penjualan';
   const tgl = $('#spDate').value || today();
   const pjkPct = +$('#spPjkPct').value || 0;
   const priPct = +$('#spPriPct').value || 0;
+  
   if(total <= 0){ alert('Isi jumlah dana masuk dulu.'); return; }
-  if(pjkPct + priPct > 100){ alert('Total % > 100. Kurangi.'); return; }
+  if(pjkPct + priPct > 100){ alert('Total % > 100. Kurangi % Pajak atau Pribadi.'); return; }
+  
   const pjk = Math.round(total * pjkPct/100);
   const pri = Math.round(total * priPct/100);
-  const entries = [];
+  const opsPct = 100 - pjkPct - priPct;
+  
+  // 1. Catat Pemasukan Utama (Income)
+  DB.tx.push({
+    id: uid(),
+    tanggal: tgl,
+    tipe: 'in',
+    kategori: katMasuk,
+    channel: from,
+    jumlah: total,
+    catatan: 'Dana Masuk (di-split ' + opsPct + '% Ops / ' + pjkPct + '% Pajak / ' + priPct + '% Pribadi)'
+  });
+  
+  // 2. Transfer bagian Pajak ke BCA Kas Pajak
   if(pjk > 0){
-    entries.push({id:uid(),tanggal:tgl,tipe:'out',kategori:TRANSFER_KAT,channel:from,jumlah:pjk,catatan:'Split → Kas Pajak ('+pjkPct+'%)'});
-    entries.push({id:uid(),tanggal:tgl,tipe:'in',kategori:TRANSFER_KAT,channel:'BCA Kas Pajak',jumlah:pjk,catatan:'Split dari '+from+' ('+pjkPct+'%)'});
+    DB.tx.push({id:uid(),tanggal:tgl,tipe:'out',kategori:TRANSFER_KAT,channel:from,jumlah:pjk,catatan:'Split → Kas Pajak ('+pjkPct+'%)'});
+    DB.tx.push({id:uid(),tanggal:tgl,tipe:'in',kategori:TRANSFER_KAT,channel:'BCA Kas Pajak',jumlah:pjk,catatan:'Split dari '+from+' ('+pjkPct+'%)'});
   }
+  
+  // 3. Transfer bagian Pribadi ke BCA Pribadi
   if(pri > 0){
-    entries.push({id:uid(),tanggal:tgl,tipe:'out',kategori:TRANSFER_KAT,channel:from,jumlah:pri,catatan:'Split → BCA Pribadi ('+priPct+'%)'});
-    entries.push({id:uid(),tanggal:tgl,tipe:'in',kategori:TRANSFER_KAT,channel:'BCA Pribadi',jumlah:pri,catatan:'Split dari '+from+' ('+priPct+'%)'});
+    DB.tx.push({id:uid(),tanggal:tgl,tipe:'out',kategori:TRANSFER_KAT,channel:from,jumlah:pri,catatan:'Split → BCA Pribadi ('+priPct+'%)'});
+    DB.tx.push({id:uid(),tanggal:tgl,tipe:'in',kategori:TRANSFER_KAT,channel:'BCA Pribadi',jumlah:pri,catatan:'Split dari '+from+' ('+priPct+'%)'});
   }
-  entries.forEach(e => DB.tx.push(e));
+  
   save(); renderAll();
   $('#splitOv').classList.remove('on');
-  alert('✅ Split diterapkan!');
+  alert('✅ Dana masuk ' + rp(total) + ' berhasil dicatat dan di-split!');
 };
 
 window.openPribadi = function(){
@@ -728,6 +1053,7 @@ function renderIn(){
     return '<div class="row"><div class="rtap" onclick="editIn(\''+t.id+'\')"><div class="ic in">⬇</div><div class="mid"><div class="t1">'+esc(t.kategori)+badge+'</div><div class="t2">'+esc([fdate(t.tanggal),t.channel,t.catatan].filter(Boolean).join(' · '))+'</div></div></div><div class="amt in">+'+fmt(t.jumlah)+'</div><button class="delbtn" onclick="delTx(\''+t.id+'\')">✕</button></div>';
   }).join('') : '<div class="empty">Belum ada pemasukan periode ini.</div>';
 }
+
 window.editIn = function(id){
   const t=DB.tx.find(x=>x.id===id); if(!t) return;
   inEdit=id; $('#inEditTag').style.display='block'; $('#inEditTag').textContent='⚠️ SEDANG EDIT — bukan tambah baru!'; $('#inEditBtns').classList.remove('hidden'); $('#inSave').textContent='✓ Update';
@@ -735,11 +1061,13 @@ window.editIn = function(id){
   $('#inJumlah').value='Rp '+t.jumlah.toLocaleString('id-ID'); $('#inDate').value=t.tanggal; $('#inNote').value=t.catatan||'';
   window.scrollTo({top:0,behavior:'smooth'});
 };
+
 function inFormReset(){
   inEdit=null; $('#inEditTag').style.display='none'; $('#inEditBtns').classList.add('hidden'); $('#inSave').textContent='➕ Simpan Pemasukan';
   $('#inJumlah').value=''; $('#inNote').value=''; $('#inDate').value=today();
   fillSel($('#inKat'),KAT_MASUK,'Penjualan'); fillSel($('#inChannel'),CHANNELS,'BCA Operasional');
 }
+
 $('#inSave').onclick = ()=>{
   const j=readAmt($('#inJumlah')); if(!j){alert('Isi jumlah');return;}
   if(inEdit && !confirm('⚠️ Kamu sedang EDIT entry lama.\nYakin mau UPDATE?\n\nKalau mau TAMBAH BARU → klik Batal dulu.')){return;}
@@ -755,7 +1083,7 @@ function renderOut(){
   $('#out-total').textContent=rp(tx.reduce((s,t)=>s+t.jumlah,0));
   $('#out-count').textContent=tx.length;
   $('#out-list').innerHTML=tx.length?tx.map(t=>{
-    const badge=EQUITY_KAT.includes(t.kategori)?'<span class="badge">Prive</span>':(t.kategori==='Transfer Antar Rekening'?'<span class="badge" style="background:#4d90d6;color:#fff">Transfer</span>':'');
+    const badge=EQUITY_KAT.includes(t.kategori)?'<span class="badge">Prive</span>':(t.kategori==='Transfer Antar Rekening'?'<span class="badge" style="background:#3b82f6;color:#fff">Transfer</span>':'');
     return '<div class="row"><div class="rtap" onclick="editOut(\''+t.id+'\')"><div class="ic out">⬆</div><div class="mid"><div class="t1">'+esc(t.kategori)+badge+'</div><div class="t2">'+esc([fdate(t.tanggal),t.channel,t.catatan].filter(Boolean).join(' · '))+'</div></div></div><div class="amt out">−'+fmt(t.jumlah)+'</div><button class="delbtn" onclick="delTx(\''+t.id+'\')">✕</button></div>';
   }).join(''):'<div class="empty">Belum ada pengeluaran usaha.</div>';
 
@@ -764,13 +1092,12 @@ function renderOut(){
   const prEl = $('#pribadi-section');
   if(prEl){
     if(pribadi.length){
-      prEl.innerHTML = '<div style="padding:12px;background:var(--panel2);border:1px dashed var(--muted);border-radius:8px;margin-top:12px">'+
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
-        '<b style="color:var(--muted);font-size:12px">🏠 Riwayat Belanja Pribadi (info aja)</b>'+
-        '<span style="color:var(--muted);font-size:11px">'+pribadi.length+' tx · Total '+rp(prTotal)+'</span>'+
+      prEl.innerHTML = '<div style="padding:14px;background:var(--panel2);border:1px dashed var(--muted);border-radius:12px;margin-top:14px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+        '<b style="color:var(--muted);font-size:12px">🏠 Riwayat Belanja Pribadi</b>'+
+        '<span style="color:var(--muted);font-size:11px;font-weight:700">'+pribadi.length+' tx · Total '+rp(prTotal)+'</span>'+
         '</div>'+
-        '<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Data ini <b>TIDAK</b> masuk Ringkasan/L/R/Pajak. Cuma catatan pribadi lo. Aman dari DJP.</div>'+
-        pribadi.map(t=>'<div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;padding:6px 0;border-bottom:1px dotted var(--border);font-size:12px;align-items:center">'+
+        pribadi.map(t=>'<div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;padding:8px 0;border-bottom:1px dotted var(--border);font-size:12px;align-items:center">'+
           '<span style="color:var(--muted);font-size:10px">'+fdate(t.tanggal)+'</span>'+
           '<span>'+esc(t.catatan||t.kategori)+'</span>'+
           '<span style="color:var(--red);font-weight:700">−'+fmt(t.jumlah)+'</span>'+
@@ -782,6 +1109,7 @@ function renderOut(){
     }
   }
 }
+
 window.editOut=function(id){
   const t=DB.tx.find(x=>x.id===id); if(!t) return;
   outEdit=id; $('#outEditTag').style.display='block'; $('#outEditTag').textContent='⚠️ SEDANG EDIT — bukan tambah baru!'; $('#outEditBtns').classList.remove('hidden'); $('#outSave').textContent='✓ Update';
@@ -789,11 +1117,13 @@ window.editOut=function(id){
   $('#outJumlah').value='Rp '+t.jumlah.toLocaleString('id-ID'); $('#outDate').value=t.tanggal; $('#outNote').value=t.catatan||'';
   window.scrollTo({top:0,behavior:'smooth'});
 };
+
 function outFormReset(){
   outEdit=null; $('#outEditTag').style.display='none'; $('#outEditBtns').classList.add('hidden'); $('#outSave').textContent='➖ Simpan Pengeluaran';
   $('#outJumlah').value=''; $('#outNote').value=''; $('#outDate').value=today();
   fillSel($('#outKat'),KAT_KELUAR,'Beli Bahan / HPP'); fillSel($('#outChannel'),CHANNELS,'BCA Operasional');
 }
+
 $('#outSave').onclick=()=>{
   const j=readAmt($('#outJumlah')); if(!j){alert('Isi jumlah');return;}
   if(outEdit && !confirm('⚠️ Kamu sedang EDIT entry lama.\nYakin mau UPDATE?\n\nKalau mau TAMBAH BARU → klik Batal dulu.')){return;}
@@ -814,6 +1144,7 @@ function renderPiutang(){
   $('#piut-sisa').textContent=rp(sisa); $('#piut-total').textContent=rp(total);
   $('#piut-list').innerHTML=list.length?list.map(x=>renderPiUtRow(x,'piutang')).join(''):'<div class="empty">Belum ada piutang.</div>';
 }
+
 window.editPiutang=function(id){
   const x=DB.pi.find(y=>y.id===id); if(!x||x.tipe!=='piutang') return;
   piutEdit=id; $('#piutEditTag').style.display='block'; $('#piutEditBtns').classList.remove('hidden'); $('#piutSave').textContent='✓ Update';
@@ -821,10 +1152,12 @@ window.editPiutang=function(id){
   $('#piutDate').value=x.tanggal||''; $('#piutTempo').value=x.tempo||''; $('#piutNote').value=x.catatan||'';
   window.scrollTo({top:0,behavior:'smooth'});
 };
+
 function piutFormReset(){
   piutEdit=null; $('#piutEditTag').style.display='none'; $('#piutEditBtns').classList.add('hidden'); $('#piutSave').textContent='➕ Simpan Piutang';
   $('#piutNama').value=''; $('#piutJumlah').value=''; $('#piutDate').value=today(); $('#piutTempo').value=''; $('#piutNote').value='';
 }
+
 $('#piutSave').onclick=()=>{
   const nama=$('#piutNama').value.trim(); if(!nama){alert('Isi nama');return;}
   const j=readAmt($('#piutJumlah')); if(!j){alert('Isi jumlah');return;}
@@ -864,13 +1197,13 @@ function renderPiUtRow(x, tipe){
   let histori = '';
   if(bayar.length){
     let cum = 0;
-    histori = '<div style="margin-top:10px;padding:10px;background:var(--panel2);border-radius:8px;border:1px dashed var(--border)">'+
-      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:700">📋 Riwayat Cicilan ('+bayar.length+'x pembayaran)</div>'+
+    histori = '<div style="margin-top:10px;padding:10px;background:var(--panel2);border-radius:10px;border:1px dashed var(--border)">'+
+      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:700">📋 Riwayat Cicilan ('+bayar.length+'x)</div>'+
       bayar.map((b,i) => {
         cum += (+b.jumlah||0);
         const sisaSetelah = Math.max(0, x.jumlah - cum);
         return '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dotted var(--border);font-size:12px">'+
-          '<span style="background:'+btnBg+';color:'+btnCol+';padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700">#'+(i+1)+'</span>'+
+          '<span style="background:'+btnBg+';color:'+btnCol+';padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">#'+(i+1)+'</span>'+
           '<span><b>'+fdate(b.tanggal)+'</b>'+(b.channel?' <span style="color:var(--muted);font-size:10px">· '+esc(b.channel)+'</span>':'')+'</span>'+
           '<span style="text-align:right"><b style="color:'+btnCol+'">'+rp(b.jumlah)+'</b><br><span style="font-size:10px;color:var(--muted)">sisa '+rp(sisaSetelah)+'</span></span>'+
           '</div>';
@@ -879,25 +1212,26 @@ function renderPiUtRow(x, tipe){
   }
 
   return '<div class="row" style="align-items:flex-start;flex-wrap:wrap;padding:12px 0;flex-direction:column">'+
-    '<div style="display:flex;width:100%;align-items:flex-start;gap:8px">'+
+    '<div style="display:flex;width:100%;align-items:flex-start;gap:10px">'+
     '<div class="rtap" onclick="'+editFn+'(\''+x.id+'\')" style="align-items:flex-start;flex:1">'+
     '<div class="ic '+icClass+'">'+icEmoji+'</div>'+
     '<div class="mid">'+
     '<div class="t1">'+esc(x.nama)+' <span class="status '+st+'">'+st+'</span></div>'+
     '<div class="t2" style="margin-top:2px">Total '+rp(x.jumlah)+' · Dibayar '+rp(t)+' ('+pct+'%) · Sisa <b style="color:'+(s>0?'var(--red)':'var(--green)')+'">'+rp(s)+'</b></div>'+
     (meta?'<div class="t2">'+esc(meta)+'</div>':'')+
-    '<div style="height:8px;background:#1b232c;border-radius:4px;overflow:hidden;margin-top:6px;width:100%">'+
+    '<div style="height:8px;background:#0d131e;border-radius:4px;overflow:hidden;margin-top:6px;width:100%">'+
     '<div style="height:100%;background:'+barCol+';width:'+pct+'%;transition:width .3s"></div>'+
     '</div>'+
     '</div></div>'+
     '<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">'+
-    (s>0?'<button class="paybtn" onclick="event.stopPropagation();openBayar(\''+x.id+'\')" style="background:'+btnBg+';color:'+btnCol+';border:1px solid '+btnBrd+';border-radius:9px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">'+btnLbl+'</button>':'<span style="font-size:10px;color:var(--green);font-weight:700;padding:8px">✓ LUNAS</span>')+
-    '<button class="delbtn" onclick="event.stopPropagation();delPi(\''+x.id+'\')" style="width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer">✕</button>'+
+    (s>0?'<button class="paybtn" onclick="event.stopPropagation();openBayar(\''+x.id+'\')" style="background:'+btnBg+';color:'+btnCol+';border:1px solid '+btnBrd+'">'+btnLbl+'</button>':'<span style="font-size:10px;color:var(--green);font-weight:800;padding:6px 10px">✓ LUNAS</span>')+
+    '<button class="delbtn" onclick="event.stopPropagation();delPi(\''+x.id+'\')">✕</button>'+
     '</div>'+
     '</div>'+
     (histori?'<div style="width:100%">'+histori+'</div>':'')+
     '</div>';
 }
+
 window.editUtang=function(id){
   const x=DB.pi.find(y=>y.id===id); if(!x||x.tipe!=='utang') return;
   utgEdit=id; $('#utgEditTag').style.display='block'; $('#utgEditBtns').classList.remove('hidden'); $('#utgSave').textContent='✓ Update';
@@ -905,10 +1239,12 @@ window.editUtang=function(id){
   $('#utgDate').value=x.tanggal||''; $('#utgTempo').value=x.tempo||''; $('#utgNote').value=x.catatan||'';
   window.scrollTo({top:0,behavior:'smooth'});
 };
+
 function utgFormReset(){
   utgEdit=null; $('#utgEditTag').style.display='none'; $('#utgEditBtns').classList.add('hidden'); $('#utgSave').textContent='➕ Simpan Utang';
   $('#utgNama').value=''; $('#utgJumlah').value=''; $('#utgDate').value=today(); $('#utgTempo').value=''; $('#utgNote').value='';
 }
+
 $('#utgSave').onclick=()=>{
   const nama=$('#utgNama').value.trim(); if(!nama){alert('Isi nama');return;}
   const j=readAmt($('#utgJumlah')); if(!j){alert('Isi jumlah');return;}
@@ -934,12 +1270,12 @@ window.openBayar = function(id){
   $('#bySisa').innerHTML = 'Total: <b>'+rp(x.jumlah)+'</b> · Sudah bayar: <b style="color:var(--green)">'+rp(t)+'</b> · Sisa: <b style="color:var(--red)">'+rp(s)+'</b>';
   $('#byJumlah').value = 'Rp '+s.toLocaleString('id-ID');
   $('#byDate').value = today();
-  fillSel($('#byChannel'), CHANNELS, x.tipe === 'piutang' ? 'BCA Operasional' : 'BCA Operasional');
+  fillSel($('#byChannel'), CHANNELS, 'BCA Operasional');
   const bayar = x.bayar || [];
-  let histori = '<div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">📜 Riwayat Pembayaran ('+bayar.length+'x)</div>';
+  let histori = '<div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:700">📜 Riwayat Pembayaran ('+bayar.length+'x)</div>';
   if(bayar.length){
     histori += bayar.map(b =>
-      '<div style="display:flex;justify-content:space-between;padding:6px 8px;background:var(--panel2);border-radius:6px;margin-bottom:4px;font-size:12px">'+
+      '<div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--panel2);border-radius:8px;margin-bottom:4px;font-size:12px">'+
       '<span>'+fdate(b.tanggal)+'</span>'+
       '<span style="font-weight:700;color:var(--green)">Rp '+fmt(b.jumlah)+'</span>'+
       '</div>'
@@ -1004,11 +1340,12 @@ function renderRingkas(){
   const byCh={}; bizIn.forEach(t=>{const c=t.channel||'Umum';byCh[c]=(byCh[c]||0)+t.jumlah;});
   $('#by-ch').innerHTML=barChart(byCh,'var(--green)');
 }
+
 function barChart(map,color){
   const a=Object.entries(map).sort((x,y)=>y[1]-x[1]);
   if(!a.length) return '<div class="empty">Belum ada data.</div>';
   const mx=a[0][1]||1;
-  return a.map(([k,v])=>'<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #1b232c;font-size:13px"><div style="flex:0 0 110px">'+esc(k)+'</div><div style="flex:1;height:8px;background:#1b232c;border-radius:5px;overflow:hidden"><div style="height:100%;background:'+color+';width:'+(v/mx*100).toFixed(0)+'%"></div></div><div style="flex:0 0 auto;color:var(--muted);font-size:12px;min-width:100px;text-align:right">'+rp(v)+'</div></div>').join('');
+  return a.map(([k,v])=>'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><div style="flex:0 0 120px;font-weight:600">'+esc(k)+'</div><div style="flex:1;height:8px;background:#0d131e;border-radius:6px;overflow:hidden"><div style="height:100%;background:'+color+';width:'+(v/mx*100).toFixed(0)+'%"></div></div><div style="flex:0 0 auto;color:var(--muted);font-size:12px;min-width:100px;text-align:right;font-weight:700">'+rp(v)+'</div></div>').join('');
 }
 
 let cfCb=null;
@@ -1031,7 +1368,7 @@ $('#importCSV').onchange=e=>{
   const r=new FileReader();
   r.onload=()=>{
     try{
-      const lines=r.result.replace(/^﻿/,'').trim().split('\n');
+      const lines=r.result.replace(/^/,'').trim().split('\n');
       const h=lines[0].split(',').map(x=>x.trim().toLowerCase());
       const idx={tgl:h.findIndex(x=>x.includes('tanggal')||x.includes('date')),tipe:h.findIndex(x=>x.includes('tipe')),kat:h.findIndex(x=>x.includes('kategori')),ch:h.findIndex(x=>x.includes('channel')),jml:h.findIndex(x=>x.includes('jumlah')||x.includes('amount')),ket:h.findIndex(x=>x.includes('keterangan'))};
       let n=0;
@@ -1046,14 +1383,14 @@ $('#importCSV').onchange=e=>{
   };
   r.readAsText(f); e.target.value='';
 };
+
 $('#btnCsv').onclick=()=>{
   const rows=[['Tanggal','Tipe','Kategori','Channel','Jumlah','Keterangan']];
   DB.tx.forEach(t=>rows.push([t.tanggal,t.tipe==='in'?'Masuk':'Keluar',t.kategori,t.channel,t.jumlah,t.catatan||'']));
-  dl('kas-command-'+today()+'.csv','﻿'+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
+  dl('kas-command-'+today()+'.csv',''+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
 };
 
 $('#btnSyncCSV').onclick=()=>{
-  const tx=DB.tx.filter(t => inPeriode(t.tanggal) && t.channel!=='BCA Pribadi' && t.kategori!=='Konsumsi Pribadi');
   const rows=[['Tanggal','Tipe','Kategori','Channel','Jumlah','Keterangan']];
   let skippedShopee = 0, skippedPribadi = 0;
   DB.tx.filter(t=>inPeriode(t.tanggal)).forEach(t=>{
@@ -1061,9 +1398,10 @@ $('#btnSyncCSV').onclick=()=>{
     if(t.tipe==='in'&&t.kategori==='Penjualan'&&(t.channel||'').toLowerCase().includes('shopee')) { skippedShopee++; return; }
     rows.push([t.tanggal,t.tipe==='in'?'Masuk':'Keluar',t.kategori,t.channel,t.jumlah,t.catatan||'']);
   });
-  dl('kas-sync-'+today()+'.csv','﻿'+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
-  alert('✅ CSV sync (USAHA ONLY).\n\n'+(rows.length-1)+' transaksi didownload.\n\n🏠 '+skippedPribadi+' tx pribadi dikecualikan (aman dari DJP).\n\nUpload ke Dashboard Pembukuan.');
+  dl('kas-sync-'+today()+'.csv',''+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
+  alert('✅ CSV sync.\n\n'+(rows.length-1)+' transaksi didownload.');
 };
+
 $('#btnSyncJSON').onclick=()=>{
   const tx=DB.tx.filter(t => inPeriode(t.tanggal) && t.channel!=='BCA Pribadi' && t.kategori!=='Konsumsi Pribadi');
   const income=[],expense=[];
@@ -1084,14 +1422,8 @@ $('#btnSyncJSON').onclick=()=>{
     }
   });
   dl('kas-sync-'+today()+'.json',JSON.stringify({state:{income,expense,catalog:[],aset:[],stokBahanBaku:0,setupSaldo:{},inputs:{}},version:'kas-sync'},null,2),'application/json');
-  alert('✅ JSON sync. Buka Dashboard → Ringkasan → ⬆ Restore JSON.');
+  alert('✅ JSON sync berhasil.');
 };
-
-$('#periodMode').addEventListener('change',function(){
-  $('#periodMonth').style.display=this.value==='pick'?'inline-block':'none';
-  renderAll();
-});
-$('#periodMonth').addEventListener('change',renderAll);
 
 function renderPajak(){
   const txP = DB.tx.filter(t => inPeriode(t.tanggal));
@@ -1102,9 +1434,9 @@ function renderPajak(){
   const ytdTotal = ytdSales.reduce((s,t)=>s+t.jumlah,0);
 
   const wpStatus = (localStorage.getItem('pj_wp_status') || 'op');
-  $('#pjWpStatus').value = wpStatus;
+  if($('#pjWpStatus')) $('#pjWpStatus').value = wpStatus;
   const splitPct = parseFloat(localStorage.getItem('pj_split_pct') || '1');
-  $('#pjSplit').value = splitPct;
+  if($('#pjSplit')) $('#pjSplit').value = splitPct;
 
   const KUOTA_BEBAS = 500_000_000;
   const kuotaBebas = wpStatus === 'op' ? KUOTA_BEBAS : 0;
@@ -1132,7 +1464,7 @@ function renderPajak(){
   if(pphYtd === 0){
     box.className = 'kpi g';
     if(wpStatus === 'op' && ytdTotal < kuotaBebas){
-      stEl.innerHTML = '🎉 BEBAS PAJAK<br><span style="font-size:11px">masih di bawah kuota Rp 500jt</span>';
+      stEl.innerHTML = '🎉 BEBAS PAJAK<br><span style="font-size:11px">kuota aman</span>';
     } else {
       stEl.innerHTML = '—<br><span style="font-size:11px">belum ada omzet</span>';
     }
@@ -1154,7 +1486,6 @@ function renderPajak(){
       rekomHtml += '<br><span style="color:var(--accent)">Sudah lewat kuota di periode ini — PPh Final periode: <b>'+rp(pphPeriode)+'</b>.</span>';
     }
   } else {
-    const anjuranBuffer = Math.round(pphPeriode * splitPct * 2); 
     rekomHtml += 'Basis PPh periode: <b>'+rp(basisPeriode)+'</b>. Kena PPh Final 0,5% = <b>'+rp(pphPeriode)+'</b>.<br>';
     if(selisih < 0){
       rekomHtml += '<span style="color:var(--red)"><b>⚠ Kas Pajak KURANG '+rp(-selisih)+'</b></span>. ';
@@ -1163,7 +1494,6 @@ function renderPajak(){
       rekomHtml += '<span style="color:var(--green)"><b>✓ Kas Pajak cukup</b></span>. Pertahankan split '+splitPct+'%.';
     }
   }
-  rekomHtml += '<br><br><span style="color:var(--muted);font-size:11px">📅 <b>Batas bayar:</b> paling lambat tgl 15 bulan berikutnya (via e-billing DJP). <b>SPT Tahunan:</b> 31 Maret (OP) / 30 April (Badan). Tarif 0,5% berlaku max 7 tahun (OP), 4 tahun (Koperasi/CV/Firma), 3 tahun (PT).</span>';
   rekomEl.innerHTML = rekomHtml;
 
   const chList = {};
@@ -1183,13 +1513,6 @@ function renderPajak(){
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const wp = document.getElementById('pjWpStatus');
-  const sp = document.getElementById('pjSplit');
-  if(wp) wp.addEventListener('change', () => { localStorage.setItem('pj_wp_status', wp.value); renderPajak(); });
-  if(sp) sp.addEventListener('change', () => { localStorage.setItem('pj_split_pct', sp.value); renderPajak(); });
-});
-
 function exportPPNCSV(){
   const txP = DB.tx.filter(t => inPeriode(t.tanggal) && t.tipe==='in' && t.kategori==='Penjualan' && isBiz(t));
   const rows = [['Tanggal','Channel','Deskripsi','Omzet Bruto','PPh Final 0,5%']];
@@ -1200,7 +1523,7 @@ function exportPPNCSV(){
   const totJ = txP.reduce((s,t)=>s+t.jumlah,0);
   const totPPh = Math.round(totJ*0.005);
   rows.push(['','','TOTAL OMZET & PPh',totJ, totPPh]);
-  dl('omzet-pph-final-'+today()+'.csv','﻿'+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
+  dl('omzet-pph-final-'+today()+'.csv',''+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
 }
 
 function exportLRCSV(){
@@ -1222,7 +1545,7 @@ function exportLRCSV(){
   rows.push(['LABA KOTOR','',laba]);
   rows.push(['PPh Final UMKM 0,5% dari OMZET','',Math.round(salesTot*0.005)]);
   rows.push(['LABA BERSIH SETELAH PAJAK','',laba - Math.round(salesTot*0.005)]);
-  dl('laba-rugi-'+today()+'.csv','﻿'+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
+  dl('laba-rugi-'+today()+'.csv',''+rows.map(r=>r.map(csvEsc).join(',')).join('\n'),'text/csv;charset=utf-8');
 }
 
 function renderAll(){
@@ -1232,20 +1555,29 @@ function renderAll(){
   save();
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const wp = document.getElementById('pjWpStatus');
+  const sp = document.getElementById('pjSplit');
+  if(wp) wp.addEventListener('change', () => { localStorage.setItem('pj_wp_status', wp.value); renderPajak(); });
+  if(sp) sp.addEventListener('change', () => { localStorage.setItem('pj_split_pct', sp.value); renderPajak(); });
+  
+  if($('#periodMonth')) $('#periodMonth').value = new Date().toISOString().slice(0, 7);
+});
+
 inFormReset(); outFormReset(); piutFormReset(); utgFormReset();
 bindAmt($('#inJumlah')); bindAmt($('#outJumlah')); bindAmt($('#piutJumlah')); bindAmt($('#utgJumlah'));
-const pjPPN = $('#pjExportPPN'); if(pjPPN) pjPPN.onclick = exportPPNCSV;
+const pjPPN = $('#pjExportPPN'); if(pjPPN) pjPPN.onclick = exportPPNPPN = $('#pjExportPPN'); if(pjPPN) pjPPN.onclick = exportPPNCSV;
 const pjPPh = $('#pjExportPPh'); if(pjPPh) pjPPh.onclick = exportLRCSV;
 
 const pmSel = $('#periodMode'); const pmMon = $('#periodMonth');
 if(pmSel){
-  pmSel.addEventListener('change', () => renderAll());
+  pmSel.addEventListener('change', () => {
+    pmMon.style.display = pmSel.value==='pick'?'inline-block':'none';
+    renderAll();
+  });
 }
 if(pmMon){
   pmMon.addEventListener('change', () => renderAll());
 }
 
 renderAll();
-</script>
-</body>
-</html>
