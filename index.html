@@ -47,7 +47,7 @@ header .ver{margin-left:auto;font-size:10px;color:var(--muted);border:1px solid 
 .qf .editrow button{flex:1;padding:13px;border-radius:11px;font-weight:800;font-size:14px;cursor:pointer;border:none}
 .qf .b-cancel{background:transparent;border:1px solid var(--border)!important;color:var(--muted)}
 .qf .b-del{background:var(--redbg);color:var(--red);border:1px solid var(--red)!important;flex:0 0 auto!important;padding:13px 16px}
-.editing-tag{font-size:11px;color:var(--accent);margin-bottom:8px;display:none}
+.editing-tag{font-size:13px;font-weight:800;color:#fff;background:var(--red);padding:8px 12px;border-radius:8px;margin-bottom:8px;display:none;text-align:center;animation:editPulse 1.5s infinite}@keyframes editPulse{0%,100%{opacity:1}50%{opacity:.6}}
 .row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #1b232c}
 .row:last-child{border:none}
 .rtap{display:flex;align-items:center;gap:11px;flex:1;min-width:0;cursor:pointer}
@@ -724,7 +724,7 @@ function renderIn(){
 }
 window.editIn = function(id){
   const t=DB.tx.find(x=>x.id===id); if(!t) return;
-  inEdit=id; $('#inEditTag').style.display='block'; $('#inEditBtns').classList.remove('hidden'); $('#inSave').textContent='✓ Update';
+  inEdit=id; $('#inEditTag').style.display='block'; $('#inEditTag').textContent='⚠️ SEDANG EDIT — bukan tambah baru!'; $('#inEditBtns').classList.remove('hidden'); $('#inSave').textContent='✓ Update';
   fillSel($('#inKat'),KAT_MASUK,t.kategori); fillSel($('#inChannel'),CHANNELS,t.channel);
   $('#inJumlah').value='Rp '+t.jumlah.toLocaleString('id-ID'); $('#inDate').value=t.tanggal; $('#inNote').value=t.catatan||'';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -736,6 +736,7 @@ function inFormReset(){
 }
 $('#inSave').onclick = ()=>{
   const j=readAmt($('#inJumlah')); if(!j){alert('Isi jumlah');return;}
+  if(inEdit && !confirm('⚠️ Kamu sedang EDIT entry lama.\nYakin mau UPDATE?\n\nKalau mau TAMBAH BARU → klik Batal dulu.')){return;}
   const rec={id:inEdit||uid(),tipe:'in',jumlah:j,kategori:$('#inKat').value,channel:$('#inChannel').value,tanggal:$('#inDate').value||today(),catatan:$('#inNote').value.trim()};
   if(inEdit) DB.tx[DB.tx.findIndex(x=>x.id===inEdit)]=rec; else DB.tx.push(rec);
   inFormReset(); renderAll();
@@ -777,7 +778,7 @@ function renderOut(){
 }
 window.editOut=function(id){
   const t=DB.tx.find(x=>x.id===id); if(!t) return;
-  outEdit=id; $('#outEditTag').style.display='block'; $('#outEditBtns').classList.remove('hidden'); $('#outSave').textContent='✓ Update';
+  outEdit=id; $('#outEditTag').style.display='block'; $('#outEditTag').textContent='⚠️ SEDANG EDIT — bukan tambah baru!'; $('#outEditBtns').classList.remove('hidden'); $('#outSave').textContent='✓ Update';
   fillSel($('#outKat'),KAT_KELUAR,t.kategori); fillSel($('#outChannel'),CHANNELS,t.channel);
   $('#outJumlah').value='Rp '+t.jumlah.toLocaleString('id-ID'); $('#outDate').value=t.tanggal; $('#outNote').value=t.catatan||'';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -789,6 +790,7 @@ function outFormReset(){
 }
 $('#outSave').onclick=()=>{
   const j=readAmt($('#outJumlah')); if(!j){alert('Isi jumlah');return;}
+  if(outEdit && !confirm('⚠️ Kamu sedang EDIT entry lama.\nYakin mau UPDATE?\n\nKalau mau TAMBAH BARU → klik Batal dulu.')){return;}
   const rec={id:outEdit||uid(),tipe:'out',jumlah:j,kategori:$('#outKat').value,channel:$('#outChannel').value,tanggal:$('#outDate').value||today(),catatan:$('#outNote').value.trim()};
   if(outEdit) DB.tx[DB.tx.findIndex(x=>x.id===outEdit)]=rec; else DB.tx.push(rec);
   outFormReset(); renderAll();
