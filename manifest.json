@@ -1,0 +1,21 @@
+{
+  "name": "Kas Command",
+  "short_name": "Kas Command",
+  "description": "Kas Pribadi + Pembukuan UMKM — Soldier Apparel",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "sdsf.PNG",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "sdsf.PNG",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
