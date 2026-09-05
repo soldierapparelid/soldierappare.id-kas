@@ -389,32 +389,17 @@ header .ver {
 <div class="wrap">
   <header>
     <img src="sdsf.PNG" alt="Logo" onerror="this.outerHTML='<div style=\'width:46px;height:46px;flex:0 0 46px;border-radius:12px;background:rgba(245,158,11,0.15);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;\'>💼</div>'" style="width:46px;height:46px;flex:0 0 46px;border-radius:12px;object-fit:cover;border:2px solid var(--accent);background:#000;">
-    <div><h1>Kas Command</h1><small>Kas Pribadi + Pembukuan UMKM</small></div>
-    <span class="ver">v3 Pro</span>
+    <div><h1>Kas Command</h1><small>Pembukuan Operasional UMKM</small></div>
+    <span class="ver">v4 Ops</span>
   </header>
 
   <div class="saldo">
-    <div class="lab">Saldo Kas Total (Real Time)</div>
+    <div class="lab">Saldo Kas Operasional (Real Time)</div>
     <div class="amt" id="saldo">Rp 0</div>
     <div class="meta" id="saldoMeta">Belum ada transaksi</div>
   </div>
 
-  <div class="card" style="padding:14px 16px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-      <h2 style="margin:0;font-size:11px">💳 Alokasi Saldo per Rekening</h2>
-      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-        <span id="rekSelisih" style="font-size:10px;color:var(--muted);font-weight:700"></span>
-        <button onclick="openSplitDana()" style="background:var(--green);color:#04140a;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">⚡ Split 20/10/70</button>
-        <button onclick="openTransfer()" style="background:var(--blue);color:#ffffff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">🔀 Transfer</button>
-        <button onclick="openPribadi()" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">🏠 Pribadi</button>
-        <button onclick="openSetupAlokasi()" style="background:var(--accent);color:#0d131e;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">🔧 Setup</button>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px" id="rekGrid"></div>
-    <div style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5">
-      Saldo per rekening = akumulasi Masuk − Keluar per channel. Pilih channel yang tepat saat transaksi.
-    </div>
-  </div>
+  
 
   <div class="periode">
     <label>📅 PERIODE</label>
@@ -429,11 +414,9 @@ header .ver {
   <div class="tabs">
     <div class="tab on" data-tab="in">💰 Pemasukan</div>
     <div class="tab" data-tab="out">💸 Pengeluaran</div>
-    <div class="tab" data-tab="piutang">📥 Piutang</div>
-    <div class="tab" data-tab="utang">📤 Utang</div>
+        <div class="tab" data-tab="utang">📤 Utang</div>
     <div class="tab" data-tab="ringkas">📊 Ringkasan</div>
-    <div class="tab" data-tab="pajak">🏦 Pajak</div>
-    <div class="tab" data-tab="sync">🔗 Sync</div>
+        <div class="tab" data-tab="sync">🔗 Sync</div>
   </div>
 
   <div id="tab-in" class="tab-panel">
@@ -474,26 +457,6 @@ header .ver {
     <div class="card"><div id="out-list"></div><div id="pribadi-section"></div></div>
   </div>
 
-  <div id="tab-piutang" class="tab-panel hidden">
-    <div class="card qf" style="border-left:3px solid var(--green)">
-      <div style="color:var(--green);font-size:12px;font-weight:800;margin-bottom:8px;letter-spacing:1px">📥 PIUTANG — Uang yang orang lain UTANG ke kita</div>
-      <div class="editing-tag" id="piutEditTag">✎ Sedang mengedit</div>
-      <input type="text" id="piutNama" placeholder="Nama pelanggan / pihak yang berhutang">
-      <input type="text" inputmode="numeric" id="piutJumlah" class="amt-in" placeholder="Rp 0" style="margin-top:10px">
-      <div class="g2" style="margin-top:10px"><input type="date" id="piutDate"><input type="date" id="piutTempo" title="Jatuh Tempo"></div>
-      <input type="text" id="piutNote" placeholder="Keterangan" style="margin-top:10px">
-      <button class="save in" id="piutSave" style="margin-top:10px">➕ Simpan Piutang</button>
-      <div class="editrow hidden" id="piutEditBtns">
-        <button class="b-del" id="piutDel">Hapus</button>
-        <button class="b-cancel" id="piutCancel">Batal</button>
-      </div>
-    </div>
-    <div class="kpis" style="grid-template-columns:1fr 1fr">
-      <div class="kpi g"><div class="l">Sisa Piutang</div><div class="v" id="piut-sisa">Rp 0</div></div>
-      <div class="kpi y"><div class="l">Total Piutang</div><div class="v" id="piut-total">Rp 0</div></div>
-    </div>
-    <div class="card"><div id="piut-list"></div></div>
-  </div>
 
   <div id="tab-utang" class="tab-panel hidden">
     <div class="card qf" style="border-left:3px solid var(--red)">
@@ -527,68 +490,6 @@ header .ver {
     <div class="card"><h2>Pemasukan per Channel</h2><div id="by-ch"></div></div>
   </div>
 
-  <div id="tab-pajak" class="tab-panel hidden">
-    <div class="card" style="padding:16px;border-left:4px solid var(--green)">
-      <h2 style="margin:0 0 8px 0;font-size:13px;color:var(--green)">🇮🇩 PPh Final UMKM 0,5% (PP 55/2022)</h2>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
-        Skema pajak UMKM WP Orang Pribadi. Basis: <b>omzet bruto (peredaran bruto)</b>, tarif <b>0,5% final</b>, dibayar bulanan. WP OP mendapat fasilitas <b>omzet ≤ Rp 500 juta/tahun tidak kena pajak</b>.
-      </div>
-      <div class="kpis" style="grid-template-columns:1fr 1fr">
-        <div class="kpi g"><div class="l">Omzet Periode</div><div class="v" id="pj-sales">Rp 0</div></div>
-        <div class="kpi b"><div class="l">Omzet Tahun Berjalan (YTD)</div><div class="v" id="pj-ytd">Rp 0</div></div>
-      </div>
-      <div class="kpis" style="grid-template-columns:1fr 1fr">
-        <div class="kpi y"><div class="l">Sisa Kuota Bebas Pajak (Rp 500jt/th)</div><div class="v" id="pj-kuota">Rp 500.000.000</div></div>
-        <div class="kpi r"><div class="l">PPh Final 0,5% Periode</div><div class="v" id="pj-pph">Rp 0</div></div>
-      </div>
-      <div class="kpis" style="grid-template-columns:1fr">
-        <div class="kpi b"><div class="l">Total PPh Final YTD (harus dibayar tahun ini)</div><div class="v" id="pj-total">Rp 0</div></div>
-      </div>
-    </div>
-
-    <div class="card" style="padding:16px">
-      <h2 style="margin:0 0 10px 0;font-size:13px">💰 Kas Pajak (Sinking Fund) vs Kebutuhan</h2>
-      <div class="kpis">
-        <div class="kpi b"><div class="l">Saldo Kas Pajak</div><div class="v" id="pj-kas">Rp 0</div></div>
-        <div class="kpi" id="pj-status-box"><div class="l">Status</div><div class="v" id="pj-status" style="font-size:14px">-</div></div>
-      </div>
-      <div style="margin-top:10px;padding:12px;background:var(--panel2);border-radius:10px;font-size:12px;line-height:1.7" id="pj-rekom"></div>
-    </div>
-
-    <div class="card" style="padding:16px">
-      <h2 style="margin:0 0 10px 0;font-size:13px">📊 Setting Pajak</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div>
-          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Status WP</label>
-          <select id="pjWpStatus" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-            <option value="op" selected>Orang Pribadi (WP OP)</option>
-            <option value="badan">Badan (PT/CV/UD)</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Tarif Split ke Kas Pajak</label>
-          <select id="pjSplit" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-            <option value="0.5">0,5% (sesuai tarif)</option>
-            <option value="1" selected>1% (aman, buffer 2×)</option>
-            <option value="2">2% (super aman)</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="padding:16px">
-      <h2 style="margin:0 0 10px 0;font-size:13px">📋 Rincian Omzet per Channel</h2>
-      <div id="pj-channel-list" style="font-size:12px"></div>
-    </div>
-
-    <div class="card" style="padding:16px">
-      <h2 style="margin:0 0 10px 0;font-size:13px">📤 Export untuk Konsultan / DJP</h2>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button id="pjExportPPN" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0d131e;border:none;border-radius:10px;padding:11px 16px;font-size:12px;font-weight:800;cursor:pointer">📥 CSV Omzet PPh Final</button>
-        <button id="pjExportPPh" style="background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 16px;font-size:12px;font-weight:800;cursor:pointer">📥 CSV Laba/Rugi</button>
-      </div>
-    </div>
-  </div>
 
   <div id="tab-sync" class="tab-panel hidden">
     <div class="sync-info">
@@ -658,99 +559,15 @@ header .ver {
   </div>
 </div></div>
 
-<!-- Modal Setup Alokasi -->
-<div class="overlay" id="alkOverlay"><div class="cfbox">
-  <div class="m">🔧 Setup Alokasi Saldo per Rekening</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">
-    Saldo total: <b id="alkSaldoTotal" style="color:var(--accent)">Rp 0</b>
-  </div>
-  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:6px 0 4px">📊 BCA Operasional</label>
-  <input type="text" inputmode="numeric" id="alkOps" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
-  <label style="font-size:11px;color:var(--blue);font-weight:800;display:block;margin:10px 0 4px">🏠 BCA Pribadi</label>
-  <input type="text" inputmode="numeric" id="alkPri" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
-  <label style="font-size:11px;color:var(--red);font-weight:800;display:block;margin:10px 0 4px">🏦 BCA Kas Pajak</label>
-  <input type="text" inputmode="numeric" id="alkPjk" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
-  <label style="font-size:11px;color:var(--green);font-weight:800;display:block;margin:10px 0 4px">💵 Kas Fisik</label>
-  <input type="text" inputmode="numeric" id="alkTun" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:16px;text-align:right;font-weight:800">
-  <div id="alkCheck" style="text-align:center;font-size:11px;margin:12px 0;padding:10px;border-radius:8px;background:var(--panel2);font-weight:700">Isi angka di atas...</div>
-  <div class="cfbtns">
-    <button id="alkCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
-    <button id="alkApply" style="background:var(--green);color:#04140a">✓ Terapkan</button>
-  </div>
-</div></div>
 
-<!-- Modal Split Dana 20/10/70 (FIXED) -->
-<div class="overlay" id="splitOv"><div class="cfbox">
-  <div class="m">⚡ Split Dana Masuk Otomatis</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-align:center;line-height:1.5">
-    Catat dana cair (Shopee, TikTok, Klien). Sistem otomatis menambah dana & mentransfer ke Kas Pajak & Pribadi.
-  </div>
-  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:6px 0 4px">💰 Total Dana Masuk</label>
-  <input type="text" inputmode="numeric" id="spTotal" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:22px;font-weight:800;text-align:right">
-  
-  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Kategori Pemasukan:</label>
-  <select id="spKat" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px"></select>
 
-  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Masuk ke Rekening Tujuan:</label>
-  <select id="spFrom" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px"></select>
-  
-  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Tanggal:</label>
-  <input type="date" id="spDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
-    <div><label style="font-size:10px;color:var(--red);font-weight:800">🏦 Pajak %</label><input type="number" id="spPjkPct" value="20" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:800"></div>
-    <div><label style="font-size:10px;color:var(--blue);font-weight:800">🏠 Pribadi %</label><input type="number" id="spPriPct" value="10" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:800"></div>
-    <div><label style="font-size:10px;color:var(--accent);font-weight:800">📊 Ops (sisa)</label><input type="text" id="spOpsPct" value="70%" disabled style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px;font-size:13px;text-align:center;font-weight:800"></div>
-  </div>
-  <div id="spPreview" style="margin-top:14px;padding:12px;background:var(--panel2);border-radius:10px;font-size:11px;line-height:1.7"></div>
-  <div class="cfbtns">
-    <button id="spCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
-    <button id="spApply" style="background:var(--green);color:#04140a">✓ Tambah & Split Dana</button>
-  </div>
-</div></div>
 
-<!-- Modal Belanja Pribadi -->
-<div class="overlay" id="priOv"><div class="cfbox">
-  <div class="m">🏠 Catat Belanja Pribadi</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-align:center;line-height:1.5">
-    Kurangi saldo BCA Pribadi. <b style="color:var(--green)">TIDAK</b> masuk Ringkasan Pengeluaran & tidak ngefek ke PPh Final.
-  </div>
-  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:6px 0 4px">💰 Jumlah</label>
-  <input type="text" inputmode="numeric" id="priJumlah" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:22px;font-weight:800;text-align:right">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Tanggal:</label>
-  <input type="date" id="priDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Keterangan (opsional):</label>
-  <input type="text" id="priNote" placeholder="Contoh: Belanja harian" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  <div class="cfbtns">
-    <button id="priCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
-    <button id="priApply" style="background:var(--muted);color:#0d131e">✓ Kurangi Saldo Pribadi</button>
-  </div>
-</div></div>
-
-<!-- Modal Transfer Antar Rekening -->
-<div class="overlay" id="trfOv"><div class="cfbox">
-  <div class="m">🔀 Transfer Antar Rekening</div>
-  <label style="font-size:11px;color:var(--red);font-weight:800;display:block;margin:6px 0 4px">📤 Dari Rekening</label>
-  <select id="trfFrom" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px"></select>
-  <label style="font-size:11px;color:var(--green);font-weight:800;display:block;margin:10px 0 4px">📥 Ke Rekening</label>
-  <select id="trfTo" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:14px"></select>
-  <label style="font-size:11px;color:var(--accent);font-weight:800;display:block;margin:10px 0 4px">💰 Jumlah</label>
-  <input type="text" inputmode="numeric" id="trfJumlah" class="amt-in" placeholder="Rp 0" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-size:20px;font-weight:800;text-align:right">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Tanggal:</label>
-  <input type="date" id="trfDate" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  <label style="font-size:10px;color:var(--muted);display:block;margin:10px 0 4px;font-weight:700">Catatan (opsional):</label>
-  <input type="text" id="trfNote" placeholder="Contoh: Sisihkan pajak Juli" style="width:100%;background:#0d131e;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px">
-  <div class="cfbtns">
-    <button id="trfCancel" style="background:transparent;border:1px solid var(--border)!important;color:var(--muted)">Batal</button>
-    <button id="trfApply" style="background:var(--blue);color:#ffffff">✓ Transfer</button>
-  </div>
-</div></div>
 
 <script>
 "use strict";
 const KEY = 'soldier_kas_v2';
-const KAT_MASUK = ['Penjualan','Pelunasan Piutang','Modal Masuk','Refund','Bunga Bank','Hadiah / Bonus','Transfer Antar Rekening','Lainnya'];
-const KAT_KELUAR = ['Beli Bahan / HPP','Produksi / Jahit','Sablon / Bordir','Packaging','Iklan / Marketing','Gaji / Upah','Konsumsi Karyawan','Transport / Bensin','Internet / Pulsa','Listrik / Air','Ongkir / Kirim','Sewa Tempat','Perlengkapan Kantor','Maintenance / Servis','Operasional','Bayar Utang','Beban Bunga','Tarik Modal (Prive)','Pajak','Transfer Antar Rekening','Konsumsi Pribadi','Lainnya'];
+const KAT_MASUK = ['Penjualan','Modal Masuk','Refund','Bunga Bank','Hadiah / Bonus','Lainnya'];
+const KAT_KELUAR = ['Bayar Jahit','Bahan Baku Kain','Aksesoris Jahit','Upah / Gaji','Listrik / Internet','Konsumsi Karyawan','Maintenance / Service','Bayar Utang','Lainnya'];
 const PRIBADI_CH = 'BCA Pribadi';
 
 function isBiz(t){
@@ -763,7 +580,7 @@ function isBiz(t){
 }
 
 const TRANSFER_KAT = 'Transfer Antar Rekening';
-const CHANNELS = ['BCA Operasional','BCA Pribadi','BCA Kas Pajak','Kas Fisik','Shopee','TikTok Shop','Lazada','Website','Offline','Umum'];
+const CHANNELS = ['BCA Operasional','TikTok Shop','Lazada','Website','Offline','Umum'];
 const EQUITY_KAT = ['Modal Masuk','Tarik Modal (Prive)'];
 const PIUTANG_KAT = ['Pelunasan Piutang'];
 
@@ -808,63 +625,13 @@ $$('.tab').forEach(t => t.onclick = () => {
 
 function saldo(){ return DB.tx.reduce((s,t)=>s+(t.tipe==='in'?t.jumlah:-t.jumlah),0); }
 
-const REK_UTAMA = ['BCA Operasional','BCA Pribadi','BCA Kas Pajak','Kas Fisik'];
+const REK_UTAMA = ['BCA Operasional'];
 const REK_META = {
-  'BCA Operasional': {color:'var(--accent)', icon:'📊', desc:'Cash flow harian usaha'},
-  'BCA Pribadi': {color:'var(--blue)', icon:'🏠', desc:'Gaji owner + prive'},
-  'BCA Kas Pajak': {color:'var(--red)', icon:'🏦', desc:'Khusus bayar pajak'},
-  'Kas Fisik': {color:'var(--green)', icon:'💵', desc:'Uang tunai di laci'}
+  'BCA Operasional': {color:'var(--accent)', icon:'📊', desc:'Cash flow operasional usaha'}
 };
 
-function renderSaldoPerRek(){
-  const grid = document.getElementById('rekGrid');
-  if(!grid) return;
-  const bal = {};
-  REK_UTAMA.forEach(r => bal[r] = 0);
-  bal['Belum di-Tag'] = 0;
-  DB.tx.forEach(t => {
-    const ch = t.channel || 'Umum';
-    const delta = t.tipe==='in' ? t.jumlah : -t.jumlah;
-    if(REK_UTAMA.includes(ch)) bal[ch] += delta;
-    else bal['Belum di-Tag'] += delta;
-  });
-  let html = '';
-  REK_UTAMA.forEach(r => {
-    const meta = REK_META[r];
-    const v = bal[r];
-    const color = v<0 ? 'var(--red)' : meta.color;
-    html += '<div style="background:var(--panel2);border:1px solid var(--border);border-left:3px solid '+meta.color+';border-radius:12px;padding:12px">'+
-      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">'+meta.icon+' '+r+'</div>'+
-      '<div style="font-size:16px;font-weight:800;color:'+color+';margin-top:4px">'+rp(v)+'</div>'+
-      '<div style="font-size:9px;color:var(--muted);margin-top:2px">'+meta.desc+'</div></div>';
-  });
-  if(bal['Belum di-Tag'] !== 0){
-    html += '<div style="background:var(--panel2);border:1px dashed var(--muted);border-radius:12px;padding:12px;grid-column:span 2">'+
-      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">⚠ Belum di-Tag (channel Shopee/Umum)</div>'+
-      '<div style="font-size:16px;font-weight:800;color:var(--muted);margin-top:4px">'+rp(bal['Belum di-Tag'])+'</div></div>';
-  }
-  grid.innerHTML = html;
-  document.getElementById('rekSelisih').textContent = 'Total: '+rp(Object.values(bal).reduce((s,v)=>s+v,0));
-}
+function renderSaldoPerRek(){}
 
-window.openSetupAlokasi = function(){
-  const total = saldo();
-  $('#alkSaldoTotal').textContent = rp(total);
-  
-  const cur = {'BCA Operasional':0,'BCA Pribadi':0,'BCA Kas Pajak':0,'Kas Fisik':0,'Belum di-Tag':0};
-  DB.tx.forEach(t => {
-    const ch = REK_UTAMA.includes(t.channel) ? t.channel : 'Belum di-Tag';
-    cur[ch] += (t.tipe==='in' ? t.jumlah : -t.jumlah);
-  });
-  
-  $('#alkOps').value = 'Rp ' + Math.max(0, cur['BCA Operasional']).toLocaleString('id-ID');
-  $('#alkPri').value = 'Rp ' + Math.max(0, cur['BCA Pribadi']).toLocaleString('id-ID');
-  $('#alkPjk').value = 'Rp ' + Math.max(0, cur['BCA Kas Pajak']).toLocaleString('id-ID');
-  $('#alkTun').value = 'Rp ' + Math.max(0, cur['Kas Fisik']).toLocaleString('id-ID');
-  
-  updateAlkCheck();
-  $('#alkOverlay').classList.add('on');
-};
 
 function updateAlkCheck(){
   const total = readAmt($('#alkOps'))+readAmt($('#alkPri'))+readAmt($('#alkPjk'))+readAmt($('#alkTun'));
@@ -920,16 +687,6 @@ $('#alkApply').onclick = ()=>{
   alert('✅ Rebalance diterapkan!');
 };
 
-window.openSplitDana = function(){
-  $('#spTotal').value = '';
-  $('#spDate').value = today();
-  fillSel($('#spKat'), KAT_MASUK, 'Penjualan');
-  fillSel($('#spFrom'), REK_UTAMA, 'BCA Operasional');
-  $('#spPjkPct').value = 20;
-  $('#spPriPct').value = 10;
-  updateSplitPreview();
-  $('#splitOv').classList.add('on');
-};
 
 function updateSplitPreview(){
   const total = readAmt($('#spTotal'));
@@ -991,12 +748,6 @@ $('#spApply').onclick = () => {
   alert('✅ Dana masuk ' + rp(total) + ' berhasil dicatat dan di-split!');
 };
 
-window.openPribadi = function(){
-  $('#priJumlah').value = '';
-  $('#priDate').value = today();
-  $('#priNote').value = '';
-  $('#priOv').classList.add('on');
-};
 $('#priJumlah').addEventListener('input', () => {
   const d = $('#priJumlah').value.replace(/[^\d]/g,'');
   $('#priJumlah').value = d ? 'Rp '+(+d).toLocaleString('id-ID') : '';
@@ -1013,14 +764,6 @@ $('#priApply').onclick = () => {
   alert('✅ Saldo BCA Pribadi berkurang '+rp(j));
 };
 
-window.openTransfer = function(){
-  fillSel($('#trfFrom'), REK_UTAMA, 'BCA Operasional');
-  fillSel($('#trfTo'), REK_UTAMA, 'BCA Kas Pajak');
-  $('#trfJumlah').value = '';
-  $('#trfDate').value = today();
-  $('#trfNote').value = '';
-  $('#trfOv').classList.add('on');
-};
 $('#trfJumlah').addEventListener('input', () => {
   const d = $('#trfJumlah').value.replace(/[^\d]/g,'');
   $('#trfJumlah').value = d ? 'Rp '+(+d).toLocaleString('id-ID') : '';
@@ -1131,16 +874,7 @@ $('#outSave').onclick=()=>{
 $('#outCancel').onclick=outFormReset;
 $('#outDel').onclick=()=>{if(outEdit)delTx(outEdit);};
 
-function renderPiutang(){
-  const list=DB.pi.filter(x=>x.tipe==='piutang').sort((a,b)=>{
-    const sa=statusOf(a),sb=statusOf(b),ord={belum:0,cicil:1,lunas:2};
-    return ord[sa]-ord[sb]||(a.tempo||'').localeCompare(b.tempo||'');
-  });
-  const sisa=list.reduce((s,x)=>s+sisaOf(x),0);
-  const total=list.reduce((s,x)=>s+pokokOf(x),0);
-  $('#piut-sisa').textContent=rp(sisa); $('#piut-total').textContent=rp(total);
-  $('#piut-list').innerHTML=list.length?list.map(x=>renderPiUtRow(x,'piutang')).join(''):'<div class="empty">Belum ada piutang.</div>';
-}
+function renderPiutang(){}
 
 window.editPiutang=function(id){
   const x=DB.pi.find(y=>y.id===id); if(!x||x.tipe!=='piutang') return;
@@ -1450,7 +1184,7 @@ $('#btnSyncCSV').onclick=()=>{
 $('#btnSyncJSON').onclick=()=>{
   const tx=DB.tx.filter(t => inPeriode(t.tanggal) && t.channel!=='BCA Pribadi' && t.kategori!=='Konsumsi Pribadi');
   const income=[],expense=[];
-  const KAT_MAP={'beli bahan':{kat:'Bahan Baku',jenis:'operasi'},'produksi':{kat:'TKL Jahit',jenis:'operasi'},'jahit':{kat:'TKL Jahit',jenis:'operasi'},'sablon':{kat:'TKL Sablon',jenis:'operasi'},'packaging':{kat:'BOP',jenis:'operasi'},'iklan':{kat:'Beban Iklan',jenis:'operasi'},'gaji':{kat:'Beban Gaji',jenis:'operasi'},'upah':{kat:'Beban Gaji',jenis:'operasi'},'listrik':{kat:'Beban Listrik',jenis:'operasi'},'ongkir':{kat:'Beban Ongkir',jenis:'operasi'},'maintenance':{kat:'Beban Maintenance',jenis:'operasi'},'operasional':{kat:'Beban Gaji',jenis:'operasi'},'bayar utang':{kat:'Bayar Utang',jenis:'utang'},'tarik modal':{kat:'Prive',jenis:'prive'},'pajak':{kat:'Beban Pajak',jenis:'operasi'},'beban bunga':{kat:'Beban Bunga',jenis:'operasi'}};
+  const KAT_MAP={'bayar jahit':{kat:'Beban Jahit',jenis:'operasi'},'bahan baku':{kat:'Bahan Baku',jenis:'operasi'},'aksesoris':{kat:'BOP',jenis:'operasi'},'upah':{kat:'Beban Gaji',jenis:'operasi'},'gaji':{kat:'Beban Gaji',jenis:'operasi'},'listrik':{kat:'Beban Listrik',jenis:'operasi'},'internet':{kat:'Beban Listrik',jenis:'operasi'},'konsumsi':{kat:'BOP',jenis:'operasi'},'maintenance':{kat:'Beban Maintenance',jenis:'operasi'},'service':{kat:'Beban Maintenance',jenis:'operasi'},'bayar utang':{kat:'Bayar Utang',jenis:'utang'},'beli bahan':{kat:'Bahan Baku',jenis:'operasi'},'produksi':{kat:'Beban Jahit',jenis:'operasi'},'jahit':{kat:'Beban Jahit',jenis:'operasi'},'sablon':{kat:'BOP',jenis:'operasi'},'packaging':{kat:'BOP',jenis:'operasi'},'iklan':{kat:'Beban Iklan',jenis:'operasi'},'ongkir':{kat:'Beban Ongkir',jenis:'operasi'},'operasional':{kat:'Beban Gaji',jenis:'operasi'},'tarik modal':{kat:'Prive',jenis:'prive'},'pajak':{kat:'Beban Pajak',jenis:'operasi'},'beban bunga':{kat:'Beban Bunga',jenis:'operasi'}};
   tx.forEach(t=>{
     if(t.tipe==='in'){
       if(t.kategori==='Penjualan'&&(t.channel||'').toLowerCase().includes('shopee')) return;
@@ -1470,93 +1204,7 @@ $('#btnSyncJSON').onclick=()=>{
   alert('✅ JSON sync berhasil.');
 };
 
-function renderPajak(){
-  const txP = DB.tx.filter(t => inPeriode(t.tanggal));
-  const sales = txP.filter(t => t.tipe==='in' && t.kategori==='Penjualan' && isBiz(t));
-  const salesTotal = sales.reduce((s,t)=>s+t.jumlah,0);
-  const currentYear = new Date().toISOString().slice(0,4);
-  const ytdSales = DB.tx.filter(t => t.tipe==='in' && t.kategori==='Penjualan' && isBiz(t) && String(t.tanggal).startsWith(currentYear));
-  const ytdTotal = ytdSales.reduce((s,t)=>s+t.jumlah,0);
-
-  const wpStatus = (localStorage.getItem('pj_wp_status') || 'op');
-  if($('#pjWpStatus')) $('#pjWpStatus').value = wpStatus;
-  const splitPct = parseFloat(localStorage.getItem('pj_split_pct') || '1');
-  if($('#pjSplit')) $('#pjSplit').value = splitPct;
-
-  const KUOTA_BEBAS = 500_000_000;
-  const kuotaBebas = wpStatus === 'op' ? KUOTA_BEBAS : 0;
-  const sisaKuota = Math.max(0, kuotaBebas - ytdTotal);
-
-  const basisYtd = Math.max(0, ytdTotal - kuotaBebas);
-  const pphYtd = Math.round(basisYtd * 0.005);
-  const kuotaTerpakaiSebelumnya = Math.max(0, Math.min(kuotaBebas, ytdTotal - salesTotal));
-  const kuotaTersisa = Math.max(0, kuotaBebas - kuotaTerpakaiSebelumnya);
-  const basisPeriode = Math.max(0, salesTotal - kuotaTersisa);
-  const pphPeriode = Math.round(basisPeriode * 0.005);
-
-  const kasPajak = DB.tx.filter(t => t.channel==='BCA Kas Pajak').reduce((s,t)=>s+(t.tipe==='in'?t.jumlah:-t.jumlah),0);
-  const selisih = kasPajak - pphYtd;
-
-  $('#pj-sales').textContent = rp(salesTotal);
-  $('#pj-ytd').textContent = rp(ytdTotal);
-  $('#pj-kuota').textContent = rp(sisaKuota);
-  $('#pj-pph').textContent = rp(pphPeriode);
-  $('#pj-total').textContent = rp(pphYtd);
-  $('#pj-kas').textContent = rp(kasPajak);
-
-  const box = $('#pj-status-box');
-  const stEl = $('#pj-status');
-  if(pphYtd === 0){
-    box.className = 'kpi g';
-    if(wpStatus === 'op' && ytdTotal < kuotaBebas){
-      stEl.innerHTML = '🎉 BEBAS PAJAK<br><span style="font-size:11px">kuota aman</span>';
-    } else {
-      stEl.innerHTML = '—<br><span style="font-size:11px">belum ada omzet</span>';
-    }
-    stEl.style.color = 'var(--green)';
-  } else if(selisih >= 0){
-    box.className = 'kpi g'; stEl.innerHTML = '✅ AMAN<br><span style="font-size:11px">surplus '+rp(selisih)+'</span>'; stEl.style.color = 'var(--green)';
-  } else {
-    box.className = 'kpi r'; stEl.innerHTML = '⚠ KURANG<br><span style="font-size:11px">defisit '+rp(-selisih)+'</span>'; stEl.style.color = 'var(--red)';
-  }
-
-  const rekomEl = $('#pj-rekom');
-  let rekomHtml = '<b style="color:var(--accent)">📌 Rekomendasi:</b><br>';
-  if(salesTotal === 0){
-    rekomHtml += '<span style="color:var(--muted)">Belum ada penjualan periode ini.</span>';
-  } else if(wpStatus === 'op' && sisaKuota > 0 && ytdTotal < kuotaBebas){
-    rekomHtml += '<span style="color:var(--green)"><b>🎉 Fasilitas WP OP aktif.</b></span> Omzet YTD baru '+rp(ytdTotal)+' dari kuota bebas '+rp(kuotaBebas)+'.<br>';
-    rekomHtml += 'Sisa kuota bebas pajak: <b>'+rp(sisaKuota)+'</b>. Selama YTD masih di bawah ini, PPh Final = Rp 0.<br>';
-    if(pphPeriode > 0){
-      rekomHtml += '<br><span style="color:var(--accent)">Sudah lewat kuota di periode ini — PPh Final periode: <b>'+rp(pphPeriode)+'</b>.</span>';
-    }
-  } else {
-    rekomHtml += 'Basis PPh periode: <b>'+rp(basisPeriode)+'</b>. Kena PPh Final 0,5% = <b>'+rp(pphPeriode)+'</b>.<br>';
-    if(selisih < 0){
-      rekomHtml += '<span style="color:var(--red)"><b>⚠ Kas Pajak KURANG '+rp(-selisih)+'</b></span>. ';
-      rekomHtml += 'Naikin split ke Kas Pajak jadi <b>2%</b> mulai bulan depan.';
-    } else {
-      rekomHtml += '<span style="color:var(--green)"><b>✓ Kas Pajak cukup</b></span>. Pertahankan split '+splitPct+'%.';
-    }
-  }
-  rekomEl.innerHTML = rekomHtml;
-
-  const chList = {};
-  sales.forEach(t => { chList[t.channel] = (chList[t.channel]||0) + t.jumlah; });
-  const chEl = $('#pj-channel-list');
-  if(Object.keys(chList).length === 0){
-    chEl.innerHTML = '<div class="empty" style="text-align:center;color:var(--muted);padding:15px">Belum ada penjualan periode ini.</div>';
-  } else {
-    chEl.innerHTML = Object.entries(chList).sort((a,b)=>b[1]-a[1]).map(([ch,tot])=>{
-      const pphCh = Math.round(tot*0.005);
-      return '<div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px 0;border-bottom:1px dotted var(--border);align-items:center">'+
-        '<span><b>'+esc(ch)+'</b></span>'+
-        '<span style="color:var(--muted);font-size:11px">Omzet '+rp(tot)+'</span>'+
-        '<span><b style="color:var(--red)">PPh '+rp(pphCh)+'</b></span>'+
-        '</div>';
-    }).join('');
-  }
-}
+function renderPajak(){}
 
 function exportPPNCSV(){
   const txP = DB.tx.filter(t => inPeriode(t.tanggal) && t.tipe==='in' && t.kategori==='Penjualan' && isBiz(t));
@@ -1573,7 +1221,7 @@ function exportPPNCSV(){
 
 function exportLRCSV(){
   const txP = DB.tx.filter(t => inPeriode(t.tanggal));
-  const KAT_BIAYA = ['Beli Bahan / HPP','Produksi / Jahit','Sablon / Bordir','Packaging','Iklan / Marketing','Gaji / Upah','Konsumsi Karyawan','Transport / Bensin','Internet / Pulsa','Listrik / Air','Ongkir / Kirim','Sewa Tempat','Perlengkapan Kantor','Maintenance / Servis','Operasional','Beban Bunga','Lainnya'];
+  const KAT_BIAYA = ['Bayar Jahit','Bahan Baku Kain','Aksesoris Jahit','Upah / Gaji','Listrik / Internet','Konsumsi Karyawan','Maintenance / Service','Lainnya'];
   const sales = txP.filter(t=>t.tipe==='in'&&t.kategori==='Penjualan'&&isBiz(t));
   const salesTot = sales.reduce((s,t)=>s+t.jumlah,0);
   const rows = [['Akun','Kategori','Jumlah']];
