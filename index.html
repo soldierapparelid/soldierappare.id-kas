@@ -727,28 +727,8 @@ $('#outDel').onclick=()=>{if(outEdit)delTx(outEdit);};
 
 function renderPiutang(){}
 
-window.editPiutang=function(id){
-  const x=DB.pi.find(y=>y.id===id); if(!x||x.tipe!=='piutang') return;
-  piutEdit=id; $('#piutEditTag').style.display='block'; $('#piutEditBtns').classList.remove('hidden'); $('#piutSave').textContent='✓ Update';
-  $('#piutNama').value=x.nama; $('#piutJumlah').value='Rp '+x.jumlah.toLocaleString('id-ID');
-  $('#piutDate').value=x.tanggal||''; $('#piutTempo').value=x.tempo||''; $('#piutNote').value=x.catatan||'';
-  window.scrollTo({top:0,behavior:'smooth'});
-};
-
-function piutFormReset(){
-  piutEdit=null; $('#piutEditTag').style.display='none'; $('#piutEditBtns').classList.add('hidden'); $('#piutSave').textContent='➕ Simpan Piutang Awal';
-  $('#piutNama').value=''; $('#piutJumlah').value=''; $('#piutDate').value=today(); $('#piutTempo').value=''; $('#piutNote').value='';
-}
-
-$('#piutSave').onclick=()=>{
-  const nama=$('#piutNama').value.trim(); if(!nama){alert('Isi nama');return;}
-  const j=readAmt($('#piutJumlah')); if(!j){alert('Isi jumlah');return;}
-  const rec={id:piutEdit||uid(),tipe:'piutang',nama,jumlah:j,tanggal:$('#piutDate').value||today(),tempo:$('#piutTempo').value||'',catatan:$('#piutNote').value.trim(),bayar:(piutEdit?(DB.pi.find(x=>x.id===piutEdit)?.bayar||[]):[]),tambahan:(piutEdit?(DB.pi.find(x=>x.id===piutEdit)?.tambahan||[]):[]),status:'belum'};
-  if(piutEdit) DB.pi[DB.pi.findIndex(x=>x.id===piutEdit)]=rec; else DB.pi.push(rec);
-  piutFormReset(); renderAll();
-};
-$('#piutCancel').onclick=piutFormReset;
-$('#piutDel').onclick=()=>{if(piutEdit)delPi(piutEdit);};
+window.editPiutang=function(){};
+function piutFormReset(){}
 
 function renderUtang(){
   const list=DB.pi.filter(x=>x.tipe==='utang').sort((a,b)=>{
@@ -1109,7 +1089,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 inFormReset(); outFormReset(); piutFormReset(); utgFormReset();
-bindAmt($('#inJumlah')); bindAmt($('#outJumlah')); bindAmt($('#piutJumlah')); bindAmt($('#utgJumlah'));
+bindAmt($('#inJumlah')); bindAmt($('#outJumlah')); bindAmt($('#utgJumlah'));
 const pjPPN = $('#pjExportPPN'); if(pjPPN) pjPPN.onclick = exportPPNCSV;
 const pjPPh = $('#pjExportPPh'); if(pjPPh) pjPPh.onclick = exportLRCSV;
 
