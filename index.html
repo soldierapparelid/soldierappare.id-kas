@@ -7,11 +7,11 @@
 <title>Kas Command — Usaha & Pribadi</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="sdsf.PNG">
-<link rel="stylesheet" href="kas.css?v=5.1">
+<link rel="stylesheet" href="kas.css?v=5.2">
 </head>
 <body>
 <div class="app">
-<header class="app-head"><div class="brand"><span class="brand-icon">K</span><div><h1>Kas Command</h1><p>Usaha & pribadi <span class="version">v5.1</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="debts">Utang</button><button id="openTax">Pengaturan pajak</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
+<header class="app-head"><div class="brand"><span class="brand-icon">K</span><div><h1>Kas Command</h1><p>Usaha & pribadi <span class="version">v5.2</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="debts">Utang</button><button id="openTax">Pengaturan pajak</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
 <div id="storageNotice" class="notice" role="status"></div>
 <div class="topline"><label for="month">Bulan<input id="month" type="month" required></label><p id="periodLabel"></p></div>
 <nav aria-label="Menu Kas" id="nav">
@@ -20,6 +20,7 @@
 <main>
 <section id="dashboard" class="view">
 <div id="dashboardStats" class="stats"></div>
+<div id="splitSummary" class="split-summary"></div>
 <div id="reviewNotice"></div>
 <div class="quick-actions"><button data-new-flow="sale" class="primary">+ Uang masuk</button><button data-new-flow="expense">− Uang keluar</button></div>
 <details class="card compact-details"><summary>Rincian usaha & uang pribadi</summary><div class="two-cols"><div><h3>Uang usaha</h3><div id="businessSummary"></div><p class="hint">Saldo berdasarkan catatan, bukan laba bersih. Persediaan, piutang, dan penyusutan tidak dihitung di sini.</p></div><div><h3>Uang pribadi</h3><div id="personalSummary"></div><p class="hint">Jatah dicatat sekali: keluar dari usaha, masuk ke pribadi.</p><button data-view="owner">Atur jatah saya</button></div></div></details>
@@ -33,6 +34,7 @@
 <label>Jenis transaksi<select id="flow" required>
 <optgroup label="Sehari-hari"><option value="sale">Penjualan usaha</option><option value="expense">Pengeluaran usaha</option><option value="personalIncome">Pemasukan pribadi</option><option value="personalExpense">Pengeluaran pribadi</option></optgroup><optgroup label="Pemilik"><option value="ownerDraw">Ambil jatah saya dari usaha</option><option value="capital">Tambah modal dari uang pribadi</option></optgroup><optgroup label="Lainnya"><option value="loan">Pinjaman masuk ke usaha</option><option value="debtPayment">Bayar pokok utang</option><option value="taxPayment">Bayar pajak usaha</option><option value="businessIncome">Pemasukan usaha lainnya</option><option value="transferIn">Transfer sendiri — masuk</option><option value="transferOut">Transfer sendiri — keluar</option></optgroup></select></label><p id="flowHelp" class="help"></p>
 <div class="two-fields"><label id="amountLabel">Jumlah (Rp)<input id="amount" inputmode="numeric" type="text" placeholder="Contoh: 1.500.000" required></label><label>Tanggal<input id="date" type="date" required></label></div>
+<div id="splitPreview" class="notice hidden" aria-live="polite"></div>
 <div id="saleFields" class="inset">
 <label>Penjualan sebelum potongan (Rp)<input id="gross" inputmode="numeric" type="text" placeholder="Untuk dasar laporan pajak" required></label>
 <button type="button" id="sameGross" class="text-button">Samakan dengan uang diterima</button>
@@ -49,8 +51,10 @@
 </div>
 </section>
 <section id="owner" class="view hidden">
-<div class="section-head"><div><h2>Jatah saya</h2><p>Atur rencana, lalu catat yang sudah diambil.</p></div><button data-view="dashboard">Kembali</button></div>
-<div class="two-cols"><article class="card"><form id="ownerForm"><label>Rencana jatah bulan dipilih (Rp)<input id="ownerBudget" type="text" inputmode="numeric" placeholder="Contoh: 3.000.000" required></label><button class="primary">Simpan rencana</button></form><p class="hint">Ini pengambilan pemilik (prive), bukan gaji karyawan atau biaya usaha. Tidak mengurangi omzet untuk PPh final.</p></article><article class="card"><div id="ownerSummary"></div><button id="recordOwner" class="primary">Catat jatah yang sudah diambil</button><p class="hint">Lihat kebutuhan bahan, utang, dan kewajiban pajak sebelum mengambil uang. Saldo tercatat bukan rekomendasi jumlah yang aman diambil.</p></article></div><article class="card"><h3>Riwayat jatah bulan ini</h3><div id="ownerList"></div></article>
+<div class="section-head"><div><h2>Jatah saya</h2><p>Terbagi dari penjualan baru. Catat setelah benar-benar ditransfer.</p></div><button data-view="dashboard">Kembali</button></div>
+<article class="card"><div id="ownerSplitSummary"></div><button id="recordOwner" class="primary">Catat jatah yang sudah diambil</button><p class="hint">Transfer lewat aplikasi bank ke rekening pribadi dahulu, lalu catat sekali di sini. Jangan catat lagi sebagai pemasukan pribadi. Aplikasi tidak mentransfer atau mengunci uang bank.</p></article>
+<details class="card compact-details"><summary>Atur persentase pembagian</summary><form id="incomeSplitForm"><label class="check"><input id="splitEnabled" type="checkbox" checked>Bagi otomatis uang penjualan baru</label><label>Bagian pribadi (%)<input id="splitPercent" type="number" min="0" max="100" step="1" value="15" required></label><p class="hint">Sisanya untuk usaha, termasuk kebutuhan bahan, upah, pajak, dan cadangan. Berlaku untuk penjualan baru yang dicatat, bukan modal, pinjaman, impor, atau data lama. Perubahan persentase tidak membagi ulang transaksi yang sudah tersimpan.</p><button class="primary">Simpan pembagian</button></form></details>
+<details class="card compact-details"><summary>Target kebutuhan pribadi bulanan (opsional)</summary><form id="ownerForm"><label>Rencana jatah bulan dipilih (Rp)<input id="ownerBudget" type="text" inputmode="numeric" placeholder="Contoh: 25.000.000" required></label><button class="primary">Simpan rencana</button></form><div id="ownerSummary"></div><p class="hint">Target ini bukan tambahan jatah atau uang yang sudah tersedia. Pengambilan pemilik (prive) bukan gaji karyawan dan tidak mengurangi omzet untuk PPh final.</p></details><article class="card"><h3>Riwayat jatah bulan ini</h3><div id="ownerList"></div></article>
 </section>
 <section id="reports" class="view hidden">
 <div class="section-head"><div><h2 id="reportTitle">Laporan</h2><p>Pilih bulan di atas, lalu unduh.</p></div></div>
@@ -88,7 +92,7 @@
 <details class="card"><summary>Alat lama · impor CSV & ekspor Dashboard</summary><p class="hint">Untuk kebutuhan khusus. CSV dan ekspor Dashboard bukan cadangan lengkap. Untuk pindah HP gunakan cadangan JSON di atas.</p><div class="actions"><label class="file-button">Tambahkan CSV transaksi<input id="importCSV" type="file" accept=".csv,text/csv"></label><button id="exportDashboard">Ekspor Dashboard — bulan dipilih</button></div><p class="hint">Ekspor Dashboard memakai jumlah kas dan melewati penjualan Shopee seperti versi lama. Jangan gunakan file ini sebagai laporan pajak.</p></details>
 </section>
 </main>
-<footer>Kas Command v5.1 · Data tersimpan di perangkat ini.</footer>
+<footer>Kas Command v5.2 · Data tersimpan di perangkat ini.</footer>
 </div>
 <dialog id="paymentDialog"><form id="paymentForm"><h2>Catat pembayaran utang</h2><p id="paymentTitle"></p><label>Jumlah dibayar (Rp)<input id="paymentAmount" type="text" inputmode="numeric" required></label><label>Tanggal pembayaran<input id="paymentDate" type="date" required></label><label>Sumber uang<input id="paymentChannel" value="BCA Operasional" required></label><div class="actions"><button class="primary">Simpan pembayaran</button><button type="button" id="cancelPayment">Batal</button></div></form></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -96,5 +100,6 @@
 <script src="kas-finance.js?v=5"></script>
 <script src="kas-storage.js?v=5"></script>
 <script src="kas-compat.js?v=5"></script>
-<script src="kas-ui.js?v=5.1"></script>
+<script src="kas-buckets.js?v=5.2"></script>
+<script src="kas-ui.js?v=5.2"></script>
 </body></html>
