@@ -12,7 +12,7 @@
   let storage, loaded;
   try { storage = window.localStorage; loaded = S.open(storage,KEY); }
   catch (e) { loaded = {data:null,raw:null,error:'Penyimpanan browser tidak dapat dibuka. Jangan hapus data situs.'}; }
-  let DB = loaded.data || {tx:[],pi:[]}, raw = loaded.raw, blocked = !!loaded.error, activeView = 'dashboard', payId = null, toastTimer;
+  let DB = loaded.data || {tx:[],pi:[]}, raw = loaded.raw, blocked = !!loaded.error, activeView = 'dashboard', payId = null, toastTimer, previousCashDate='';
   $('month').value = localDate().slice(0,7);
   function notice(message,error) { $('storageNotice').textContent = message; $('storageNotice').className = 'notice'+(error?' error':''); }
   function toast(message) { $('toast').textContent=message; $('toast').style.display='block'; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{$('toast').style.display='none';},4200); }
@@ -22,7 +22,7 @@
     if(blocked) { notice('Perubahan belum disimpan. Unduh cadangan lalu buka ulang halaman ini. '+(loaded.error||'Data berubah di tab lain.'),true);return false; }
     const result = S.transaction(storage,KEY,raw,next);
     if(!result.ok) { notice('Belum tersimpan: '+result.error+'. Form tetap terbuka; jangan tutup sebelum masalah selesai.',true);if(result.code==='conflict')blocked=true;return false; }
-    DB=next;raw=result.raw;notice('Tersimpan di browser HP / komputer ini. Belum tersinkron otomatis antar-perangkat.');render();
+    DB=next;raw=result.raw;notice('Tersimpan di perangkat ini · belum sinkron antar-perangkat');render();
     if(message)toast(message);return true;
   }
   function invalidateTaxConfirmation(next) {
@@ -44,6 +44,8 @@
   function go(view) {
     activeView=view;document.querySelectorAll('.view').forEach(e=>e.classList.toggle('hidden',e.id!==view));
     document.querySelectorAll('#nav button').forEach(e=>e.classList.toggle('active',e.dataset.view===view));
+    $('moreMenu').open=false;
+    $('moreMenu').classList.toggle('active',['owner','debts','settings'].includes(view));
     if(view==='reports')fillTaxSettings();
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -79,15 +81,14 @@
     const m=$('month').value,s=currentSummary(),t=s.totals, tax=currentTax(),budget=((DB.kasSettings||{}).ownerBudgets||{})[m]||0;
     $('periodLabel').textContent=monthName(m);$('reportTitle').textContent='Laporan '+monthName(m);
     $('dashboardStats').innerHTML=[
-      ['Penerimaan penjualan',t.sale||0,'Uang yang diterima, bukan omzet bruto','positive'],
-      ['Pengeluaran usaha',t.expense||0,'Tidak termasuk jatah, pokok utang & pajak','negative'],
-      ['Jatah sudah diambil',t.ownerDraw||0,'Dari usaha ke pribadi',''],
-      ['Selisih kas usaha bulan ini',s.businessIn-s.businessOut,'Semua kas masuk dikurangi kas keluar','']
+      ['Saldo usaha',s.cashBusinessClosing,'Berdasarkan catatan · bukan laba',''],
+      ['Uang masuk usaha',s.businessIn,'Bulan dipilih','positive'],
+      ['Uang keluar usaha',s.businessOut,'Termasuk jatah, utang & pajak','negative']
     ].map(x=>'<div class="stat"><span>'+x[0]+'</span><strong class="'+x[3]+'">'+esc(rupiah(x[1]))+'</strong><small>'+x[2]+'</small></div>').join('');
     $('businessSummary').innerHTML=line('Saldo awal tercatat',s.cashBusinessOpening)+line('Kas masuk usaha',s.businessIn)+line('Kas keluar usaha',s.businessOut)+line('Saldo akhir tercatat',s.cashBusinessClosing,'total');
     $('personalSummary').innerHTML=line('Saldo awal tercatat',s.cashPersonalOpening)+line('Masuk pribadi, termasuk jatah',s.personalIn)+line('Keluar pribadi, termasuk modal',s.personalOut)+line('Saldo akhir tercatat',s.cashPersonalClosing,'total');
     const review=s.tx.filter(needsReview).length;
-    $('reviewNotice').innerHTML=review||s.invalidCount||!s.balancesComplete?'<div class="notice warning">'+review+' transaksi bulan ini perlu peninjauan'+(s.invalidCount?' · '+s.invalidCount+' catatan tidak valid':'')+(s.balanceUnresolvedCount?' · '+s.balanceUnresolvedCount+' transaksi sampai bulan ini belum jelas jenisnya':'')+'. Saldo dan laporan belum lengkap. <button data-review>Tinjau transaksi lama · semua bulan</button></div>':'';
+    $('reviewNotice').innerHTML=review||s.invalidCount||!s.balancesComplete?'<div class="notice warning">Ada catatan yang perlu dicek. Saldo / laporan belum lengkap. <button data-review>Cek catatan</button><details><summary>Lihat penyebab</summary>'+review+' transaksi bulan ini perlu peninjauan'+(s.invalidCount?' · '+s.invalidCount+' catatan tidak valid':'')+(s.balanceUnresolvedCount?' · '+s.balanceUnresolvedCount+' transaksi sampai bulan ini belum jelas jenisnya':'')+'.</details></div>':'';
     $('recentList').innerHTML=rowsHTML(s.tx.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).slice(0,5),false);
     $('ownerSummary').innerHTML=line('Rencana bulan ini',budget)+line('Sudah diambil',t.ownerDraw||0)+line('Sisa rencana',Math.max(0,budget-(t.ownerDraw||0)))+((t.ownerDraw||0)>budget?'<p class="hint">Pengambilan melebihi rencana sebesar '+esc(rupiah((t.ownerDraw||0)-budget))+'.</p>':'');
     if(document.activeElement!==$('ownerBudget'))setMoney('ownerBudget',budget);
@@ -104,8 +105,8 @@
       (tax.warnings||[]).map(w=>'<p class="notice warning">'+esc(w)+'</p>').join('');
   }
   const descriptions={
-    sale:'Hasil penjualan barang usaha. Pisahkan uang yang diterima dan omzet bruto.',
-    expense:'Biaya usaha yang benar-benar dibayar. Jangan masukkan jatah pribadi atau pokok utang.',
+    sale:'Hasil penjualan. Bedakan uang diterima dan nilai sebelum potongan.',
+    expense:'Biaya usaha yang dibayar, bukan belanja pribadi atau pokok utang.',
     personalIncome:'Pemasukan pribadi dari luar usaha. Tidak masuk rekap omzet UMKM ini; bukan berarti bebas seluruh pajak.',
     personalExpense:'Belanja pribadi dari uang pribadi, bukan biaya usaha.',
     capital:'Pindahkan uang pribadi menjadi modal usaha. Dicatat sekali: pribadi berkurang, usaha bertambah.',
@@ -122,12 +123,19 @@
     $('flowHelp').textContent=descriptions[f]||'Pilih jenis yang sesuai dengan transaksi aslinya.';
     $('saleFields').classList.toggle('hidden',!isSale);$('gross').required=isSale;$('grossDate').required=isSale;
     $('otherIncomeFields').classList.toggle('hidden',f!=='businessIncome');
-    $('amountLabel').firstChild.textContent=(F.flows[f]&&F.flows[f].tipe==='out'?'Uang dibayar / dipindahkan (Rp)':'Uang diterima / dipindahkan (Rp)');
+    $('amountLabel').firstChild.textContent=(F.flows[f]&&F.flows[f].tipe==='out'?'Uang keluar (Rp)':'Uang masuk (Rp)');
   }
   function resetForm() {
     $('transactionForm').reset();$('editId').value='';$('date').value=defaultDate();$('grossDate').value=defaultDate();
+    previousCashDate=$('date').value;
     $('editNotice').classList.add('hidden');$('cancelEdit').classList.add('hidden');$('saveTransaction').textContent='Simpan transaksi';
     $('channel').value='BCA Operasional';flowChanged();
+    $('extraFields').open=false;$('saleDateDetails').open=false;
+  }
+  function beginEntry(flow,category=''){
+    const drafted=$('editId').value||$('amount').value||$('gross').value||$('category').value||$('note').value||$('channel').value!=='BCA Operasional'||$('date').value!==defaultDate()||$('grossDate').value!==defaultDate();
+    if(drafted&&!confirm('Ada isian yang belum disimpan. Mulai catatan baru dan tinggalkan isian itu?'))return;
+    resetForm();$('flow').value=flow;$('category').value=category;flowChanged();go('transactions');
   }
   function editTransaction(id) {
     const t=DB.tx.find(x=>x.id===id);if(!t)return;
@@ -141,6 +149,7 @@
     $('editNotice').classList.remove('hidden');$('cancelEdit').classList.remove('hidden');$('saveTransaction').textContent='Simpan perubahan';
     $('date').value=t.tanggal;setMoney('amount',t.jumlah);setMoney('gross',t.gross);$('grossDate').value=t.omzetTanggal||t.tanggal;
     $('category').value=t.kategori||'';$('channel').value=t.channel||'';$('note').value=t.catatan||'';$('otherTax').value=t.taxTreatment||'review';
+    $('extraFields').open=!!(t.kategori||t.catatan);$('saleDateDetails').open=!!(t.omzetTanggal&&t.omzetTanggal!==t.tanggal);
     flowChanged();go('transactions');
   }
   $('transactionForm').addEventListener('submit',e=>{
@@ -167,7 +176,7 @@
   }
   function legacyDebtPayment(t){return !t.flow&&!t.debtId&&['Bayar Utang','Pelunasan Piutang'].includes(t.kategori)&&DB.pi.some(x=>x&&Array.isArray(x.bayar)&&x.bayar.length);}
   $('ownerForm').addEventListener('submit',e=>{e.preventDefault();const v=parseMoney('ownerBudget');if(v===null)return alert('Isi jumlah rupiah, boleh 0.');mutate(next=>{next.kasSettings=next.kasSettings||{};next.kasSettings.ownerBudgets=next.kasSettings.ownerBudgets||{};next.kasSettings.ownerBudgets[$('month').value]=v;},'Rencana jatah tersimpan. Tidak ada uang dipindahkan.');});
-  $('recordOwner').onclick=()=>{resetForm();$('flow').value='ownerDraw';$('category').value='Jatah pemilik (prive)';$('date').value=defaultDate();flowChanged();go('transactions');};
+  $('recordOwner').onclick=()=>beginEntry('ownerDraw','Jatah pemilik (prive)');
   function defaultDate(){return $('month').value===localDate().slice(0,7)?localDate():$('month').value+'-01';}
   function fillTaxSettings(){
     const m=$('month').value,p=taxSettings();
@@ -279,16 +288,21 @@
     if(b.dataset.view)go(b.dataset.view);if(b.dataset.go)go(b.dataset.go);
     if(b.dataset.edit)editTransaction(b.dataset.edit);if(b.dataset.void)toggleVoid(b.dataset.void,false);if(b.dataset.restoreTx)toggleVoid(b.dataset.restoreTx,true);if(b.dataset.pay)openPayment(b.dataset.pay);
     if(b.dataset.debtEdit)editDebt(b.dataset.debtEdit,'edit');if(b.dataset.debtAdd)editDebt(b.dataset.debtAdd,'add');
-    if(b.hasAttribute('data-review')){$('txFilter').value='reviewAll';go('transactions');renderTransactions();}
+    if(b.dataset.newFlow)beginEntry(b.dataset.newFlow);
+    if(b.hasAttribute('data-review'))showHistory('reviewAll');
   });
-  $('reviewOld').onclick=()=>{$('txFilter').value='reviewAll';go('transactions');renderTransactions();};
+  function showHistory(filter){$('txFilter').value=filter;$('searchTx').value='';go('transactions');$('entryHistory').open=true;renderTransactions();$('entryHistory').scrollIntoView?.({behavior:'smooth',block:'start'});}
+  $('showHistory').onclick=()=>showHistory('all');
+  $('reviewOld').onclick=()=>showHistory('reviewAll');
+  $('openTax').onclick=()=>{go('reports');$('reportMore').open=true;$('taxSettings').open=true;$('reportMore').scrollIntoView?.({behavior:'smooth',block:'start'});};
+  $('grossDate').addEventListener('invalid',()=>{$('saleDateDetails').open=true;});
   $('flow').onchange=flowChanged;$('cancelEdit').onclick=resetForm;
   $('sameGross').onclick=()=>{const n=parseMoney('amount');if(n===null)return alert('Isi uang diterima terlebih dahulu.');setMoney('gross',n);};
-  $('date').onchange=()=>{if(!$('editId').value)$('grossDate').value=$('date').value;};
+  $('date').onchange=()=>{if(!$('editId').value&&$('grossDate').value===previousCashDate)$('grossDate').value=$('date').value;previousCashDate=$('date').value;};
   $('searchTx').oninput=renderTransactions;$('txFilter').onchange=renderTransactions;
-  $('month').onchange=()=>{if(!F.validMonth($('month').value)){$('month').value=localDate().slice(0,7);}if(!$('editId').value&&!$('amount').value&&!$('category').value&&!$('note').value){$('date').value=defaultDate();$('grossDate').value=defaultDate();}render();fillTaxSettings();};
+  $('month').onchange=()=>{if(!F.validMonth($('month').value)){$('month').value=localDate().slice(0,7);}if(!$('editId').value&&!$('amount').value&&!$('gross').value&&!$('category').value&&!$('note').value&&$('grossDate').value===previousCashDate&&$('date').value===previousCashDate){$('date').value=defaultDate();$('grossDate').value=defaultDate();previousCashDate=$('date').value;}render();fillTaxSettings();};
   window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);}});
   document.querySelectorAll('input[inputmode="numeric"]').forEach(el=>el.addEventListener('blur',()=>{const n=parseMoney(el.id);if(n!==null)setMoney(el.id,n);}));
   resetForm();$('debtDate').value=localDate();fillTaxSettings();render();
-  notice(loaded.error||'Tersimpan di browser HP / komputer ini. Belum tersinkron otomatis antar-perangkat.',!!loaded.error);
+  notice(loaded.error||'Tersimpan di perangkat ini · belum sinkron antar-perangkat',!!loaded.error);
 })();
