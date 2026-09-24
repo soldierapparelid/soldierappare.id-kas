@@ -16,7 +16,7 @@
   $('month').value = localDate().slice(0,7);
   function notice(message,error) { $('storageNotice').textContent = message; $('storageNotice').className = 'notice'+(error?' error':''); }
   function toast(message) { $('toast').textContent=message; $('toast').style.display='block'; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{$('toast').style.display='none';},4200); }
-  function download(name,content,type) { const b=new Blob([content],{type:type||'application/json'}), u=URL.createObjectURL(b), a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000); }
+  function download(name,content,type,keepUrl) { const b=new Blob([content],{type:type||'application/json'}), u=URL.createObjectURL(b), a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();if(!keepUrl)setTimeout(()=>URL.revokeObjectURL(u),10000);return u; }
   function backup() { if(loaded.error&&loaded.raw===null){alert('Data browser belum dapat dibaca. Tidak ada cadangan kosong yang dibuat. Jangan hapus data situs.');return false;}download('kas-command-backup-'+localDate()+'.json',loaded.error ? loaded.raw : JSON.stringify(DB,null,2));return true; }
   function commit(next,message) {
     if(blocked) { notice('Perubahan belum disimpan. Unduh cadangan lalu buka ulang halaman ini. '+(loaded.error||'Data berubah di tab lain.'),true);return false; }
@@ -317,14 +317,28 @@
     if(!reportSourceAvailable())return;
     try{exportCsv('kas-konsultan',consultantRows());toast('Laporan pemasukan dan pengeluaran berhasil diunduh.');}catch(e){alert('Laporan belum dibuat: '+e.message);}
   };
-  function table(rows){return '<table><thead><tr>'+rows[0].map(v=>'<th>'+esc(v)+'</th>').join('')+'</tr></thead><tbody>'+rows.slice(1).map(r=>'<tr>'+r.map(v=>'<td>'+esc(typeof v==='number'?v.toLocaleString('id-ID'):v)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
-  $('printReport').onclick=()=>{
+  let pdfBusy=false,pdfUrl=null;
+  $('printReport').onclick=async()=>{
+    if(pdfBusy)return;
     if(!reportSourceAvailable())return;
+    const button=$('printReport'),label=button.innerHTML;
+    pdfBusy=true;button.disabled=true;button.textContent='Menyiapkan PDF...';
+    $('pdfDownloadReady').classList.add('hidden');
+    if(pdfUrl){URL.revokeObjectURL(pdfUrl);pdfUrl=null;}
     try{
-      const d=consultantData();
-      $('printArea').innerHTML='<h1>Laporan pemasukan dan pengeluaran usaha</h1><p>'+esc(monthName($('month').value))+'</p>'+table([['Ringkasan','Jumlah (Rp)'],['Total pemasukan',d.incoming],['Total pengeluaran',d.outgoing],['Selisih pemasukan dan pengeluaran',d.difference]])+'<p>Berdasarkan tanggal uang masuk / keluar. Rincian pribadi, saldo awal dan transfer sendiri tidak dihitung dalam total di atas.</p>'+(d.issues.length?'<p>'+esc(d.issues.join(' '))+'</p>':'')+'<h2>Rincian pemasukan dan pengeluaran</h2>'+table(plainCashRows(d.cash))+(d.transfers.length?'<h2>Transfer antar-rekening sendiri — tidak masuk total</h2>'+table(plainCashRows(d.transfers)):'')+(d.openings.length?'<h2>Saldo awal tercatat — bukan pemasukan</h2>'+table([['Tanggal','Keterangan','Jumlah (Rp)'],...d.openings.map(x=>[x.tanggal,x.catatan||flowLabel(x),x.jumlah])]):'');
-      window.print();
-    }catch(e){alert('Laporan belum dibuat: '+e.message);}
+      if(!window.KasPdf||typeof window.KasPdf.createBlob!=='function')throw new Error('Pembuat PDF belum termuat. Muat ulang halaman, lalu coba lagi.');
+      const d=consultantData(),month=$('month').value;
+      const pdf=await window.KasPdf.createBlob({month,monthLabel:monthName(month),incoming:d.incoming,outgoing:d.outgoing,difference:d.difference,issues:d.issues,cashRows:plainCashRows(d.cash),transferRows:d.transfers.length?plainCashRows(d.transfers):[],openingRows:d.openings.length?[['Tanggal','Keterangan','Jumlah (Rp)'],...d.openings.map(x=>[x.tanggal,x.catatan||flowLabel(x),x.jumlah])]:[]});
+      if(!reportSourceAvailable())return;
+      if(!pdf||pdf.type!=='application/pdf'||!pdf.size)throw new Error('File PDF belum terbentuk. Coba lagi.');
+      const filename='kas-konsultan-'+month+'.pdf';
+      pdfUrl=download(filename,pdf,'application/pdf',true);
+      $('pdfDownloadLink').href=pdfUrl;$('pdfDownloadLink').download=filename;
+      $('pdfDownloadLink').textContent='Simpan '+filename;
+      $('pdfDownloadReady').classList.remove('hidden');
+      toast('PDF siap. Cek folder Unduhan; jika belum muncul, ketuk tautan Simpan PDF.');
+    }catch(e){alert('PDF belum dibuat: '+e.message+' Data transaksi tidak diubah.');}
+    finally{pdfBusy=false;button.disabled=false;button.innerHTML=label;}
   };
   function debtValues(x){const principal=Number(x.jumlah||0)+(x.tambahan||[]).reduce((s,b)=>s+Number(b.jumlah||0),0);const historical=x.legacyPaidOpening!==undefined?Number(x.legacyPaidOpening):(!(x.bayar||[]).length&&x.status==='lunas'?Number(x.jumlah||0):0);const paid=historical+(x.bayar||[]).filter(b=>!b.voided).reduce((s,b)=>s+Number(b.jumlah||0),0);return {principal,paid,remaining:Math.max(0,principal-paid)};}
   function preserveLegacyPaid(debt){if(debt.legacyPaidOpening===undefined&&!(debt.bayar||[]).length&&debt.status==='lunas')debt.legacyPaidOpening=Number(debt.jumlah||0);}
