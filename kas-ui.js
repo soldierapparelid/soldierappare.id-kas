@@ -268,35 +268,63 @@
     return [['Rekap omzet & estimasi PPh Final UMKM',m],['Profil','Orang pribadi — hanya jika memenuhi syarat'],['Status',t.ready?'Estimasi untuk pengecekan':'BELUM LENGKAP — bukan nol pajak'],['Masalah',(t.errors||[]).join(' ')],['Peringatan',(t.warnings||[]).join(' ')],['Mulai pencatatan lengkap',p.startMonth||'Belum diatur'],['Omzet sebelum mulai',p.openingTurnover??'Belum diisi'],['Omzet bruto bulan ini',t.monthTurnover||0],['Kumulatif sebelum bulan ini',t.previousTurnover||0],['Kumulatif sampai bulan ini',t.ytdTurnover||0],['Batas omzet tahunan tidak dikenai PPh final (OP)',500000000],['Omzet kena PPh bulan ini',t.ready?t.taxableMonth:'Belum dihitung'],['Tarif',0.005],['Estimasi PPh final',t.ready?t.estimate:'Belum dihitung'],['Dipotong pihak lain sesuai bukti',t.withheld??'Belum dikonfirmasi'],['Setoran masa pajak sesuai bukti',t.paid??'Belum dikonfirmasi'],['Sisa estimasi',t.ready&&t.remaining!==null?t.remaining:'Belum dihitung'],['Bukti/rekonsiliasi',p.evidence||''],['Catatan','Bukan bukti pelaporan, pembayaran, atau file impor Coretax. Cocokkan seluruh channel dan bukti pajak.'],[],['ID','Tanggal omzet','Tanggal kas','Sumber','Omzet bruto (Rp)','Uang diterima (Rp)','Catatan'],...sales.map(x=>[x.id,x.omzetTanggal||x.tanggal,x.tanggal,x.channel,x.gross??'Belum diperiksa',x.jumlah,x.catatan||''])];
   }
   function consultantIssues(){
-    const s=currentSummary(),t=currentTax(),p=taxSettings(),issues=[...(t.errors||[]),...(t.warnings||[])];
+    const s=currentSummary(),issues=[];
     if(blocked)issues.unshift('Data perangkat belum dapat dipastikan. Selesaikan kendala penyimpanan sebelum membuat berkas.');
-    if(!s.balancesComplete||s.tx.some(needsReview))issues.push('Ada transaksi atau saldo kas yang masih perlu ditinjau.');
-    if((t.withheld>0||t.paid>0)&&!String(p.evidence||'').trim())issues.push('Nomor bukti atau catatan potongan / setoran belum diisi.');
-    return [...new Set(issues)];
+    if(s.invalidCount)issues.push('Ada catatan dengan tanggal atau nominal tidak valid. Periksa sebelum menggunakan laporan.');
+    const tx=s.tx.filter(x=>F.flows[F.classify(x)].scope!=='personal');
+    if(tx.some(x=>F.classify(x)==='review'))issues.push('Ada transaksi yang belum jelas jenisnya; keterangannya tetap disertakan untuk diperiksa.');
+    if(tx.some(x=>F.classify(x)==='sale'&&!F.validAmount(x.gross,true)))issues.push('Ada penjualan yang nilai sebelum potongannya belum diisi. Uang diterima tetap tercantum.');
+    return issues;
   }
   function renderConsultant(){
     const issues=consultantIssues();
-    $('consultantStatus').innerHTML=issues.length?'<div class="notice warning"><strong>Ada yang perlu dilengkapi</strong><p>Berkas tetap bisa diunduh sebagai bahan pemeriksaan, bukan hasil pajak final.</p><details><summary>Lihat yang perlu dicek</summary><ul>'+issues.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></details></div>':'<div class="notice"><strong>Bahan pemeriksaan tersedia</strong><p>Perhitungan berdasarkan isianmu. Cocokkan bukti dan konfirmasikan kepada konsultan; belum berarti sudah lapor atau bayar pajak.</p></div>';
+    $('consultantStatus').innerHTML=issues.length?'<div class="notice warning"><strong>Ada catatan yang perlu dicek</strong><details><summary>Lihat catatan</summary><ul>'+issues.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></details></div>':'<p class="hint">Berdasarkan transaksi yang tersimpan untuk bulan dipilih.</p>';
   }
-  function consultantRows(){
-    const s=currentSummary(),t=s.totals,m=$('month').value,issues=consultantIssues();
-    const businessTx=s.tx.filter(x=>F.flows[F.classify(x)].scope!=='personal');
-    return [['Kas Command — bahan pemeriksaan konsultan',m],['Dibuat pada',localDate()],['Status',issues.length?'PERLU DILENGKAPI / DITINJAU':'Bahan pemeriksaan tersedia; belum diverifikasi konsultan'],['Yang perlu diperiksa',issues.join(' ')],['Cakupan','Kas usaha berdasarkan tanggal kas; omzet berdasarkan tanggal penjualan. Rincian pribadi tidak disertakan. Transaksi belum jelas dan transfer sendiri disertakan untuk pemeriksaan, bukan otomatis omzet/biaya.'],['Batasan','Bukan laporan laba rugi, SPT, bukti bayar/lapor, atau file impor Coretax. Tidak memuat lampiran bukti.'],['Lampirkan terpisah','Rekap seluruh toko/marketplace beserta retur/potongan, mutasi rekening usaha, nota/faktur/kuitansi, bukti potong/pungut dan bukti setor pajak.'],['Pertama kali','Konfirmasikan profil pajak dan kelengkapan omzet sejak Januari. Penghasilan pribadi lain/harta/utang untuk SPT tahunan disampaikan terpisah sesuai kebutuhan konsultan.'],[],['A. REKAP OMZET DAN ESTIMASI PAJAK — tanggal omzet'],...taxRows(),[],['B. RINGKASAN KAS USAHA — tanggal kas'],['Ukuran','Jumlah (Rp)'],['Saldo awal usaha tercatat',s.cashBusinessOpening],['Kas masuk usaha',s.businessIn],['Kas keluar usaha',s.businessOut],['Saldo akhir usaha tercatat',s.cashBusinessClosing],['Penerimaan penjualan',t.sale||0],['Biaya usaha dibayar',t.expense||0],['Modal pemilik masuk — bukan penjualan',t.capital||0],['Pinjaman masuk — bukan penjualan',t.loan||0],['Pokok utang dibayar — bukan biaya usaha',t.debtPayment||0],['Pajak dibayar — tanggal kas',t.taxPayment||0],['Jatah pemilik diambil — bukan biaya usaha',t.ownerDraw||0],['Status saldo',s.balancesComplete?'Berdasarkan catatan tersedia; belum dicocokkan dengan bank':'BELUM LENGKAP'],[],['C. RINCIAN KAS USAHA — tanggal kas'],...txRows(businessTx)];
+  function consultantData(){
+    const s=currentSummary(),cash=[],transfers=[],openings=[];
+    const add=(a,b)=>{const n=a+b;if(!Number.isSafeInteger(n))throw new RangeError('Total nominal terlalu besar.');return n;};
+    let incoming=0,outgoing=0;
+    s.tx.slice().sort((a,b)=>a.tanggal.localeCompare(b.tanggal)||String(a.id).localeCompare(String(b.id))).forEach(x=>{
+      const f=F.classify(x);if(F.flows[f].scope==='personal')return;
+      if(F.isOpeningBalance(x)){openings.push(x);return;}
+      if(f==='transferIn'||f==='transferOut'){transfers.push(x);return;}
+      cash.push(x);
+      if(!F.validAmount(x.jumlah))throw new RangeError('Ada nominal transaksi yang belum valid.');
+      if(x.tipe==='in')incoming=add(incoming,x.jumlah);else if(x.tipe==='out')outgoing=add(outgoing,x.jumlah);else throw new RangeError('Arah transaksi belum valid.');
+    });
+    return {cash,transfers,openings,incoming,outgoing,difference:add(incoming,-outgoing),issues:consultantIssues()};
+  }
+  function plainCashRows(tx){
+    return [['Tanggal','Jenis transaksi','Kategori','Rekening / sumber','Pemasukan (Rp)','Pengeluaran (Rp)','Penjualan sebelum potongan (Rp)','Tanggal penjualan','Keterangan'],...tx.map(x=>{
+      const f=F.classify(x),note=[f==='review'?'Jenis perlu ditinjau':'',x.catatan||''].filter(Boolean).join(' · ');
+      return [x.tanggal,flowLabel(x),x.kategori||'',x.channel||'',x.tipe==='in'?x.jumlah:'',x.tipe==='out'?x.jumlah:'',f==='sale'?(F.validAmount(x.gross,true)?x.gross:'Belum diisi'):'',f==='sale'?(x.omzetTanggal||x.tanggal):'',note];
+    })];
+  }
+  function consultantRows(d){
+    d=d||consultantData();
+    return [['Laporan pemasukan dan pengeluaran usaha',$('month').value],['Total pemasukan (Rp)',d.incoming],['Total pengeluaran (Rp)',d.outgoing],['Selisih pemasukan dan pengeluaran (Rp)',d.difference],['Periode','Berdasarkan tanggal uang masuk / keluar. Rincian pribadi, saldo awal dan transfer sendiri tidak dihitung dalam total di atas.'],...(d.issues.length?[['Catatan pemeriksaan',d.issues.join(' ')]]:[]),[],...plainCashRows(d.cash),...(d.transfers.length?[[],['Transfer antar-rekening sendiri — tidak masuk total'],...plainCashRows(d.transfers)]:[]),...(d.openings.length?[[],['Saldo awal tercatat — bukan pemasukan'],['Tanggal','Keterangan','Jumlah (Rp)'],...d.openings.map(x=>[x.tanggal,x.catatan||flowLabel(x),x.jumlah])]:[])];
+  }
+  function reportSourceAvailable(){
+    if(blocked){alert('Berkas belum dibuat karena data perangkat belum dapat dipastikan. Selesaikan kendala penyimpanan; jangan hapus data situs.');return false;}
+    if(currentSummary().invalidCount){alert('Berkas belum dibuat: perbaiki tanggal atau nominal catatan yang tidak valid dahulu. Data tidak diubah.');return false;}
+    return true;
   }
   function exportCsv(name,rows){download(name+'-'+$('month').value+'.csv',F.csv(rows),'text/csv;charset=utf-8');}
   $('downloadCash').onclick=()=>exportCsv('kas-transaksi',txRows(currentSummary().tx));
   $('downloadSummary').onclick=()=>exportCsv('kas-ringkasan',summaryRows());
   $('downloadTax').onclick=()=>exportCsv('kas-omzet-pph',taxRows());
   $('downloadConsultant').onclick=()=>{
-    if(blocked)return alert('Berkas belum dibuat karena data perangkat belum dapat dipastikan. Selesaikan kendala penyimpanan; jangan hapus data situs.');
-    exportCsv('kas-konsultan',consultantRows());
-    toast('Berkas diunduh. Sertakan bukti transaksi dan pajak saat mengirim ke konsultan.');
+    if(!reportSourceAvailable())return;
+    try{exportCsv('kas-konsultan',consultantRows());toast('Laporan pemasukan dan pengeluaran berhasil diunduh.');}catch(e){alert('Laporan belum dibuat: '+e.message);}
   };
   function table(rows){return '<table><thead><tr>'+rows[0].map(v=>'<th>'+esc(v)+'</th>').join('')+'</tr></thead><tbody>'+rows.slice(1).map(r=>'<tr>'+r.map(v=>'<td>'+esc(typeof v==='number'?v.toLocaleString('id-ID'):v)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
   $('printReport').onclick=()=>{
-    const s=currentSummary(),tax=currentTax(),taxData=taxRows(),detailStart=taxData.findIndex(r=>r[0]==='ID');
-    $('printArea').innerHTML='<h1>Kas Command</h1><p>Laporan kas · '+esc(monthName($('month').value))+'</p><h2>Ringkasan bulanan</h2>'+table(summaryRows().slice(1))+'<h2>Estimasi PPh final UMKM</h2>'+table(taxData.slice(0,detailStart).filter(r=>r.length))+'<h2>Rincian omzet — tanggal penjualan</h2>'+table(taxData.slice(detailStart))+'<h2>Rincian transaksi kas — tanggal uang masuk / keluar</h2>'+table([['Tanggal','Jenis','Catatan','Jumlah (Rp)'],...s.tx.map(t=>[t.tanggal,flowLabel(t),t.catatan||t.kategori,(t.tipe==='in'?1:-1)*t.jumlah])])+'<p>Dokumen pendukung pencatatan; bukan bukti lapor/bayar pajak. '+esc(tax.ready?'Estimasi berdasarkan data dan konfirmasi pengguna.':(tax.errors||[]).join(' '))+'</p>';
-    window.print();
+    if(!reportSourceAvailable())return;
+    try{
+      const d=consultantData();
+      $('printArea').innerHTML='<h1>Laporan pemasukan dan pengeluaran usaha</h1><p>'+esc(monthName($('month').value))+'</p>'+table([['Ringkasan','Jumlah (Rp)'],['Total pemasukan',d.incoming],['Total pengeluaran',d.outgoing],['Selisih pemasukan dan pengeluaran',d.difference]])+'<p>Berdasarkan tanggal uang masuk / keluar. Rincian pribadi, saldo awal dan transfer sendiri tidak dihitung dalam total di atas.</p>'+(d.issues.length?'<p>'+esc(d.issues.join(' '))+'</p>':'')+'<h2>Rincian pemasukan dan pengeluaran</h2>'+table(plainCashRows(d.cash))+(d.transfers.length?'<h2>Transfer antar-rekening sendiri — tidak masuk total</h2>'+table(plainCashRows(d.transfers)):'')+(d.openings.length?'<h2>Saldo awal tercatat — bukan pemasukan</h2>'+table([['Tanggal','Keterangan','Jumlah (Rp)'],...d.openings.map(x=>[x.tanggal,x.catatan||flowLabel(x),x.jumlah])]):'');
+      window.print();
+    }catch(e){alert('Laporan belum dibuat: '+e.message);}
   };
   function debtValues(x){const principal=Number(x.jumlah||0)+(x.tambahan||[]).reduce((s,b)=>s+Number(b.jumlah||0),0);const historical=x.legacyPaidOpening!==undefined?Number(x.legacyPaidOpening):(!(x.bayar||[]).length&&x.status==='lunas'?Number(x.jumlah||0):0);const paid=historical+(x.bayar||[]).filter(b=>!b.voided).reduce((s,b)=>s+Number(b.jumlah||0),0);return {principal,paid,remaining:Math.max(0,principal-paid)};}
   function preserveLegacyPaid(debt){if(debt.legacyPaidOpening===undefined&&!(debt.bayar||[]).length&&debt.status==='lunas')debt.legacyPaidOpening=Number(debt.jumlah||0);}
@@ -377,7 +405,6 @@
   $('showHistory').onclick=()=>showHistory('all');
   $('reviewOld').onclick=()=>showHistory('reviewAll');
   $('openTax').onclick=()=>{go('reports');$('reportMore').open=true;$('taxSettings').open=true;$('reportMore').scrollIntoView?.({behavior:'smooth',block:'start'});};
-  $('consultantTax').onclick=$('openTax').onclick;
   $('grossDate').addEventListener('invalid',()=>{$('saleDateDetails').open=true;});
   $('flow').onchange=flowChanged;$('cancelEdit').onclick=resetForm;$('amount').addEventListener('input',renderSplitPreview);
   $('sameGross').onclick=()=>{const n=parseMoney('amount');if(n===null)return alert('Isi uang diterima terlebih dahulu.');setMoney('gross',n);};

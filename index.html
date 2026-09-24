@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="app">
-<header class="app-head"><div class="brand"><span class="brand-icon">K</span><div><h1>Kas Command</h1><p>Usaha & pribadi <span class="version">v5.3</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="debts">Utang</button><button id="openTax">Pengaturan pajak</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
+<header class="app-head"><div class="brand"><span class="brand-icon">K</span><div><h1>Kas Command</h1><p>Usaha & pribadi <span class="version">v5.4</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="debts">Utang</button><button id="openTax">Pengaturan pajak</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
 <div id="storageNotice" class="notice" role="status"></div>
 <div class="topline"><label for="month">Bulan<input id="month" type="month" required></label><p id="periodLabel"></p></div>
 <nav aria-label="Menu Kas" id="nav">
@@ -60,18 +60,17 @@
 <section id="reports" class="view hidden">
 <div class="section-head"><div><h2 id="reportTitle">Laporan</h2><p>Pilih bulan di atas, lalu unduh.</p></div></div>
 <article class="card consultant-guide">
-<span class="eyebrow">UNTUK KONSULTAN PAJAK</span><h3>Kirim laporan tiap bulan</h3>
-<p>Unduh satu berkas berisi rekap omzet, estimasi pajak, dan arus kas usaha bulan dipilih.</p>
+<span class="eyebrow">LAPORAN BULANAN</span><h3>Pemasukan & pengeluaran usaha</h3>
+<p>Pilih bulan, unduh, lalu kirim ke konsultan. Isinya tanggal, jenis, keterangan, uang masuk dan keluar, serta totalnya.</p>
 <div id="consultantStatus" role="status"></div>
-<button id="downloadConsultant" class="primary consultant-action">Unduh berkas konsultan · CSV</button>
-<p class="hint">Bisa dibuka di Excel. Tidak mengirim otomatis. Rincian belanja pribadi tidak disertakan; modal dan pengambilan dari usaha tetap tercatat.</p>
-<details><summary>Apa saja yang perlu dikirim?</summary><ol><li>Berkas konsultan dari aplikasi untuk bulan yang dipilih.</li><li>Rekap penjualan semua toko / marketplace, termasuk retur dan potongannya; cocokkan dengan omzet sebelum potongan.</li><li>Mutasi rekening usaha dan bukti transaksi: nota, faktur, atau kuitansi.</li><li>Bukti potong / pungut dan bukti setor pajak untuk masa yang sesuai, jika ada.</li></ol><p class="hint">Saat pertama kali, konfirmasikan profil pajak dan omzet sejak Januari bersama konsultan. Penghasilan pribadi lainnya mungkin diperlukan untuk SPT tahunan, disampaikan terpisah. Aplikasi tidak memeriksa keaslian bukti, tidak melapor pajak, dan tidak menjamin laporan diterima tanpa pertanyaan.</p><button id="consultantTax" class="secondary">Periksa dasar perhitungan pajak</button></details>
+<button id="downloadConsultant" class="primary consultant-action">Unduh pemasukan & pengeluaran · CSV</button>
+<p class="hint">Bisa dibuka di Excel. Tanpa estimasi atau perhitungan pajak; konsultan yang menghitung. Tidak perlu mengisi pengaturan pajak untuk mengunduh.</p>
+<details><summary>Isi laporan</summary><p class="hint">Transaksi usaha mengikuti tanggal uang masuk / keluar. Nilai penjualan sebelum potongan tetap disertakan jika sudah diisi. Rincian belanja pribadi tidak ikut; modal dan pengambilan dari usaha tetap tercatat. Transfer sendiri dan saldo awal ditampilkan terpisah, tidak menambah total pemasukan / pengeluaran. Transaksi yang dibatalkan tidak dimasukkan.</p></details>
 </article>
 <div class="download-grid">
-<button id="downloadCash"><strong>Pemasukan & pengeluaran</strong><span>Semua transaksi bulan ini · CSV / Excel</span></button>
-<button id="printReport"><strong>Cetak / simpan PDF</strong><span>Ringkasan dan rincian bulan dipilih</span></button>
+<button id="printReport"><strong>Cetak / simpan PDF</strong><span>Laporan pemasukan & pengeluaran usaha yang sama</span></button>
 </div>
-<details id="reportMore" class="card compact-details"><summary>Ringkasan lengkap & pajak</summary><div class="download-grid"><button id="downloadSummary"><strong>Ringkasan bulanan</strong><span>Usaha, pribadi & jatah · CSV / Excel</span></button><button id="downloadTax"><strong>Rekap omzet & pajak</strong><span>Untuk pengecekan · CSV / Excel</span></button></div>
+<details id="reportMore" class="card compact-details"><summary>Alat tambahan (opsional)</summary><p class="hint">Alat lama tetap tersedia. Tidak dimasukkan ke laporan pemasukan & pengeluaran di atas.</p><div class="download-grid"><button id="downloadCash"><strong>Semua transaksi</strong><span>Termasuk transaksi pribadi · CSV / Excel</span></button><button id="downloadSummary"><strong>Ringkasan bulanan</strong><span>Usaha, pribadi & jatah · CSV / Excel</span></button><button id="downloadTax"><strong>Rekap omzet & pajak</strong><span>Ekspor terpisah, bukan berkas konsultan · CSV / Excel</span></button></div>
 <article class="card"><div class="section-head"><div><h3>PPh Final UMKM 0,5%</h3><p>Profil: orang pribadi. Perhitungan tahunan kumulatif.</p></div></div><div id="taxSummary"></div>
 <details id="taxSettings"><summary>Lengkapi dasar perhitungan</summary><form id="taxForm">
 <p class="hint">Rp500 juta omzet pertama dalam satu tahun tidak dikenai PPh final bagi orang pribadi yang memenuhi syarat. Pajak bukan dihitung dari laba atau seluruh pemasukan kas.</p>
@@ -101,7 +100,7 @@
 <details class="card"><summary>Alat lama · impor CSV & ekspor Dashboard</summary><p class="hint">Untuk kebutuhan khusus. CSV dan ekspor Dashboard bukan cadangan lengkap. Untuk pindah HP gunakan cadangan JSON di atas.</p><div class="actions"><label class="file-button">Tambahkan CSV transaksi<input id="importCSV" type="file" accept=".csv,text/csv"></label><button id="exportDashboard">Ekspor Dashboard — bulan dipilih</button></div><p class="hint">Ekspor Dashboard memakai jumlah kas dan melewati penjualan Shopee seperti versi lama. Jangan gunakan file ini sebagai laporan pajak.</p></details>
 </section>
 </main>
-<footer>Kas Command v5.3 · Data tersimpan di perangkat ini.</footer>
+<footer>Kas Command v5.4 · Data tersimpan di perangkat ini.</footer>
 </div>
 <dialog id="paymentDialog"><form id="paymentForm"><h2>Catat pembayaran utang</h2><p id="paymentTitle"></p><label>Jumlah dibayar (Rp)<input id="paymentAmount" type="text" inputmode="numeric" required></label><label>Tanggal pembayaran<input id="paymentDate" type="date" required></label><label>Sumber uang<input id="paymentChannel" value="BCA Operasional" required></label><div class="actions"><button class="primary">Simpan pembayaran</button><button type="button" id="cancelPayment">Batal</button></div></form></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -110,5 +109,5 @@
 <script src="kas-storage.js?v=5"></script>
 <script src="kas-compat.js?v=5"></script>
 <script src="kas-buckets.js?v=5.2"></script>
-<script src="kas-ui.js?v=5.3"></script>
+<script src="kas-ui.js?v=5.4"></script>
 </body></html>
