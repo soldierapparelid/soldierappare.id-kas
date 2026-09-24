@@ -3,15 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101827">
+<meta name="theme-color" content="#6d28d9">
 <title>Kas Command — Usaha & Pribadi</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="sdsf.PNG">
-<link rel="stylesheet" href="kas.css?v=5.3">
+<link rel="icon" href="kas-icon.svg?v=5.6" type="image/svg+xml">
+<link rel="alternate icon" href="kas-icon-192.png?v=5.6" type="image/png">
+<link rel="apple-touch-icon" href="kas-icon-180.png?v=5.6">
+<link rel="stylesheet" href="kas.css?v=5.6">
 </head>
 <body>
 <div class="app">
-<header class="app-head"><div class="brand"><span class="brand-icon">K</span><div><h1>Kas Command</h1><p>Usaha & pribadi <span class="version">v5.5</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="debts">Utang</button><button id="openTax">Pengaturan pajak</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
+<header class="app-head"><div class="brand"><img class="brand-icon" src="kas-icon.svg?v=5.6" width="44" height="44" alt=""><div><h1>Kas Command</h1><p>Usaha & pribadi <span class="version">v5.6</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="debts">Utang</button><button id="openTax">Pengaturan pajak</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
 <div id="storageNotice" class="notice" role="status"></div>
 <div class="topline"><label for="month">Bulan<input id="month" type="month" required></label><p id="periodLabel"></p></div>
 <nav aria-label="Menu Kas" id="nav">
@@ -101,7 +103,7 @@
 <details class="card"><summary>Alat lama · impor CSV & ekspor Dashboard</summary><p class="hint">Untuk kebutuhan khusus. CSV dan ekspor Dashboard bukan cadangan lengkap. Untuk pindah HP gunakan cadangan JSON di atas.</p><div class="actions"><label class="file-button">Tambahkan CSV transaksi<input id="importCSV" type="file" accept=".csv,text/csv"></label><button id="exportDashboard">Ekspor Dashboard — bulan dipilih</button></div><p class="hint">Ekspor Dashboard memakai jumlah kas dan melewati penjualan Shopee seperti versi lama. Jangan gunakan file ini sebagai laporan pajak.</p></details>
 </section>
 </main>
-<footer>Kas Command v5.5 · Data tersimpan di perangkat ini.</footer>
+<footer>Kas Command v5.6 · Data tersimpan di perangkat ini.</footer>
 </div>
 <dialog id="paymentDialog"><form id="paymentForm"><h2>Catat pembayaran utang</h2><p id="paymentTitle"></p><label>Jumlah dibayar (Rp)<input id="paymentAmount" type="text" inputmode="numeric" required></label><label>Tanggal pembayaran<input id="paymentDate" type="date" required></label><label>Sumber uang<input id="paymentChannel" value="BCA Operasional" required></label><div class="actions"><button class="primary">Simpan pembayaran</button><button type="button" id="cancelPayment">Batal</button></div></form></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -113,5 +115,5 @@
 <script src="vendor/pdf/jspdf-4.2.1.umd.min.js"></script>
 <script src="vendor/pdf/jspdf-autotable-5.0.8.min.js"></script>
 <script src="kas-pdf.js?v=5.5"></script>
-<script src="kas-ui.js?v=5.5"></script>
+<script src="kas-ui.js?v=5.6"></script>
 </body></html>

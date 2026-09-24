@@ -40,9 +40,9 @@ a { color: var(--blue); text-underline-offset: 3px; }
 .brand { gap: 12px; min-width: 0; }
 .brand-icon {
   display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px;
-  border: 1px solid #8be6c74a; border-radius: 14px;
-  background: linear-gradient(145deg, #224f49, #142f35); color: var(--green);
-  font-size: 25px; font-weight: 850;
+  border: 1px solid #c4b5fd66; border-radius: 14px;
+  background: #6d28d9; color: #faf5ff; overflow: hidden;
+  font-size: 25px; font-weight: 850; object-fit: cover;
 }
 .brand p { margin: 1px 0 0; color: var(--muted); font-size: 12px; }
 .version { display: inline; padding-left: 5px; color: var(--muted); font-size: 10px; }
@@ -167,6 +167,17 @@ details form { margin-top: 16px; }
 .transaction.cash-in { border-left-color: var(--green); }
 .transaction.cash-out { border-left-color: var(--red); }
 .transaction.cash-neutral { border-left-color: #8da5c2; }
+.transaction.debt-card { padding: 16px; margin: 12px 0; border: 1px solid var(--line); border-left-width: 4px; border-radius: 14px; }
+.transaction.debt-unpaid { background: #2d241e; border-color: #725636; border-left-color: var(--amber); }
+.transaction.debt-paid { background: #132b28; border-color: #2f5149; border-left-color: var(--green); }
+.debt-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.debt-head > strong { flex: 1 1 160px; font-size: 16px; }
+.debt-status { display: inline-block; padding: 4px 10px; border: 1px solid currentColor; border-radius: 8px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.debt-unpaid .debt-status, .debt-remaining { color: var(--amber); }
+.debt-paid .debt-status { color: var(--green); }
+.debt-card .debt-progress { color: var(--amber); }
+.debt-pay { margin-top: 12px; border-color: #ba884b; background: #ffcf87; color: #332312; }
+.debt-card details { margin-top: 12px; }
 .cash-direction { display: inline-flex; align-items: center; margin: 0 7px 5px 0; padding: 2px 7px; border: 1px solid #456079; border-radius: 6px; background: #213047; color: #cbd9ea; font-size: 10px; font-weight: 700; line-height: 1.65; vertical-align: middle; white-space: nowrap; }
 .cash-in .cash-direction { border-color: #376b5c; background: var(--in-bg); color: var(--green); }
 .cash-out .cash-direction { border-color: #855061; background: var(--out-bg); color: var(--red); }

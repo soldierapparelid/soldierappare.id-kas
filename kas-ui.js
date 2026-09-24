@@ -343,13 +343,21 @@
   function debtValues(x){const principal=Number(x.jumlah||0)+(x.tambahan||[]).reduce((s,b)=>s+Number(b.jumlah||0),0);const historical=x.legacyPaidOpening!==undefined?Number(x.legacyPaidOpening):(!(x.bayar||[]).length&&x.status==='lunas'?Number(x.jumlah||0):0);const paid=historical+(x.bayar||[]).filter(b=>!b.voided).reduce((s,b)=>s+Number(b.jumlah||0),0);return {principal,paid,remaining:Math.max(0,principal-paid)};}
   function preserveLegacyPaid(debt){if(debt.legacyPaidOpening===undefined&&!(debt.bayar||[]).length&&debt.status==='lunas')debt.legacyPaidOpening=Number(debt.jumlah||0);}
   function renderDebts(){
-    const debts=DB.pi.filter(x=>x&&x.tipe==='utang');
-    $('debtList').innerHTML=debts.length?debts.map(x=>{const v=debtValues(x);return '<div class="transaction"><strong>'+esc(x.nama)+'</strong><p>'+esc(x.catatan||'')+'</p>'+line('Pokok / sudah dibayar',rupiah(v.principal)+' / '+rupiah(v.paid))+line('Sisa utang',v.remaining)+'<p>Jatuh tempo: '+esc(x.tempo||'Belum ditentukan')+'</p>'+(v.remaining?'<button data-pay="'+esc(x.id)+'">Bayar utang</button>':'<span class="positive">Lunas</span>')+'<details><summary>Riwayat pembayaran & tambahan</summary>'+[...(x.tambahan||[]).map(b=>'<p>Tambahan '+esc(b.tanggal)+' · '+esc(rupiah(b.jumlah))+' · '+esc(b.catatan||'')+'</p>'),...(x.bayar||[]).map(b=>'<p>'+esc(b.voided?'Dibatalkan':'Bayar')+' '+esc(b.tanggal)+' · '+esc(rupiah(b.jumlah))+'</p>')].join('')+'</details></div>';}).join(''):'<p class="empty">Belum ada utang tercatat.</p>';
+    const debts=DB.pi.filter(x=>x&&x.tipe==='utang').map((x,index)=>({x,index,v:debtValues(x)}));
+    // Sort only the view: retain source order and all existing payment records.
+    debts.sort((a,b)=>Number(b.v.remaining>0)-Number(a.v.remaining>0)||a.index-b.index);
+    $('debtList').innerHTML=debts.length?debts.map(({x,v})=>{
+      const unpaid=v.remaining>0;
+      return '<div class="transaction debt-card '+(unpaid?'debt-unpaid':'debt-paid')+'">'+
+        '<div class="debt-head"><strong>'+esc(x.nama)+'</strong><span class="debt-status">'+(unpaid?'Belum lunas':'Lunas')+'</span></div>'+
+        (unpaid&&v.paid>0?'<p class="debt-progress">Sudah dibayar sebagian</p>':'')+
+        '<p>'+esc(x.catatan||'')+'</p>'+line('Pokok / sudah dibayar',rupiah(v.principal)+' / '+rupiah(v.paid))+line('Sisa utang',v.remaining,unpaid?'debt-remaining':'positive')+
+        '<p>Jatuh tempo: '+esc(x.tempo||'Belum ditentukan')+'</p>'+
+        (unpaid?'<button class="debt-pay" data-pay="'+esc(x.id)+'">Bayar utang</button>':'')+
+        '<details><summary>Riwayat pembayaran & tambahan</summary>'+[...(x.tambahan||[]).map(b=>'<p>Tambahan '+esc(b.tanggal)+' · '+esc(rupiah(b.jumlah))+' · '+esc(b.catatan||'')+'</p>'),...(x.bayar||[]).map(b=>'<p>'+esc(b.voided?'Dibatalkan':'Bayar')+' '+esc(b.tanggal)+' · '+esc(rupiah(b.jumlah))+'</p>')].join('')+'</details>'+
+        '<details><summary>Kelola '+esc(x.nama)+'</summary><div class="actions"><button data-debt-edit="'+esc(x.id)+'">Edit pokok / catatan</button><button data-debt-add="'+esc(x.id)+'">Tambah utang ke orang ini</button></div></details></div>';
+    }).join(''):'<p class="empty">Belum ada utang tercatat.</p>';
     $('legacyReceivables').innerHTML=DB.pi.filter(x=>x&&x.tipe!=='utang').map(x=>{const v=debtValues(x);return '<div class="transaction"><strong>'+esc(x.nama)+'</strong><p>'+esc(x.catatan||'')+'</p>'+line('Sisa tercatat',v.remaining)+'</div>';}).join('')||'<p class="hint">Tidak ada catatan piutang lama.</p>';
-    debts.forEach(debt=>{
-      const node=document.createElement('details');node.innerHTML='<summary>Kelola '+esc(debt.nama)+'</summary><div class="actions"><button data-debt-edit="'+esc(debt.id)+'">Edit pokok / catatan</button><button data-debt-add="'+esc(debt.id)+'">Tambah utang ke orang ini</button></div>';
-      $('debtList').appendChild(node);
-    });
   }
   function resetDebt(){ $('debtForm').reset();$('debtEditId').value='';$('debtMode').value='';$('debtName').readOnly=false;$('debtDate').value=defaultDate();$('debtFormTitle').textContent='Tambah utang';$('debtAmountLabel').firstChild.textContent='Pokok utang (Rp)';$('debtSave').textContent='Tambah catatan utang';$('debtCancel').classList.add('hidden'); }
   function editDebt(id,mode){
