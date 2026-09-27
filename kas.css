@@ -10,6 +10,7 @@
   --green: #79e3ba;
   --amber: #ffcf87;
   --red: #ffabba;
+  --purple: #d3b7ff;
   --in-bg: #122f2c;
   --out-bg: #35212d;
   --shadow: 0 10px 30px #02081424;
@@ -36,7 +37,7 @@ a { color: var(--blue); text-underline-offset: 3px; }
 
 .app { max-width: 960px; margin: 0 auto; padding: 24px; }
 .app-head, .brand, .topline, .section-head, .actions { display: flex; align-items: center; gap: 14px; }
-.app-head { justify-content: space-between; margin-bottom: 12px; }
+.app-head { justify-content: space-between; margin-bottom: 8px; }
 .brand { gap: 12px; min-width: 0; }
 .brand-icon {
   display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px;
@@ -63,13 +64,13 @@ small, .hint, .help { color: var(--muted); font-size: 13px; }
 .more-options { position: absolute; top: 53px; right: 0; z-index: 10; width: min(250px, calc(100vw - 32px)); padding: 7px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); box-shadow: 0 18px 40px #0007; }
 .more-options button { display: block; width: 100%; border: 0; background: transparent; text-align: left; font-size: 14px; }
 .more-options button:hover { background: var(--panel-raised); }
-#storageNotice:not(.error) { margin: 0 0 18px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 11px; }
+#storageNotice:not(.error) { margin: 0 0 12px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 11px; }
 #storageNotice.error { margin-top: 12px; padding: 14px; }
-.topline { margin: 0 0 16px; }
+.topline { margin: 0 0 10px; }
 .topline label { display: flex; align-items: center; gap: 14px; width: 100%; margin: 0; color: var(--muted); }
 .topline input { flex: 1; width: auto; max-width: 260px; min-height: 44px; margin: 0; padding: 9px 12px; font-size: 14px; }
 .topline p { display: none; }
-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-bottom: 22px; padding: 5px; border: 1px solid #25354b; border-radius: 15px; background: #101c2e; }
+nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-bottom: 18px; padding: 5px; border: 1px solid #25354b; border-radius: 15px; background: #101c2e; }
 nav button { min-width: 0; min-height: 46px; padding: 10px 6px; border-color: transparent; border-radius: 10px; background: transparent; color: var(--muted); font-size: 14px; }
 nav button.active { border-color: #405974; background: #253b54; color: #edf5ff; box-shadow: 0 3px 8px #0002; }
 .section-head { justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
@@ -95,16 +96,16 @@ nav button.active { border-color: #405974; background: #253b54; color: #edf5ff; 
 .money-pots .stat {
   --pot-color: #abcfff; --pot-border: #476789; --pot-bg: #14283e;
   display: flex; flex-direction: column; grid-column: auto;
-  padding: 20px 18px; border-color: var(--pot-border); border-top: 4px solid var(--pot-color);
+  padding: 15px; border-color: var(--pot-border); border-top: 3px solid var(--pot-color);
   background: var(--pot-bg); box-shadow: none;
 }
 .money-pots .pot-operational { --pot-color: #abcfff; --pot-border: #476789; --pot-bg: #14283e; }
 .money-pots .pot-tax { --pot-color: #ffcf87; --pot-border: #78603e; --pot-bg: #2d281e; }
 .money-pots .pot-personal { --pot-color: #d3b7ff; --pot-border: #6e538d; --pot-bg: #292039; }
 .money-pots .stat span { color: var(--pot-color); font-size: 15px; font-weight: 750; }
-.money-pots .stat strong { margin: 10px 0 7px; color: var(--text); font-size: 28px; letter-spacing: -.7px; }
+.money-pots .stat strong { margin: 6px 0 4px; color: var(--text); font-size: 26px; letter-spacing: -.7px; }
 .money-pots .stat strong.negative { color: var(--red); }
-.money-pots .stat small { margin-bottom: 18px; color: #c8d1df; font-size: 13px; overflow-wrap: anywhere; }
+.money-pots .stat small { margin-bottom: 10px; color: #c8d1df; font-size: 13px; overflow-wrap: anywhere; }
 .money-pots .stat button { width: 100%; min-height: 46px; margin-top: auto; padding: 10px; border-color: var(--pot-border); background: #0a122055; color: var(--pot-color); font-size: 14px; }
 .money-pots .stat button:hover { border-color: var(--pot-color); background: #ffffff0d; }
 .positive { color: var(--green); }
@@ -119,6 +120,19 @@ button[data-new-flow="sale"] { border-color: #95edcd; background: var(--green); 
 button[data-new-flow="sale"]:hover { border-color: #c6ffe7; background: #95edcd; }
 button[data-new-flow="expense"] { border-color: #ffc1cd; background: var(--red); color: #4a1724; }
 button[data-new-flow="expense"]:hover { border-color: #ffdae2; background: #ffc1cd; }
+button[data-new-flow="ownerDraw"] { border-color: #dfcaff; background: var(--purple); color: #30174b; }
+button[data-new-flow="ownerDraw"]:hover { border-color: #efdeff; background: #dfcaff; }
+button[data-new-flow="taxReserve"] { border-color: #ffdda9; background: var(--amber); color: #3d2b12; }
+button[data-new-flow="taxReserve"]:hover { border-color: #ffe9c7; background: #ffdda9; }
+.launcher-heading { margin: 0 0 10px; }
+.launcher-heading h2, h2.launcher-heading { margin: 0 0 10px; font-size: 20px; line-height: 1.35; letter-spacing: -.3px; }
+.launcher-heading p { margin: 4px 0 10px; color: var(--muted); font-size: 13px; }
+.task-launcher { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0 0 22px; }
+.task-launcher button { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 5px; min-width: 0; min-height: 96px; padding: 15px; border-radius: 14px; text-align: left; overflow-wrap: anywhere; }
+.task-launcher strong { display: block; font-size: 18px; font-weight: 800; line-height: 1.35; }
+.task-launcher small { display: block; color: inherit; font-size: 13px; font-weight: 500; line-height: 1.4; }
+#dashboard > .section-head h2 { font-size: 20px; }
+#dashboard > .section-head { margin-bottom: 12px; }
 .split-summary { margin: 0 0 18px; padding: 0 3px; }
 .split-summary > p { margin: 5px 0; font-size: 13px; }
 .split-summary > p:first-child { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -156,7 +170,7 @@ details form { margin-top: 16px; }
 .entry-layout .help { min-height: 0; margin: 0 0 18px; padding: 0; font-size: 12px; }
 .entry-layout input, .entry-layout select { font-size: 16px; }
 .entry-layout .actions { margin-bottom: 0; }
-.entry-layout .actions .primary { flex: 1; min-height: 52px; }
+.entry-layout .actions .primary { flex: 1; min-height: 56px; font-size: 17px; }
 .entry-layout .inset { padding: 16px; }
 .entry-layout .inset summary, #extraFields summary { font-size: 13px; }
 #extraFields[open] > summary { margin-bottom: 12px; }
@@ -182,6 +196,33 @@ details form { margin-top: 16px; }
 #transactionForm[data-direction="out"] #amount { border-color: #a16474; }
 #transactionForm[data-direction="in"] #saveTransaction { background: var(--green); color: #10392b; }
 #transactionForm[data-direction="out"] #saveTransaction { background: var(--red); color: #4a1724; }
+#transactionForm { --entry-color: var(--blue); --entry-border: #597895; --entry-bg: #172b41; --entry-ink: #12253f; }
+#transactionForm[data-flow="sale"] { --entry-color: var(--green); --entry-border: #4c8c77; --entry-bg: var(--in-bg); --entry-ink: #10392b; }
+#transactionForm[data-flow="expense"] { --entry-color: var(--red); --entry-border: #a16474; --entry-bg: var(--out-bg); --entry-ink: #4a1724; }
+#transactionForm[data-flow="ownerDraw"] { --entry-color: var(--purple); --entry-border: #8c6bab; --entry-bg: #292039; --entry-ink: #30174b; }
+#transactionForm[data-flow="taxReserve"], #transactionForm[data-flow="taxReturn"] { --entry-color: var(--amber); --entry-border: #a48655; --entry-bg: #2d281e; --entry-ink: #3d2b12; }
+.entry-choice-fields { min-width: 0; }
+.entry-choice-fields > label { margin-bottom: 14px; font-size: 15px; }
+.entry-choice-fields .advanced-entry { margin-bottom: 14px; }
+#entryRoute { margin: 0 0 16px; padding: 12px 14px; border: 1px solid var(--entry-border, #597895); border-left: 4px solid var(--entry-color, var(--blue)); border-radius: 11px; background: var(--entry-bg, #172b41); overflow-wrap: anywhere; }
+#entryRoute strong { display: block; color: var(--entry-color, var(--blue)); font-size: 16px; line-height: 1.4; }
+#entryRoute p, #entryRoute small { display: block; margin: 4px 0 0; color: #d2dce8; font-size: 13px; line-height: 1.5; }
+.entry-guide { margin: 0 0 16px; padding: 13px 14px; border: 1px solid var(--entry-border, #597895); border-radius: 11px; background: var(--entry-bg, #172b41); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.entry-guide strong { color: var(--entry-color, var(--blue)); }
+.entry-guide p { margin: 5px 0; }
+.entry-guide p:first-child { margin-top: 0; }
+.entry-guide p:last-child { margin-bottom: 0; }
+#transactionForm[data-flow="ownerDraw"] #flowIndicator, #transactionForm[data-flow="taxReserve"] #flowIndicator, #transactionForm[data-flow="taxReturn"] #flowIndicator { border-color: var(--entry-border); background: var(--entry-bg); color: var(--entry-color); }
+#transactionForm[data-flow="ownerDraw"] #amount, #transactionForm[data-flow="taxReserve"] #amount, #transactionForm[data-flow="taxReturn"] #amount { border-color: var(--entry-border); }
+#transactionForm[data-flow="sale"] #saveTransaction, #transactionForm[data-flow="expense"] #saveTransaction, #transactionForm[data-flow="ownerDraw"] #saveTransaction, #transactionForm[data-flow="taxReserve"] #saveTransaction, #transactionForm[data-flow="taxReturn"] #saveTransaction { border-color: var(--entry-color); background: var(--entry-color); color: var(--entry-ink); }
+#saveTransaction { width: 100%; overflow-wrap: anywhere; }
+.entry-success { max-width: 620px; margin: 0 auto 20px; padding: 24px; border: 1px solid #46745f; border-radius: 17px; background: #132b28; overflow-wrap: anywhere; }
+.entry-success h2 { margin: 0 0 12px; color: var(--green); font-size: 24px; }
+.entry-success p { margin: 8px 0; font-size: 15px; }
+.entry-success strong { font-variant-numeric: tabular-nums; }
+.entry-success .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 22px 0 0; }
+.entry-success .actions button { width: 100%; min-width: 0; min-height: 52px; }
+.entry-success .primary { background: var(--green); color: #10392b; }
 #splitPreview { font-size: 13px; line-height: 1.7; }
 #splitPercent { max-width: 180px; }
 #owner .compact-details form { margin-bottom: 18px; }
@@ -250,15 +291,16 @@ dialog::backdrop { background: #030914bd; }
   .two-cols { grid-template-columns: 1fr; gap: 14px; }
 }
 @media (max-width: 720px) {
+  .task-launcher { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
   .money-pots { grid-template-columns: 1fr; }
-  .money-pots .stat { padding: 18px; }
-  .money-pots .stat strong { font-size: 30px; }
-  .money-pots .stat small { margin-bottom: 14px; }
+  .money-pots .stat { padding: 14px 16px; }
+  .money-pots .stat strong { font-size: 27px; }
+  .money-pots .stat small { margin-bottom: 10px; }
   .main-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .main-actions button[data-view="reports"] { grid-column: 1 / -1; }
 }
 @media (max-width: 480px) {
-  .app { padding: 18px 14px; }
+  .app { padding: 12px 14px; }
   .app-head { gap: 8px; }
   .brand { gap: 10px; }
   .brand-icon { width: 40px; height: 40px; border-radius: 12px; font-size: 23px; }
@@ -268,8 +310,8 @@ dialog::backdrop { background: #030914bd; }
   .more-menu > summary { padding: 11px 10px; font-size: 11px; }
   .more-menu > summary::after { margin-left: 5px; }
   .topline input { max-width: none; }
-  nav { gap: 4px; margin-bottom: 18px; }
-  nav button { font-size: 13px; }
+  nav { gap: 4px; margin-bottom: 14px; padding: 4px; }
+  nav button { min-height: 44px; padding: 9px 5px; font-size: 13px; }
   .section-head { flex-wrap: wrap; }
   .card { padding: 18px; border-radius: 17px; }
   .compact-details { padding: 3px 17px; }
@@ -278,8 +320,10 @@ dialog::backdrop { background: #030914bd; }
   .stat strong { font-size: 22px; }
   .stat:first-child { padding: 22px 19px; }
   .stat:first-child strong { font-size: 32px; }
-  .money-pots .stat { padding: 17px; }
-  .money-pots .stat strong { font-size: 29px; }
+  .money-pots .stat { padding: 13px 15px; }
+  .money-pots .stat strong { font-size: 26px; }
+  .task-launcher button { min-height: 92px; padding: 13px 12px; }
+  .task-launcher strong { font-size: 17px; }
   .quick-actions { gap: 10px; }
   .quick-actions button { min-height: 54px; padding: 13px 8px; font-size: 14px; }
   .two-fields, .download-grid { grid-template-columns: 1fr; gap: 0; }
@@ -296,6 +340,8 @@ dialog::backdrop { background: #030914bd; }
   .cash-direction { font-size: 10px; }
   .entry-switch { gap: 8px; margin-bottom: 18px; }
   .entry-switch button { padding: 11px 8px; font-size: 15px; }
+  .entry-success { padding: 20px 18px; }
+  .entry-success .actions { grid-template-columns: 1fr; }
   .split-summary > p:first-child { flex-wrap: wrap; }
   .split-summary .text-button { padding-left: 0; }
   .inset, .entry-layout .inset { padding: 13px; }

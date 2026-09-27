@@ -101,7 +101,7 @@
     $('dashboardStats').innerHTML=[
       ['Operasional',a.ready?a.operationalAvailable:null,'Setelah jatah pribadi & cadangan pajak','operational','transactions','Catat uang'],
       ['Cadangan pajak',a.reserveReady?a.taxReserve:null,'Sudah disisihkan, belum dibayar','tax','reserve','Sisihkan / bayar'],
-      ['Pribadi',a.ready?a.personalAvailable:null,'Jatah belum ditransfer ke pribadi','personal','owner','Ambil jatah']
+      ['Pribadi',a.ready?a.personalAvailable:null,'Jatah belum ditransfer ke pribadi','personal','owner','Lihat rincian jatah']
     ].map(x=>'<div class="stat pot-'+x[3]+'"><span>'+x[0]+'</span><strong class="'+(x[1]<0?'negative':'')+'">'+esc(x[1]===null?'Belum pasti':rupiah(x[1]))+'</strong><small>'+x[2]+'</small><button data-view="'+x[4]+'">'+x[5]+'</button></div>').join('');
     renderSplit(b);
     $('reserveSummary').innerHTML=line('Cadangan tersisa sampai bulan ini',a.reserveReady?a.taxReserve:'Belum pasti','total')+(!a.reserveReady?'<p class="notice warning">'+esc(a.errors.join(' '))+'</p>':'');
@@ -115,7 +115,7 @@
     $('ownerSummary').innerHTML=line('Rencana bulan ini',budget)+line('Sudah diambil',t.ownerDraw||0)+line('Sisa rencana',Math.max(0,budget-(t.ownerDraw||0)))+((t.ownerDraw||0)>budget?'<p class="hint">Pengambilan melebihi rencana sebesar '+esc(rupiah((t.ownerDraw||0)-budget))+'.</p>':'');
     if(document.activeElement!==$('ownerBudget'))setMoney('ownerBudget',budget);
     $('ownerList').innerHTML=rowsHTML(s.tx.filter(x=>F.classify(x)==='ownerDraw'));
-    renderTransactions();renderTax(tax);renderConsultant();renderDebts();
+    renderTransactions();renderTax(tax);renderConsultant();renderDebts();entryGuidance();
   }
   function renderSplit(b) {
     const p=splitPolicy(), title=!p.valid?'Pengaturan pembagian perlu diperiksa':p.enabled?(100-p.personalPercent)+'% usaha · '+p.personalPercent+'% pribadi':'Pembagian baru dijeda';
@@ -168,6 +168,25 @@
     transferIn:'Riwayat transfer masuk antar-rekening milik sendiri dalam lingkup yang sama (usaha ke usaha, atau pribadi ke pribadi). Tidak menambah total kas atau omzet.',
     transferOut:'Riwayat transfer keluar antar-rekening milik sendiri dalam lingkup yang sama. Tidak mengurangi total kas. Untuk usaha ke pribadi gunakan Jatah saya.'
   };
+  const entryTitles={ownerDraw:'Ambil jatah pribadi',taxReserve:'Sisihkan pajak',taxReturn:'Kembalikan cadangan pajak',taxPayment:'Bayar pajak usaha',expense:'Pengeluaran usaha',capital:'Tambah modal usaha',sale:'Uang masuk'};
+  let lastEntryFlow='sale';
+  function entryGuidance(){
+    const f=$('flow').value,direct=['ownerDraw','taxReserve','taxReturn'].includes(f),editing=!!$('editId').value;
+    $('transactionForm').dataset.flow=f;
+    $('entryChoiceFields').classList.toggle('hidden',direct&&!editing);
+    $('entryGuide').classList.toggle('hidden',!direct);
+    $('entryTitle').textContent=entryTitles[f]||F.flows[f]?.label||'Periksa transaksi';
+    $('entryRoute').textContent=f==='ownerDraw'?'Rekening usaha → rekening pribadi':f==='taxReserve'?'Rekening operasional → rekening pajak':f==='taxReturn'?'Rekening pajak → rekening operasional':f==='expense'?'Belanja untuk usaha':f==='sale'?'Catat uang yang benar-benar diterima':F.flows[f]?.label||'Pilih jenis transaksi';
+    $('saveTransaction').textContent=editing?'Simpan perubahan':f==='ownerDraw'?'Simpan pengambilan pribadi':f==='taxReserve'?'Simpan cadangan pajak':f==='expense'?'Simpan pengeluaran':f==='sale'||f==='capital'?'Simpan uang masuk':'Simpan catatan';
+    if(direct){
+      $('marketplaceSource').required=false;
+      const date=$('date').value,eligible=DB.tx.filter(t=>t.id!==$('editId').value&&(!F.validDate(t.tanggal)||t.tanggal<=date)),a=A.summary(eligible,F.validDate(date)?date.slice(0,7):$('month').value,F,B);
+      const title=f==='ownerDraw'?'Jatah pribadi belum diambil':f==='taxReserve'?'Operasional tercatat':'Cadangan pajak tercatat';
+      const value=f==='ownerDraw'?(a.ready?a.personalAvailable:null):f==='taxReserve'?(a.ready?a.operationalAvailable:null):(a.reserveReady?a.taxReserve:null);
+      $('entryGuide').innerHTML=editing?'<p>Perbaiki catatan transfer yang sudah ada. <strong>Jangan transfer lagi.</strong> Ini tidak membuat transaksi tambahan.</p>':line(title,value===null?'Belum dapat dipastikan':value,'total')+'<p>'+esc(f==='ownerDraw'?'1. Transfer dari rekening usaha ke rekening pribadimu lewat aplikasi bank.':'1. Pindahkan uang antar-rekening melalui aplikasi bank.')+'</p><p>2. Isi jumlah yang <strong>sudah dipindahkan</strong>, tanggal, lalu simpan sekali di sini.</p><p class="hint">'+esc(value===null?'Cocokkan catatan dan saldo bank dahulu. Angka ini belum bisa dipakai sebagai patokan jatah.':value<0?'Catatan menunjukkan kekurangan. Jangan jadikan angka ini izin mengambil uang.':'Periksa juga kebutuhan usaha dan saldo bank sebelum transfer.')+'</p>'+(f==='ownerDraw'?'<p class="hint">Tidak perlu dicatat lagi sebagai pemasukan pribadi. Aplikasi tidak mentransfer uang.</p>':'<p class="hint">Pindah cadangan bukan biaya dan bukan pembayaran pajak.</p>');
+      $('amountLabel').firstChild.textContent=f==='ownerDraw'?'Jumlah yang sudah diambil (Rp)':'Jumlah yang sudah dipindahkan (Rp)';
+    }
+  }
   function flowChanged() {
     const f=$('flow').value,isSale=f==='sale';
     const a=cashAppearance({flow:f,tipe:F.flows[f]?.tipe});
@@ -178,7 +197,7 @@
     $('taxPaySourceField').classList.toggle('hidden',f!=='taxPayment');
     $('otherIncomeFields').classList.toggle('hidden',f!=='businessIncome');
     $('amountLabel').firstChild.textContent=(F.flows[f]&&F.flows[f].tipe==='out'?'Uang keluar (Rp)':'Uang masuk (Rp)');
-    renderSplitPreview();
+    renderSplitPreview();entryGuidance();
   }
   const simpleKinds={
     marketplace:{label:'Penjualan marketplace',flow:'sale',category:'Penjualan'},offline:{label:'Penjualan offline',flow:'sale',category:'Penjualan'},capital:{label:'Modal pribadi untuk usaha',flow:'capital',category:'Modal pribadi'},
@@ -189,10 +208,9 @@
     $('entryKind').innerHTML=keys.map(k=>'<option value="'+k+'">'+simpleKinds[k].label+'</option>').join('');
     $('entryKind').value=keys.includes(kind)?kind:'other';
     $('chooseIncome').classList.toggle('active',direction==='in');$('chooseExpense').classList.toggle('active',direction==='out');
-    $('entryTitle').textContent=direction==='in'?'Uang masuk':'Uang keluar';
     $('entryKindLabel').firstChild.textContent=direction==='in'?'Uang dari mana?':'Untuk keperluan apa?';
     $('marketplaceField').classList.toggle('hidden',kind!=='marketplace');$('marketplaceSource').required=kind==='marketplace';
-    $('advancedKinds').open=kind==='other';$('advancedKinds').classList.toggle('hidden',kind!=='other');
+    $('advancedKinds').open=kind==='other';$('advancedKinds').classList.toggle('hidden',kind!=='other');entryGuidance();
   }
   function syncPicker(record){
     const f=$('flow').value,source=record?.salesSource||(['Shopee','TikTok Shop','Lazada','Offline'].includes(record?.channel)?record.channel:'');
@@ -265,8 +283,13 @@
       }
     }
     const ok=mutate(next=>{if(old){next.history=next.history||[];next.history.push({type:'edit',at:new Date().toISOString(),record:clone(old)});next.tx[next.tx.findIndex(x=>x.id===id)]=record;}else next.tx.push(record);},'Transaksi tersimpan.');
-    if(ok){resetForm();if(record.tanggal.slice(0,7)!==$('month').value){$('month').value=record.tanggal.slice(0,7);render();}}
+    if(ok){
+      lastEntryFlow=f;if(record.tanggal.slice(0,7)!==$('month').value){$('month').value=record.tanggal.slice(0,7);render();}resetForm();
+      $('entryReceipt').innerHTML='<h3>'+esc(entryTitles[f]||flowLabel(record))+'</h3>'+line('Jumlah',record.jumlah)+line('Tanggal',record.tanggal)+(record.catatan?'<p>'+esc(record.catatan)+'</p>':'')+'<p class="hint">'+esc(f==='ownerDraw'?'Sudah dicatat sekali: uang usaha berkurang dan uang pribadi bertambah. Jangan masukkan lagi sebagai pemasukan pribadi.':f==='taxReserve'||f==='taxReturn'?'Perpindahan cadangan sudah dicatat. Tidak dihitung sebagai pemasukan atau biaya usaha.':'Tersimpan di perangkat ini. Jangan masukkan transaksi yang sama lagi.')+'</p><p class="hint">Ini bukti pencatatan, bukan bukti transfer bank.</p>';
+      $('recordAnother').textContent='Catat '+(f==='ownerDraw'?'pengambilan berikutnya':f==='expense'?'pengeluaran lagi':'transaksi lagi');go('entrySuccess');
+    }
   });
+  $('recordAnother').onclick=()=>beginEntry(lastEntryFlow);
   function toggleVoid(id,restore) {
     const t=DB.tx.find(x=>x.id===id);if(!t)return;
     if((F.isOpeningBalance&&F.isOpeningBalance(t))||legacyDebtPayment(t)){alert('Catatan saldo awal atau cicilan lama ini dilindungi agar kas dan riwayat tidak terpisah. Gunakan cadangan untuk peninjauan sebelum koreksi.');return;}
@@ -487,7 +510,7 @@
   $('taxPaySource').onchange=()=>{if(['BCA Operasional','Rekening Pajak'].includes($('channel').value))$('channel').value=$('taxPaySource').value==='tax'?'Rekening Pajak':'BCA Operasional';};
   $('flow').onchange=()=>{flowChanged();syncPicker($('editId').value?DB.tx.find(t=>t.id===$('editId').value):null);};$('cancelEdit').onclick=resetForm;$('amount').addEventListener('input',renderSplitPreview);
   $('sameGross').onclick=()=>{const n=parseMoney('amount');if(n===null)return alert('Isi uang diterima terlebih dahulu.');setMoney('gross',n);};
-  $('date').onchange=()=>{if(!$('editId').value&&$('grossDate').value===previousCashDate)$('grossDate').value=$('date').value;previousCashDate=$('date').value;};
+  $('date').onchange=()=>{if(!$('editId').value&&$('grossDate').value===previousCashDate)$('grossDate').value=$('date').value;previousCashDate=$('date').value;entryGuidance();};
   $('searchTx').oninput=renderTransactions;$('txFilter').onchange=renderTransactions;
   $('month').onchange=()=>{if(!F.validMonth($('month').value)){$('month').value=localDate().slice(0,7);}if(!$('editId').value&&!$('amount').value&&!$('gross').value&&!$('category').value&&!$('note').value&&$('grossDate').value===previousCashDate&&$('date').value===previousCashDate){$('date').value=defaultDate();$('grossDate').value=defaultDate();previousCashDate=$('date').value;}render();fillTaxSettings();};
   window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);}});

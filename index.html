@@ -9,11 +9,11 @@
 <link rel="icon" href="kas-icon.svg?v=5.6" type="image/svg+xml">
 <link rel="alternate icon" href="kas-icon-192.png?v=5.6" type="image/png">
 <link rel="apple-touch-icon" href="kas-icon-180.png?v=5.6">
-<link rel="stylesheet" href="kas.css?v=6.0">
+<link rel="stylesheet" href="kas.css?v=6.1">
 </head>
 <body>
 <div class="app">
-<header class="app-head"><div class="brand"><img class="brand-icon" src="kas-icon.svg?v=5.6" width="44" height="44" alt=""><div><h1>Kas Command</h1><p>Tiga pos uang, lebih teratur <span class="version">v6.0</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="reserve">Cadangan pajak</button><button data-view="debts">Utang</button><button id="openTax">Alat pajak lama</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
+<header class="app-head"><div class="brand"><img class="brand-icon" src="kas-icon.svg?v=5.6" width="44" height="44" alt=""><div><h1>Kas Command</h1><p>Catat uang lebih mudah <span class="version">v6.1</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Jatah saya</button><button data-view="reserve">Cadangan pajak</button><button data-view="debts">Utang</button><button id="openTax">Alat pajak lama</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
 <div id="storageNotice" class="notice" role="status"></div>
 <div class="topline"><label for="month">Bulan<input id="month" type="month" required></label><p id="periodLabel"></p></div>
 <nav aria-label="Menu Kas" id="nav">
@@ -21,8 +21,9 @@
 </nav>
 <main>
 <section id="dashboard" class="view">
-<div class="section-head"><div><span class="eyebrow">PEMBAGIAN DANA</span><h2>Uang usaha dan pribadi, terpisah.</h2><p class="hint">Menurut catatan aplikasi, bukan saldo langsung dari bank.</p></div></div>
-<div class="quick-actions main-actions"><button data-new-flow="sale" class="primary">+ Uang masuk</button><button data-new-flow="expense">− Uang keluar</button><button data-view="reports">↓ Laporan bulanan</button></div>
+<div class="launcher-heading"><h2>Mau catat apa?</h2><p class="hint">Pilih tombol sesuai keperluanmu.</p></div>
+<div class="task-launcher"><button data-new-flow="sale"><strong>+ Uang masuk</strong><small>Penjualan atau modal usaha</small></button><button data-new-flow="expense"><strong>− Pengeluaran usaha</strong><small>Kain, aksesoris, upah & lainnya</small></button><button data-new-flow="ownerDraw"><strong>Ambil jatah pribadi</strong><small>Dari rekening usaha ke pribadi</small></button><button data-new-flow="taxReserve"><strong>Sisihkan pajak</strong><small>Jumlahnya kamu tentukan</small></button></div>
+<p class="hint">Saldo di bawah berdasarkan catatan, bukan saldo langsung dari bank.</p>
 <div id="dashboardStats" class="stats money-pots"></div>
 <div id="splitSummary" class="split-summary"></div>
 <div id="reviewNotice"></div>
@@ -34,13 +35,16 @@
 <div class="entry-layout">
 <article class="card"><form id="transactionForm">
 <input id="editId" type="hidden"><div id="editNotice" class="notice hidden"></div>
-<div class="entry-switch" aria-label="Arah uang"><button id="chooseIncome" type="button" data-entry-direction="in">+ Uang masuk</button><button id="chooseExpense" type="button" data-entry-direction="out">− Uang keluar</button></div>
+<div id="entryRoute" class="entry-route"></div><div id="entryGuide" class="entry-guide hidden"></div>
+<div id="entrySwitch" class="entry-switch hidden" aria-label="Arah uang"><button id="chooseIncome" type="button" data-entry-direction="in">+ Uang masuk</button><button id="chooseExpense" type="button" data-entry-direction="out">− Uang keluar</button></div>
+<div id="entryChoiceFields">
 <label id="entryKindLabel">Uang dari mana?<select id="entryKind"><option value="marketplace">Penjualan marketplace</option><option value="offline">Penjualan offline</option><option value="capital">Modal pribadi untuk usaha</option><option value="other">Transaksi lainnya</option></select></label>
 <label id="marketplaceField">Marketplace<select id="marketplaceSource"><option value="">Pilih marketplace…</option><option value="Shopee">Shopee</option><option value="TikTok Shop">TikTok Shop</option><option value="Lazada">Lazada</option><option value="Marketplace lainnya">Marketplace lainnya</option></select></label>
 <div id="flowIndicator" class="cash-direction" aria-live="polite"></div>
 <details id="advancedKinds" class="advanced-entry"><summary>Jenis lain / catatan lama</summary>
 <label>Jenis transaksi<select id="flow" required>
 <optgroup label="Sehari-hari"><option value="sale">Penjualan usaha</option><option value="expense">Pengeluaran usaha</option><option value="personalIncome">Pemasukan pribadi</option><option value="personalExpense">Pengeluaran pribadi</option></optgroup><optgroup label="Pemilik"><option value="ownerDraw">Ambil jatah saya dari usaha</option><option value="capital">Tambah modal dari uang pribadi</option></optgroup><optgroup label="Lainnya"><option value="loan">Pinjaman masuk ke usaha</option><option value="debtPayment">Bayar pokok utang</option><option value="taxPayment">Bayar pajak usaha</option><option value="taxReserve">Sisihkan ke cadangan pajak</option><option value="taxReturn">Kembalikan cadangan ke operasional</option><option value="businessIncome">Pemasukan usaha lainnya</option><option value="transferIn">Transfer sendiri — masuk</option><option value="transferOut">Transfer sendiri — keluar</option></optgroup></select></label></details><p id="flowHelp" class="help"></p>
+</div>
 <div class="two-fields"><label id="amountLabel">Jumlah (Rp)<input id="amount" inputmode="numeric" type="text" placeholder="Contoh: 1.500.000" required></label><label>Tanggal<input id="date" type="date" required></label></div>
 <div id="splitPreview" class="notice hidden" aria-live="polite"></div>
 <details id="saleFields" class="inset"><summary>Rincian penjualan untuk konsultan</summary>
@@ -60,6 +64,7 @@
 <details id="entryHistory" class="card compact-details"><summary>Riwayat transaksi</summary><label>Cari transaksi<input id="searchTx" type="search" placeholder="Kategori, sumber, catatan…"></label><label>Tampilkan<select id="txFilter"><option value="all">Semua transaksi — bulan dipilih</option><option value="business">Usaha — bulan dipilih</option><option value="personal">Pribadi — bulan dipilih</option><option value="review">Perlu ditinjau — bulan dipilih</option><option value="reviewAll">Perlu ditinjau — semua bulan</option><option value="voided">Dibatalkan — bulan dipilih</option></select></label><div id="transactionList"></div></details>
 </div>
 </section>
+<section id="entrySuccess" class="view hidden"><article class="card entry-success"><span class="eyebrow">SELESAI DICATAT</span><h2>Catatan tersimpan</h2><div id="entryReceipt"></div><div class="actions"><button class="primary" data-view="dashboard">Kembali ke halaman depan</button><button id="recordAnother">Catat lagi</button></div></article></section>
 <section id="reserve" class="view hidden">
 <div class="section-head"><div><span class="eyebrow">NOMINAL KAMU TENTUKAN</span><h2>Cadangan pajak</h2></div><button data-view="dashboard">Kembali</button></div>
 <article class="card"><div id="reserveSummary"></div><p>Transfer uang dari rekening operasional ke rekening pajak melalui aplikasi bank, lalu catat di sini sekali.</p><button class="primary" data-new-flow="taxReserve">Catat uang yang disisihkan</button><p class="hint">Bukan biaya atau pajak yang sudah dibayar. Tidak ada potongan persentase pajak otomatis.</p><div class="actions"><button data-new-flow="taxPayment">Catat pembayaran pajak</button><button data-new-flow="taxReturn">Kembalikan ke operasional</button></div><p class="hint">Saat bayar pajak, pilih rekening sumbernya. Jika dibayar dari operasional, cadangan tidak dikurangi. Jika memakai cadangan, saldo cadangan ikut berkurang.</p></article>
@@ -115,7 +120,7 @@
 <details class="card"><summary>Alat lama · impor CSV & ekspor Dashboard</summary><p class="hint">Untuk kebutuhan khusus. CSV dan ekspor Dashboard bukan cadangan lengkap. Untuk pindah HP gunakan cadangan JSON di atas.</p><div class="actions"><label class="file-button">Tambahkan CSV transaksi<input id="importCSV" type="file" accept=".csv,text/csv"></label><button id="exportDashboard">Ekspor Dashboard — bulan dipilih</button></div><p class="hint">Ekspor Dashboard memakai jumlah kas dan melewati penjualan Shopee seperti versi lama. Jangan gunakan file ini sebagai laporan pajak.</p></details>
 </section>
 </main>
-<footer>Kas Command v6.0 · Data tersimpan di perangkat ini.</footer>
+<footer>Kas Command v6.1 · Data tersimpan di perangkat ini.</footer>
 </div>
 <dialog id="paymentDialog"><form id="paymentForm"><h2>Catat pembayaran utang</h2><p id="paymentTitle"></p><label>Jumlah dibayar (Rp)<input id="paymentAmount" type="text" inputmode="numeric" required></label><label>Tanggal pembayaran<input id="paymentDate" type="date" required></label><label>Sumber uang<input id="paymentChannel" value="BCA Operasional" required></label><div class="actions"><button class="primary">Simpan pembayaran</button><button type="button" id="cancelPayment">Batal</button></div></form></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -128,5 +133,5 @@
 <script src="vendor/pdf/jspdf-4.2.1.umd.min.js"></script>
 <script src="vendor/pdf/jspdf-autotable-5.0.8.min.js"></script>
 <script src="kas-pdf.js?v=5.5"></script>
-<script src="kas-ui.js?v=6.0"></script>
+<script src="kas-ui.js?v=6.1"></script>
 </body></html>
