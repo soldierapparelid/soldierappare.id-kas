@@ -223,6 +223,21 @@ details form { margin-top: 16px; }
 .entry-success .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 22px 0 0; }
 .entry-success .actions button { width: 100%; min-width: 0; min-height: 52px; }
 .entry-success .primary { background: var(--green); color: #10392b; }
+.cash-overview { border-color: #4b6683; background: #142335; }
+.cash-overview .section-head { margin-bottom: 10px; }
+.cash-overview h2 { margin: 0; font-size: 20px; }
+.cash-closing { display: grid; gap: 3px; margin-bottom: 18px; }
+.cash-closing > span { color: var(--muted); font-size: 14px; }
+.cash-closing > strong { color: var(--blue); font-size: clamp(26px, 5vw, 38px); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; line-height: 1.3; }
+.cash-overview small { color: var(--muted); font-size: 11px; font-weight: 400; }
+.cash-overview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.cash-overview-grid > div { display: grid; align-content: start; gap: 4px; }
+.cash-overview-grid span { color: var(--muted); font-size: 12px; }
+.cash-overview-grid strong { font-size: clamp(15px, 3.9vw, 21px); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.cash-overview .negative { color: var(--red); }
+.cash-overview.cash-shortage { border-color: #a65a70; }
+.cash-overview > .hint { margin: 14px 0 0; font-size: 12px; }
+#cashOverviewStatus { margin: 0 0 12px; font-size: 12px; }
 #splitPreview { font-size: 13px; line-height: 1.7; }
 #splitPercent { max-width: 180px; }
 #owner .compact-details form { margin-bottom: 18px; }

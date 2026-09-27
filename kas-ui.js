@@ -95,9 +95,36 @@
     });
     $('transactionList').innerHTML=rowsHTML(tx);
   }
+  function renderCashOverview(s,error) {
+    const status=$('cashOverviewStatus'),m=$('month').value,ids=new Set();
+    let unavailable=loaded.error?'Data tersimpan belum dapat dibaca. Jangan hapus data situs.':error?'Total melampaui batas perhitungan yang aman. Unduh cadangan untuk diperiksa.':'';
+    if(!Array.isArray(DB.tx))unavailable='Daftar transaksi belum dapat dibaca.';
+    else DB.tx.filter(t=>!(t&&t.voided===true)).forEach(t=>{
+      if(t&&(!t.id||typeof t.id!=='string'||!t.id.trim()||ids.has(t.id)))unavailable='Ada catatan tanpa identitas atau identitas ganda. Periksa cadangan sebelum memakai total ini.';
+      if(t)ids.add(t.id);
+    });
+    const provisional=!unavailable&&s&&(!s.balancesComplete||blocked),difference=s?s.businessIn-s.businessOut:null;
+    if(s&&![s.cashBusinessOpening,s.businessIn,s.businessOut,s.cashBusinessClosing,difference].every(Number.isSafeInteger))unavailable='Total belum dapat dihitung dengan aman. Periksa cadangan.';
+    $('cashOverviewPeriod').textContent=monthName(m);
+    $('cashClosingLabel').textContent='Saldo akhir tercatat'+(provisional?' · sementara':'');
+    const values={cashClosingAmount:s?.cashBusinessClosing,cashOpening:s?.cashBusinessOpening,cashIn:s?.businessIn,cashOut:s?.businessOut,cashDifference:difference};
+    Object.entries(values).forEach(([id,value])=>{
+      $(id).textContent=unavailable||!s?'Belum dapat dihitung':rupiah(value);
+      if(id!=='cashOut'&&id!=='cashIn')$(id).classList.toggle('negative',!unavailable&&value<0);
+    });
+    $('cashOverview').classList.toggle('cash-shortage',!unavailable&&s&&s.cashBusinessClosing<0);
+    status.classList.toggle('hidden',!unavailable&&!provisional);
+    status.textContent=unavailable||(blocked?'Angka sebelumnya: data berubah di tab lain. Muat ulang untuk melihat catatan terbaru.':provisional?'Angka sementara dari transaksi yang sudah dikenali. Ada '+((s.balanceUnresolvedCount||0)+(s.invalidCount||0))+' catatan yang perlu diperiksa; total dapat berubah.':'');
+  }
   function render() {
-    const m=$('month').value,s=currentSummary(),t=s.totals, tax=currentTax(),budget=((DB.kasSettings||{}).ownerBudgets||{})[m]||0,b=currentSplit(),a=currentAccounts();
+    const m=$('month').value;let s;
     $('periodLabel').textContent=monthName(m);$('reportTitle').textContent='Laporan '+monthName(m);
+    const unavailable=()=>{['dashboardStats','businessSummary','personalSummary','splitSummary','reserveSummary','reserveList','ownerSummary','ownerSplitSummary','ownerList','recentList','reviewNotice','transactionList','taxSummary','consultantStatus'].forEach(id=>{$(id).innerHTML='<p class="notice warning">Data bulan '+esc(monthName(m))+' belum dapat dihitung. Periksa cadangan; tidak ada data yang dihapus.</p>';});};
+    if(loaded.error){renderCashOverview(null);unavailable();return;}
+    try{s=currentSummary();}catch(error){renderCashOverview(null,error);unavailable();notice('Ringkasan belum dapat dihitung. Data asli tetap tersimpan; unduh cadangan untuk diperiksa.',true);return;}
+    renderCashOverview(s);
+    let tax;try{tax=currentTax();}catch(error){tax={unavailable:true};}
+    const t=s.totals,budget=((DB.kasSettings||{}).ownerBudgets||{})[m]||0,b=currentSplit(),a=currentAccounts();
     $('dashboardStats').innerHTML=[
       ['Operasional',a.ready?a.operationalAvailable:null,'Setelah jatah pribadi & cadangan pajak','operational','transactions','Catat uang'],
       ['Cadangan pajak',a.reserveReady?a.taxReserve:null,'Sudah disisihkan, belum dibayar','tax','reserve','Sisihkan / bayar'],
@@ -144,6 +171,7 @@
     } catch(error) {el.textContent='Pembagian belum siap: '+error.message;}
   }
   function renderTax(tax) {
+    if(tax.unavailable){$('taxSummary').innerHTML='<p class="notice warning">Rekap omzet belum dapat dihitung karena total melampaui batas aman. Periksa angka omzet; ringkasan kas tetap terpisah.</p>';return;}
     $('taxSummary').innerHTML=(tax.ready?'':'<div class="notice warning"><strong>Estimasi belum siap</strong><p>'+esc((tax.errors||[]).join(' '))+'</p></div>')+
       line('Omzet bruto bulan ini'+(tax.ready?'':' (sementara)'),tax.monthTurnover||0)+line('Omzet kumulatif tahun ini'+(tax.ready?'':' (sementara)'),tax.ytdTurnover||0)+
       line('Bagian omzet kena PPh bulan ini',tax.ready?tax.taxableMonth:'Belum dapat dihitung')+
@@ -513,7 +541,7 @@
   $('date').onchange=()=>{if(!$('editId').value&&$('grossDate').value===previousCashDate)$('grossDate').value=$('date').value;previousCashDate=$('date').value;entryGuidance();};
   $('searchTx').oninput=renderTransactions;$('txFilter').onchange=renderTransactions;
   $('month').onchange=()=>{if(!F.validMonth($('month').value)){$('month').value=localDate().slice(0,7);}if(!$('editId').value&&!$('amount').value&&!$('gross').value&&!$('category').value&&!$('note').value&&$('grossDate').value===previousCashDate&&$('date').value===previousCashDate){$('date').value=defaultDate();$('grossDate').value=defaultDate();previousCashDate=$('date').value;}render();fillTaxSettings();};
-  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);}});
+  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);try{renderCashOverview(currentSummary());}catch(error){renderCashOverview(null,error);}}});
   document.querySelectorAll('input[inputmode="numeric"]').forEach(el=>el.addEventListener('blur',()=>{const n=parseMoney(el.id);if(n!==null)setMoney(el.id,n);}));
   resetForm();$('debtDate').value=localDate();fillTaxSettings();render();
   notice(loaded.error||'Tersimpan di perangkat ini · belum sinkron antar-perangkat',!!loaded.error);
