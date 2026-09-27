@@ -18,6 +18,8 @@
     ownerDraw: { label: 'Jatah pribadi dari usaha', tipe: 'out', scope: 'business', kind: 'equity' },
     debtPayment: { label: 'Bayar pokok utang usaha', tipe: 'out', scope: 'business', kind: 'debt' },
     taxPayment: { label: 'Pembayaran pajak', tipe: 'out', scope: 'business', kind: 'tax' },
+    taxReserve: { label: 'Sisihkan uang pajak', tipe: 'out', scope: 'neutral', kind: 'reserve' },
+    taxReturn: { label: 'Kembalikan cadangan ke operasional', tipe: 'in', scope: 'neutral', kind: 'reserve' },
     transferIn: { label: 'Transfer masuk antar-rekening sendiri', tipe: 'in', scope: 'neutral', kind: 'transfer' },
     transferOut: { label: 'Transfer keluar antar-rekening sendiri', tipe: 'out', scope: 'neutral', kind: 'transfer' },
     review: { label: 'Perlu dipilih jenisnya', tipe: null, scope: 'neutral', kind: 'review' }

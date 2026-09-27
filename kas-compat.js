@@ -6,6 +6,7 @@
   'use strict';
   var OLD = ['Tanggal','Tipe','Kategori','Channel','Jumlah','Keterangan'];
   var NEW = ['ID','Tanggal kas','Jenis','Masuk/Keluar','Kategori','Rekening/Sumber','Jumlah kas (Rp)','Omzet bruto (Rp)','Tanggal omzet','Status tinjauan','Catatan'];
+  var EXTENDED = NEW.concat(['Sumber penjualan','Sumber dana pajak']);
   function norm(text) { return String(text == null ? '' : text).trim().toLowerCase(); }
   function own(object, key) { return Object.prototype.hasOwnProperty.call(object, key); }
   function array(value) { return Array.isArray(value) ? value : []; }
@@ -36,13 +37,13 @@
       if (!t || typeof t !== 'object') { result.errors.push('Catatan ke-' + (index + 1) + ' tidak valid.'); return; }
       var flow = F.classify(t), meta = F.flows[flow];
       if (meta && meta.scope === 'personal') { skip('personal'); return; }
-      if (flow === 'transferIn' || flow === 'transferOut') { skip('transfer'); return; }
+      if (flow === 'transferIn' || flow === 'transferOut' || flow === 'taxReserve' || flow === 'taxReturn') { skip('transfer'); return; }
       if (flow === 'openingBusiness') { skip('opening'); return; }
       if (!F.validDate(t.tanggal)) { result.errors.push('Tanggal transaksi ' + (t.id || index + 1) + ' belum valid; bulan ekspor tidak dapat dipastikan.'); return; }
       if (t.tanggal.slice(0, 7) !== month) { skip('outsideMonth'); return; }
       if (flow === 'review') { result.errors.push('Transaksi ' + (t.id || index + 1) + ' perlu dipilih jenisnya sebelum ekspor Dashboard.'); return; }
       if (!F.validAmount(t.jumlah)) { result.errors.push('Nominal transaksi ' + (t.id || index + 1) + ' belum valid.'); return; }
-      if (flow === 'sale' && norm(t.channel).indexOf('shopee') !== -1) { skip('shopee'); return; }
+      if (flow === 'sale' && (norm(t.salesSource).indexOf('shopee') !== -1 || norm(t.channel).indexOf('shopee') !== -1)) { skip('shopee'); return; }
       if (typeof t.id !== 'string' || !t.id.trim() || usedIds.has(t.id)) { result.errors.push('ID transaksi kosong atau ganda pada baris ' + (index + 1) + '.'); return; }
       usedIds.add(t.id);
       if (flow === 'loan') { result.errors.push('Pinjaman masuk ' + t.id + ' tidak diekspor: format Dashboard lama tidak memiliki pemetaan pokok pinjaman yang aman.'); return; }
@@ -50,7 +51,7 @@
       var category = String(t.kategori || ''), note = String(t.catatan || '');
       if (flow === 'sale' || flow === 'capital' || flow === 'businessIncome') {
         var type = flow === 'sale' ? 'penjualan' : flow === 'capital' ? 'modal' : 'lain';
-        result.data.state.income.push({ tgl: t.tanggal, order: 'KAS-' + t.id, ch: t.channel || '',
+        result.data.state.income.push({ tgl: t.tanggal, order: 'KAS-' + t.id, ch: flow === 'sale' ? (t.salesSource || t.channel || '') : (t.channel || ''),
           prod: type === 'penjualan' ? note : '[' + category + '] ' + note, qty: 1, harga: t.jumlah, jenis: type, sumber: 'kas-command' });
         if (flow === 'businessIncome' && !result.warnings.some(function (w) { return w.indexOf('Pemasukan usaha lainnya') === 0; })) {
           result.warnings.push('Pemasukan usaha lainnya dikirim sebagai jenis lain. Periksa penggolongan pada Dashboard lama; ini bukan omzet UMKM otomatis.');
@@ -129,9 +130,10 @@
     if (!Array.isArray(existing)) { result.errors.push('Daftar transaksi sekarang tidak valid.'); return result; }
     var rows;
     try { rows = parseCSV(text); } catch (error) { result.errors.push(error.message); return result; }
-    var header = rows[0].map(norm), expected;
+    var header = rows[0].map(norm), expected, extended = false;
     if (header.length === OLD.length && OLD.every(function (h) { return header.indexOf(norm(h)) !== -1; })) { result.format = 'legacy'; expected = OLD; }
     else if (header.length === NEW.length && NEW.every(function (h) { return header.indexOf(norm(h)) !== -1; })) { result.format = 'current'; expected = NEW; }
+    else if (header.length === EXTENDED.length && EXTENDED.every(function (h) { return header.indexOf(norm(h)) !== -1; })) { result.format = 'current'; expected = EXTENDED; extended = true; }
     else { result.errors.push('Format kolom tidak dikenali. Gunakan CSV transaksi Kas Command, bukan rekap pajak atau ringkasan.'); return result; }
     if (new Set(header).size !== header.length) { result.errors.push('Judul kolom CSV tidak boleh ganda.'); return result; }
     var index = {};
@@ -149,9 +151,11 @@
     Object.keys(F.flows).forEach(function (flow) { flowByLabel[F.flows[flow].label] = flow; });
     function currentView(t) {
       var flow = F.classify(t), gross = flow === 'sale' ? (t.gross == null ? 'Belum diperiksa' : t.gross) : '';
-      return [String(t.id), String(t.tanggal), F.flows[flow].label, t.tipe === 'in' ? 'Masuk' : 'Keluar',
+      var view = [String(t.id), String(t.tanggal), F.flows[flow].label, t.tipe === 'in' ? 'Masuk' : 'Keluar',
         safeText(t.kategori || ''), safeText(t.channel || ''), String(t.jumlah), String(gross),
         flow === 'sale' ? String(t.omzetTanggal || t.tanggal) : '', safeText(t.catatan || '')];
+      if (extended) view.push(safeText(t.salesSource || ''), safeText(t.reserveAccount || ''));
+      return view;
     }
     rows.slice(1).forEach(function (cells, offset) {
       var label = 'Baris ' + (offset + 2);
@@ -173,6 +177,9 @@
         if (!own(flowByLabel, flowLabel)) { result.errors.push(label + ': jenis transaksi belum dikenal.'); return; }
         var flow = flowByLabel[flowLabel];
         if (flow === 'openingBusiness') { result.errors.push(label + ': saldo awal hanya dapat dipulihkan melalui Backup JSON lengkap.'); return; }
+        if (!extended && (flow === 'taxReserve' || flow === 'taxReturn')) {
+          result.errors.push(label + ': cadangan pajak memerlukan CSV dengan kolom sumber dana pajak atau Backup JSON agar sumber pembayaran tidak hilang.'); return;
+        }
         record.flow = flow;
         if (F.flows[flow].tipe && record.tipe !== F.flows[flow].tipe) { result.errors.push(label + ': jenis dan arah transaksi tidak cocok.'); return; }
         var status = get('Status tinjauan');
@@ -185,11 +192,25 @@
           if (!F.validDate(omzetDate)) { result.errors.push(label + ': tanggal omzet belum valid.'); return; }
           record.omzetTanggal = omzetDate;
         } else if (get('Omzet bruto (Rp)') !== '' || get('Tanggal omzet') !== '') { result.errors.push(label + ': omzet hanya boleh diisi untuk penjualan.'); return; }
+        if (extended) {
+          var salesSource = get('Sumber penjualan'), reserveAccount = get('Sumber dana pajak');
+          if (salesSource !== '') {
+            if (flow !== 'sale') { result.errors.push(label + ': sumber penjualan hanya boleh diisi untuk penjualan.'); return; }
+            record.salesSource = salesSource;
+          }
+          if (reserveAccount !== '') {
+            if (flow !== 'taxPayment' || (reserveAccount !== 'tax' && reserveAccount !== 'operational')) {
+              result.errors.push(label + ': sumber dana pajak harus tax atau operational dan hanya berlaku untuk pembayaran pajak.'); return;
+            }
+            record.reserveAccount = reserveAccount;
+          }
+        }
         if (flow === 'businessIncome') record.taxTreatment = 'review';
         if (byId.has(record.id)) {
           var previous = byId.get(record.id);
           var incoming = [record.id, record.tanggal, flowLabel, record.tipe === 'in' ? 'Masuk' : 'Keluar', record.kategori, record.channel, String(record.jumlah),
             flow === 'sale' ? String(record.gross == null ? 'Belum diperiksa' : record.gross) : '', flow === 'sale' ? record.omzetTanggal : '', record.catatan];
+          if (extended) incoming.push(record.salesSource || '', record.reserveAccount || '');
           if (JSON.stringify(currentView(previous)) === JSON.stringify(incoming)) { result.skipped += 1; return; }
           result.errors.push(label + ': ID ' + record.id + ' sudah ada dengan isi berbeda. Tidak ada data yang ditimpa.'); return;
         }
