@@ -14,14 +14,15 @@
   catch (e) { loaded = {data:null,raw:null,error:'Penyimpanan browser tidak dapat dibuka. Jangan hapus data situs.'}; }
   let DB = loaded.data || {tx:[],pi:[]}, raw = loaded.raw, blocked = !!loaded.error, activeView = 'dashboard', payId = null, toastTimer, previousCashDate='';
   $('month').value = localDate().slice(0,7);
-  function notice(message,error) { $('storageNotice').textContent = message; $('storageNotice').className = 'notice'+(error?' error':''); }
+  function entryStatus(message,error) { $('entrySaveStatus').textContent=message||'';$('entrySaveStatus').className='notice'+(message?(error?' error':' warning'):' hidden'); }
+  function notice(message,error) { $('storageNotice').textContent = message; $('storageNotice').className = 'notice'+(error?' error':'');if(error&&activeView==='transactions')entryStatus(message,true); }
   function toast(message) { $('toast').textContent=message; $('toast').style.display='block'; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{$('toast').style.display='none';},4200); }
   function download(name,content,type,keepUrl) { const b=new Blob([content],{type:type||'application/json'}), u=URL.createObjectURL(b), a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();if(!keepUrl)setTimeout(()=>URL.revokeObjectURL(u),10000);return u; }
   function backup() { if(loaded.error&&loaded.raw===null){alert('Data browser belum dapat dibaca. Tidak ada cadangan kosong yang dibuat. Jangan hapus data situs.');return false;}download('kas-command-backup-'+localDate()+'.json',loaded.error ? loaded.raw : JSON.stringify(DB,null,2));return true; }
   function commit(next,message) {
     if(blocked) { notice('Perubahan belum disimpan. Unduh cadangan lalu buka ulang halaman ini. '+(loaded.error||'Data berubah di tab lain.'),true);return false; }
     const reserveCheck=A.validate(next.tx,F);
-    if(!reserveCheck.ok){alert('Belum disimpan: '+reserveCheck.errors.join(' ')+' Data sebelumnya tetap ada.');return false;}
+    if(!reserveCheck.ok){const message='Belum disimpan: '+reserveCheck.errors.join(' ')+' Data sebelumnya tetap ada.';if(activeView==='transactions')entryStatus(message,true);alert(message);return false;}
     const result = S.transaction(storage,KEY,raw,next);
     if(!result.ok) { notice('Belum tersimpan: '+result.error+'. Form tetap terbuka; jangan tutup sebelum masalah selesai.',true);if(result.code==='conflict')blocked=true;return false; }
     DB=next;raw=result.raw;notice('Tersimpan di perangkat ini · belum sinkron antar-perangkat');render();
@@ -74,10 +75,10 @@
     if(meta.scope==='neutral')return {direction:'neutral',label:'Transfer sendiri',sign:'',color:''};
     return t.tipe==='in'?{direction:'in',label:'Masuk'+(meta.scope==='personal'?' · pribadi':' · usaha'),sign:'+',color:'positive'}:{direction:'out',label:'Keluar'+(meta.scope==='personal'?' · pribadi':' · usaha'),sign:'−',color:'negative'};
   }
-  function rowsHTML(tx,actions=true) {
+  function rowsHTML(tx,actions=true,perspective='business') {
     if(!tx.length)return '<p class="empty">Belum ada transaksi untuk pilihan ini.</p>';
     return tx.slice().sort((a,b)=>String(b.tanggal).localeCompare(String(a.tanggal))).map(t=>{
-      const a=cashAppearance(t);
+      const a=perspective==='personal'&&!t.voided&&F.classify(t)==='ownerDraw'?{direction:'in',label:'Masuk ke pribadi dari usaha',sign:'+',color:'positive'}:cashAppearance(t);
       return '<div class="transaction cash-'+a.direction+'"><span class="cash-direction">'+esc(a.label)+'</span><div class="transaction-head"><strong>'+esc(flowLabel(t))+(!t.voided&&needsReview(t)?'<span class="badge">Tinjau</span>':'')+'</strong><strong class="'+a.color+'">'+a.sign+esc(rupiah(t.jumlah))+'</strong></div><p>'+esc([t.tanggal,t.kategori,t.salesSource,t.channel].filter(Boolean).join(' · '))+'</p><p>'+esc(t.catatan||'')+'</p>'+(F.classify(t)==='sale'?'<p>Penjualan sebelum biaya: '+esc(t.gross==null?'Belum diperiksa':rupiah(t.gross))+' · tanggal penjualan '+esc(t.omzetTanggal||t.tanggal)+'</p>':'')+(Object.hasOwn(t,'reserveAccount')?'<p>Sumber pembayaran: '+esc(reserveSourceLabel(t))+'</p>':'')+(actions?'<div class="row-actions">'+(t.voided?'<button data-restore-tx="'+esc(t.id)+'">Aktifkan lagi</button>':'<button data-edit="'+esc(t.id)+'">Edit</button><button class="danger" data-void="'+esc(t.id)+'">Batalkan</button>')+'</div>':'')+'</div>';
     }).join('');
   }
@@ -115,22 +116,34 @@
     $('cashOverview').classList.toggle('cash-shortage',!unavailable&&s&&s.cashBusinessClosing<0);
     status.classList.toggle('hidden',!unavailable&&!provisional);
     status.textContent=unavailable||(blocked?'Angka sebelumnya: data berubah di tab lain. Muat ulang untuk melihat catatan terbaru.':provisional?'Angka sementara dari transaksi yang sudah dikenali. Ada '+((s.balanceUnresolvedCount||0)+(s.invalidCount||0))+' catatan yang perlu diperiksa; total dapat berubah.':'');
+    return {unavailable,provisional};
+  }
+  function renderPersonalOverview(s,a,state) {
+    const invalid=state.unavailable||![s.cashPersonalClosing,s.totals.ownerDraw].every(Number.isSafeInteger),pending=a.ready?a.personalAvailable:null;
+    const value=(key,n,unavailable=false)=>'<strong data-personal="'+key+'" class="'+(!unavailable&&n<0?'negative':'')+'">'+esc(unavailable?'Belum dapat dihitung':rupiah(n))+'</strong>';
+    const warning=invalid?'Saldo pribadi belum dapat dihitung. Periksa cadangan; catatan tidak dihapus.':state.provisional?(blocked?'Angka sebelumnya: data berubah di tab lain. Muat ulang untuk melihat catatan terbaru.':'Angka sementara dari catatan yang sudah dikenali. Saldo dan pengambilan dapat berubah setelah catatan diperiksa.'):'';
+    const html='<div class="section-head"><h2>Uang pribadi</h2><span class="hint">'+esc(monthName($('month').value))+'</span></div>'+(warning?'<p class="notice warning" role="status">'+esc(warning)+'</p>':'')+
+      '<div class="personal-balance"><span>Saldo pribadi tercatat'+(state.provisional?' · sementara':'')+'</span>'+value('balance',s.cashPersonalClosing,invalid)+'<small>Sudah masuk ke pribadi, dikurangi pengeluaran pribadi dan modal ke usaha.</small></div>'+
+      '<div class="personal-overview-grid"><div class="personal-taken"><span>Diambil dari usaha bulan ini</span>'+value('taken',s.totals.ownerDraw,invalid)+'<small>Sudah termasuk saldo pribadi di atas. Jangan ditambahkan lagi.</small></div><div class="personal-pending"><span>Jatah belum diambil</span>'+value('pending',pending,invalid||pending===null)+'<small>Masih di usaha. Belum masuk saldo pribadi, bukan tambahan uang.</small></div></div>'+
+      '<p class="hint">Ini catatan aplikasi, bukan saldo langsung bank. Pengambilan yang sudah disimpan tetap tercatat walau saldo usaha minus.</p>';
+    $('personalOverview').innerHTML=html+'<div class="actions"><button data-view="owner">Lihat pengambilan saya</button></div>';
+    $('ownerCashOverview').innerHTML=html;
   }
   function render() {
     const m=$('month').value;let s;
     $('periodLabel').textContent=monthName(m);$('reportTitle').textContent='Laporan '+monthName(m);
-    const unavailable=()=>{['dashboardStats','businessSummary','personalSummary','splitSummary','reserveSummary','reserveList','ownerSummary','ownerSplitSummary','ownerList','recentList','reviewNotice','transactionList','taxSummary','consultantStatus'].forEach(id=>{$(id).innerHTML='<p class="notice warning">Data bulan '+esc(monthName(m))+' belum dapat dihitung. Periksa cadangan; tidak ada data yang dihapus.</p>';});};
+    const unavailable=()=>{['personalOverview','ownerCashOverview','dashboardStats','businessSummary','personalSummary','splitSummary','reserveSummary','reserveList','ownerSummary','ownerSplitSummary','ownerList','recentList','reviewNotice','transactionList','taxSummary','consultantStatus'].forEach(id=>{$(id).innerHTML='<p class="notice warning">Data bulan '+esc(monthName(m))+' belum dapat dihitung. Periksa cadangan; tidak ada data yang dihapus.</p>';});};
     if(loaded.error){renderCashOverview(null);unavailable();return;}
     try{s=currentSummary();}catch(error){renderCashOverview(null,error);unavailable();notice('Ringkasan belum dapat dihitung. Data asli tetap tersimpan; unduh cadangan untuk diperiksa.',true);return;}
-    renderCashOverview(s);
+    const cashState=renderCashOverview(s);
     let tax;try{tax=currentTax();}catch(error){tax={unavailable:true};}
     const t=s.totals,budget=((DB.kasSettings||{}).ownerBudgets||{})[m]||0,b=currentSplit(),a=currentAccounts();
     $('dashboardStats').innerHTML=[
       ['Operasional',a.ready?a.operationalAvailable:null,'Setelah jatah pribadi & cadangan pajak','operational','transactions','Catat uang'],
-      ['Cadangan pajak',a.reserveReady?a.taxReserve:null,'Sudah disisihkan, belum dibayar','tax','reserve','Sisihkan / bayar'],
-      ['Pribadi',a.ready?a.personalAvailable:null,'Jatah belum ditransfer ke pribadi','personal','owner','Lihat rincian jatah']
+      ['Cadangan pajak',a.reserveReady?a.taxReserve:null,'Sudah disisihkan, belum dibayar','tax','reserve','Sisihkan / bayar']
     ].map(x=>'<div class="stat pot-'+x[3]+'"><span>'+x[0]+'</span><strong class="'+(x[1]<0?'negative':'')+'">'+esc(x[1]===null?'Belum pasti':rupiah(x[1]))+'</strong><small>'+x[2]+'</small><button data-view="'+x[4]+'">'+x[5]+'</button></div>').join('');
     renderSplit(b);
+    renderPersonalOverview(s,a,cashState);
     $('reserveSummary').innerHTML=line('Cadangan tersisa sampai bulan ini',a.reserveReady?a.taxReserve:'Belum pasti','total')+(!a.reserveReady?'<p class="notice warning">'+esc(a.errors.join(' '))+'</p>':'');
     $('reserveList').innerHTML=rowsHTML(s.tx.filter(x=>['taxReserve','taxReturn','taxPayment'].includes(F.classify(x))));
     if(a.ready&&a.operationalAvailable<0)$('splitSummary').innerHTML+='<p class="notice warning">Dana operasional tercatat kurang '+esc(rupiah(-a.operationalAvailable))+'. Cocokkan rekening dan kewajiban sebelum mengambil uang lagi.</p>';
@@ -141,7 +154,7 @@
     $('recentList').innerHTML=rowsHTML(s.tx.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).slice(0,5),false);
     $('ownerSummary').innerHTML=line('Rencana bulan ini',budget)+line('Sudah diambil',t.ownerDraw||0)+line('Sisa rencana',Math.max(0,budget-(t.ownerDraw||0)))+((t.ownerDraw||0)>budget?'<p class="hint">Pengambilan melebihi rencana sebesar '+esc(rupiah((t.ownerDraw||0)-budget))+'.</p>':'');
     if(document.activeElement!==$('ownerBudget'))setMoney('ownerBudget',budget);
-    $('ownerList').innerHTML=rowsHTML(s.tx.filter(x=>F.classify(x)==='ownerDraw'));
+    $('ownerList').innerHTML=rowsHTML(s.tx.filter(x=>F.classify(x)==='ownerDraw'),true,'personal');
     renderTransactions();renderTax(tax);renderConsultant();renderDebts();entryGuidance();
   }
   function renderSplit(b) {
@@ -212,6 +225,7 @@
       const title=f==='ownerDraw'?'Jatah pribadi belum diambil':f==='taxReserve'?'Operasional tercatat':'Cadangan pajak tercatat';
       const value=f==='ownerDraw'?(a.ready?a.personalAvailable:null):f==='taxReserve'?(a.ready?a.operationalAvailable:null):(a.reserveReady?a.taxReserve:null);
       $('entryGuide').innerHTML=editing?'<p>Perbaiki catatan transfer yang sudah ada. <strong>Jangan transfer lagi.</strong> Ini tidak membuat transaksi tambahan.</p>':line(title,value===null?'Belum dapat dipastikan':value,'total')+'<p>'+esc(f==='ownerDraw'?'1. Transfer dari rekening usaha ke rekening pribadimu lewat aplikasi bank.':'1. Pindahkan uang antar-rekening melalui aplikasi bank.')+'</p><p>2. Isi jumlah yang <strong>sudah dipindahkan</strong>, tanggal, lalu simpan sekali di sini.</p><p class="hint">'+esc(value===null?'Cocokkan catatan dan saldo bank dahulu. Angka ini belum bisa dipakai sebagai patokan jatah.':value<0?'Catatan menunjukkan kekurangan. Jangan jadikan angka ini izin mengambil uang.':'Periksa juga kebutuhan usaha dan saldo bank sebelum transfer.')+'</p>'+(f==='ownerDraw'?'<p class="hint">Tidak perlu dicatat lagi sebagai pemasukan pribadi. Aplikasi tidak mentransfer uang.</p>':'<p class="hint">Pindah cadangan bukan biaya dan bukan pembayaran pajak.</p>');
+      if(f==='ownerDraw'&&!editing&&a.ready&&a.operationalAvailable<0)$('entryGuide').innerHTML+='<p class="notice warning">Operasional tercatat minus. Ini bukan anjuran mengambil uang lagi. Jika pengambilan sudah terjadi, tetap catat sekali agar uang usaha dan pribadi sesuai catatan.</p>';
       $('amountLabel').firstChild.textContent=f==='ownerDraw'?'Jumlah yang sudah diambil (Rp)':'Jumlah yang sudah dipindahkan (Rp)';
     }
   }
@@ -254,6 +268,7 @@
     flowChanged();
   }
   function resetForm() {
+    entryStatus('');
     $('transactionForm').reset();$('editId').value='';$('date').value=defaultDate();$('grossDate').value=defaultDate();
     previousCashDate=$('date').value;
     $('editNotice').classList.add('hidden');$('cancelEdit').classList.add('hidden');$('saveTransaction').textContent='Simpan transaksi';
@@ -282,7 +297,8 @@
     $('saleFields').open=f==='sale';flowChanged();syncPicker(t);go('transactions');
   }
   $('transactionForm').addEventListener('submit',e=>{
-    e.preventDefault();const f=$('flow').value,amount=parseMoney('amount'),gross=parseMoney('gross'),id=$('editId').value;
+    e.preventDefault();entryStatus('');const f=$('flow').value,amount=parseMoney('amount'),gross=parseMoney('gross'),id=$('editId').value;
+    const confirmSave=message=>{if(confirm(message))return true;entryStatus('Belum disimpan — konfirmasi tidak dilanjutkan. Isian tetap ada. Jika uang sudah benar-benar dipindahkan, periksa riwayat lalu simpan sekali.'+(f==='ownerDraw'?' Jangan buat pemasukan pribadi tambahan.':''));return false;};
     if(!F.flows[f]||amount===null||amount<=0){alert('Pilih jenis dan isi jumlah rupiah bulat lebih dari 0. Gunakan titik untuk pemisah ribuan.');return;}
     if(!F.validDate($('date').value)){alert('Tanggal belum valid.');return;}
     if(f==='sale'&&(($('gross').value.trim()&&(gross===null||gross<0))||!F.validDate($('grossDate').value))){$('saleFields').open=true;alert('Isi nilai penjualan dan tanggal yang benar, atau kosongkan nilai sebelum biaya jika belum diketahui.');return;}
@@ -301,21 +317,23 @@
     try {record=B.stamp(record,old,DB.kasSettings||{},F);}catch(error){alert('Belum disimpan: '+error.message);return;}
     if(f==='taxReserve'){
       const before=A.summary(DB.tx.filter(t=>(!old||t.id!==old.id)&&(!F.validDate(t.tanggal)||t.tanggal<=record.tanggal)),record.tanggal.slice(0,7),F,B);
-      if(!before.ready||amount>before.operationalAvailable){if(!confirm('Dana operasional tercatat belum pasti atau tidak cukup setelah jatah pribadi. Catat hanya jika transfer ke rekening pajak benar-benar sudah dilakukan. Tetap simpan?'))return;}
+      if(!before.ready||amount>before.operationalAvailable){if(!confirmSave('Dana operasional tercatat belum pasti atau tidak cukup setelah jatah pribadi. Catat hanya jika transfer ke rekening pajak benar-benar sudah dilakukan. Tetap simpan?'))return;}
     }
     if(f==='ownerDraw'&&record.incomeSplit){
       const eligible=DB.tx.filter(t=>(!old||t.id!==old.id)&&(!F.validDate(t.tanggal)||t.tanggal<=record.tanggal)),before=B.summary(eligible,record.tanggal.slice(0,7),F),pots=A.summary(eligible,record.tanggal.slice(0,7),F,B);
-      if(!before.ready){if(!confirm('Saldo atau pembagian belum lengkap. Catat hanya jika uang ini benar-benar sudah diambil. Tetap simpan pengambilan nyata ini?'))return;}
+      if(!before.ready){if(!confirmSave('Saldo atau pembagian belum lengkap. Catat hanya jika uang ini benar-benar sudah diambil. Tetap simpan pengambilan nyata ini?'))return;}
       else if(!pots.reserveReady||amount>Math.min(Math.max(0,before.cashBusinessClosing-(pots.taxReserve||0)),before.remainingPersonal)){
-        if(!confirm('Jumlah ini melebihi jatah belum diambil atau saldo tercatat. Jangan memakai uang operasional untuk rencana pribadi. Jika transfer sudah benar-benar terjadi, catat agar saldo sesuai. Tetap simpan?'))return;
+        if(!confirmSave('Jumlah ini melebihi jatah belum diambil atau saldo tercatat. Jangan memakai uang operasional untuk rencana pribadi. Jika transfer sudah benar-benar terjadi, catat agar saldo sesuai. Tetap simpan?'))return;
       }
     }
     const ok=mutate(next=>{if(old){next.history=next.history||[];next.history.push({type:'edit',at:new Date().toISOString(),record:clone(old)});next.tx[next.tx.findIndex(x=>x.id===id)]=record;}else next.tx.push(record);},'Transaksi tersimpan.');
     if(ok){
       lastEntryFlow=f;if(record.tanggal.slice(0,7)!==$('month').value){$('month').value=record.tanggal.slice(0,7);render();}resetForm();
-      $('entryReceipt').innerHTML='<h3>'+esc(entryTitles[f]||flowLabel(record))+'</h3>'+line('Jumlah',record.jumlah)+line('Tanggal',record.tanggal)+(record.catatan?'<p>'+esc(record.catatan)+'</p>':'')+'<p class="hint">'+esc(f==='ownerDraw'?'Sudah dicatat sekali: uang usaha berkurang dan uang pribadi bertambah. Jangan masukkan lagi sebagai pemasukan pribadi.':f==='taxReserve'||f==='taxReturn'?'Perpindahan cadangan sudah dicatat. Tidak dihitung sebagai pemasukan atau biaya usaha.':'Tersimpan di perangkat ini. Jangan masukkan transaksi yang sama lagi.')+'</p><p class="hint">Ini bukti pencatatan, bukan bukti transfer bank.</p>';
+      $('viewPersonalAfterSave').classList.toggle('hidden',f!=='ownerDraw');
+      const movement=f==='ownerDraw'?(old?'<p>Koreksi pengambilan tersimpan. Catatan lama diperbarui, bukan pengambilan baru. Jangan transfer lagi.</p>':'<div class="owner-movement">'+line('Usaha berkurang','−'+rupiah(record.jumlah),'negative')+line('Pribadi bertambah','+'+rupiah(record.jumlah),'positive')+'</div>'):'';
+      $('entryReceipt').innerHTML='<h3>'+esc(entryTitles[f]||flowLabel(record))+'</h3>'+line('Jumlah',record.jumlah)+line('Tanggal',record.tanggal)+movement+(record.catatan?'<p>'+esc(record.catatan)+'</p>':'')+'<p class="hint">'+esc(f==='ownerDraw'?(old?'Jangan masukkan lagi sebagai pemasukan pribadi.':'Sudah dicatat sekali: uang usaha berkurang dan uang pribadi bertambah. Jangan masukkan lagi sebagai pemasukan pribadi.'):f==='taxReserve'||f==='taxReturn'?'Perpindahan cadangan sudah dicatat. Tidak dihitung sebagai pemasukan atau biaya usaha.':'Tersimpan di perangkat ini. Jangan masukkan transaksi yang sama lagi.')+'</p><p class="hint">Ini bukti pencatatan, bukan bukti transfer bank.</p>';
       $('recordAnother').textContent='Catat '+(f==='ownerDraw'?'pengambilan berikutnya':f==='expense'?'pengeluaran lagi':'transaksi lagi');go('entrySuccess');
-    }
+    }else if(!$('entrySaveStatus').textContent)entryStatus('Belum tersimpan. Isian tetap ada; periksa pesan di atas. Jangan catat ulang melalui pemasukan pribadi.',true);
   });
   $('recordAnother').onclick=()=>beginEntry(lastEntryFlow);
   function toggleVoid(id,restore) {
@@ -541,7 +559,7 @@
   $('date').onchange=()=>{if(!$('editId').value&&$('grossDate').value===previousCashDate)$('grossDate').value=$('date').value;previousCashDate=$('date').value;entryGuidance();};
   $('searchTx').oninput=renderTransactions;$('txFilter').onchange=renderTransactions;
   $('month').onchange=()=>{if(!F.validMonth($('month').value)){$('month').value=localDate().slice(0,7);}if(!$('editId').value&&!$('amount').value&&!$('gross').value&&!$('category').value&&!$('note').value&&$('grossDate').value===previousCashDate&&$('date').value===previousCashDate){$('date').value=defaultDate();$('grossDate').value=defaultDate();previousCashDate=$('date').value;}render();fillTaxSettings();};
-  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);try{renderCashOverview(currentSummary());}catch(error){renderCashOverview(null,error);}}});
+  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);try{const s=currentSummary(),state=renderCashOverview(s);renderPersonalOverview(s,currentAccounts(),state);}catch(error){renderCashOverview(null,error);['personalOverview','ownerCashOverview'].forEach(id=>{$(id).innerHTML='<p class="notice warning">Saldo pribadi belum dapat dihitung. Data asli tetap tersimpan.</p>';});}}});
   document.querySelectorAll('input[inputmode="numeric"]').forEach(el=>el.addEventListener('blur',()=>{const n=parseMoney(el.id);if(n!==null)setMoney(el.id,n);}));
   resetForm();$('debtDate').value=localDate();fillTaxSettings();render();
   notice(loaded.error||'Tersimpan di perangkat ini · belum sinkron antar-perangkat',!!loaded.error);
