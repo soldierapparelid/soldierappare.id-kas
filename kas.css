@@ -108,6 +108,33 @@ nav button.active { border-color: #405974; background: #253b54; color: #edf5ff; 
 .money-pots .stat small { margin-bottom: 10px; color: #c8d1df; font-size: 13px; overflow-wrap: anywhere; }
 .money-pots .stat button { width: 100%; min-height: 46px; margin-top: auto; padding: 10px; border-color: var(--pot-border); background: #0a122055; color: var(--pot-color); font-size: 14px; }
 .money-pots .stat button:hover { border-color: var(--pot-color); background: #ffffff0d; }
+.account-balances { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 16px; align-items: start; }
+.account-card {
+  --account-color: var(--blue); --account-border: #476789; --account-bg: #14283e;
+  display: flex; flex-direction: column; min-width: 0; padding: 12px;
+  border: 1px solid var(--account-border); border-top: 3px solid var(--account-color);
+  border-radius: 16px; background: var(--account-bg);
+}
+.account-operational { --account-color: var(--blue); --account-border: #476789; --account-bg: #14283e; }
+.account-tax { --account-color: var(--amber); --account-border: #78603e; --account-bg: #2d281e; }
+.account-personal { --account-color: var(--purple); --account-border: #6e538d; --account-bg: #292039; }
+.account-card h2 { margin: 0 0 2px; color: var(--account-color); font-size: 18px; line-height: 1.3; letter-spacing: -.2px; overflow-wrap: anywhere; }
+.account-card .account-state { display: block; margin: 0; color: #c4cbd6; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.account-card .account-amount { display: block; min-width: 0; margin: 5px 0; color: var(--text); font-size: 28px; line-height: 1.25; letter-spacing: -.6px; font-variant-numeric: tabular-nums; white-space: normal; overflow-wrap: anywhere; }
+.account-card > .hint { margin: 0 0 8px; color: #c4cbd6; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.account-calculation { min-width: 0; margin-top: 4px; border-top: 1px solid var(--account-border); }
+.account-calculation > summary { min-height: 44px; padding: 10px 0; color: var(--account-color); font-size: 13px; line-height: 1.7; }
+.account-calculation > summary::marker { color: var(--account-color); }
+.account-calculation[open] { margin-bottom: 10px; }
+.account-calculation .label-value { gap: 10px; padding: 9px 0; font-size: 12px; }
+.account-calculation .label-value span { flex: 1; }
+.account-calculation .label-value strong { max-width: 58%; }
+.account-calculation p { margin: 7px 0; color: #c4cbd6; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.account-card > button { width: 100%; min-height: 44px; margin-top: 3px; padding: 9px 10px; border-color: var(--account-border); background: #0a122055; color: var(--account-color); font-size: 13px; }
+.account-calculation#accountHistoryCalculation { --account-color: var(--blue); --account-border: var(--line); margin: 0 0 16px; }
+.account-card > button:hover { border-color: var(--account-color); background: #ffffff0d; }
+.account-card .negative, .account-card .account-amount.negative, .account-card .negative strong { color: var(--red); }
+.account-card .positive, .account-card .positive strong { color: var(--green); }
 .positive { color: var(--green); }
 .negative { color: var(--red); }
 .quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0 0 20px; }
@@ -131,6 +158,22 @@ button[data-new-flow="taxReserve"]:hover { border-color: #ffe9c7; background: #f
 .task-launcher button { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 5px; min-width: 0; min-height: 96px; padding: 15px; border-radius: 14px; text-align: left; overflow-wrap: anywhere; }
 .task-launcher strong { display: block; font-size: 18px; font-weight: 800; line-height: 1.35; }
 .task-launcher small { display: block; color: inherit; font-size: 13px; font-weight: 500; line-height: 1.4; }
+.task-launcher3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 20px; }
+.task-launcher3 button { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px; min-width: 0; min-height: 80px; padding: 13px 15px; border-radius: 13px; text-align: left; overflow-wrap: anywhere; }
+.task-launcher3 strong { display: block; font-size: 18px; line-height: 1.35; font-weight: 800; }
+.task-launcher3 small { display: block; color: inherit; font-size: 13px; line-height: 1.4; font-weight: 500; }
+.task-launcher3 button[data-view="transfer"] { border-color: #dfcaff; background: var(--purple); color: #30174b; }
+.task-launcher3 button[data-view="transfer"]:hover { border-color: #efdeff; background: #dfcaff; }
+.transfer-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
+.transfer-options > * { min-width: 0; }
+.transfer-options button { min-height: 64px; padding: 13px; text-align: left; overflow-wrap: anywhere; }
+.transfer-options strong { display: block; font-size: 16px; line-height: 1.4; }
+.transfer-options small { display: block; margin-top: 4px; font-size: 13px; line-height: 1.5; }
+#transfer > .card { max-width: 740px; margin-right: auto; margin-left: auto; }
+#transfer label { font-size: 15px; }
+#transferRoute { min-height: 54px; border-color: #8c6bab; background: #292039; color: #f1e8ff; font-size: 16px; font-weight: 650; }
+#startTransfer { width: 100%; min-height: 54px; border-color: #dfcaff; background: var(--purple); color: #30174b; font-size: 17px; }
+#startTransfer:hover { background: #dfcaff; }
 #dashboard > .section-head h2 { font-size: 20px; }
 #dashboard > .section-head { margin-bottom: 12px; }
 .split-summary { margin: 0 0 18px; padding: 0 3px; }
@@ -339,6 +382,11 @@ dialog::backdrop { background: #030914bd; }
 }
 @media (max-width: 720px) {
   .task-launcher { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .task-launcher3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .task-launcher3 > button:last-child { grid-column: 1 / -1; min-height: 64px; }
+  .account-balances { grid-template-columns: 1fr; gap: 10px; }
+  .account-card { padding: 12px; }
+  .account-card .account-amount { margin: 5px 0; font-size: 29px; }
   .money-pots { grid-template-columns: 1fr; }
   .money-pots .stat { padding: 14px 16px; }
   .money-pots .stat strong { font-size: 27px; }
@@ -371,6 +419,12 @@ dialog::backdrop { background: #030914bd; }
   .money-pots .stat strong { font-size: 26px; }
   .task-launcher button { min-height: 92px; padding: 13px 12px; }
   .task-launcher strong { font-size: 17px; }
+  .task-launcher3 button { min-height: 76px; padding: 12px; }
+  .task-launcher3 strong { font-size: 17px; }
+  .account-card { padding: 12px; }
+  .account-card h2 { font-size: 18px; }
+  .account-card .account-amount { font-size: 29px; }
+  .transfer-options { grid-template-columns: 1fr; gap: 10px; }
   .quick-actions { gap: 10px; }
   .quick-actions button { min-height: 54px; padding: 13px 8px; font-size: 14px; }
   .two-fields, .download-grid { grid-template-columns: 1fr; gap: 0; }

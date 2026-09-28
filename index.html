@@ -9,34 +9,31 @@
 <link rel="icon" href="kas-icon.svg?v=5.6" type="image/svg+xml">
 <link rel="alternate icon" href="kas-icon-192.png?v=5.6" type="image/png">
 <link rel="apple-touch-icon" href="kas-icon-180.png?v=5.6">
-<link rel="stylesheet" href="kas.css?v=6.3">
+<link rel="stylesheet" href="kas.css?v=6.4">
 </head>
 <body>
 <div class="app">
-<header class="app-head"><div class="brand"><img class="brand-icon" src="kas-icon.svg?v=5.6" width="44" height="44" alt=""><div><h1>Kas Command</h1><p>Catat uang lebih mudah <span class="version">v6.3</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="owner">Uang pribadi & pengambilan</button><button data-view="reserve">Cadangan pajak</button><button data-view="debts">Utang</button><button id="openTax">Alat pajak lama</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
+<header class="app-head"><div class="brand"><img class="brand-icon" src="kas-icon.svg?v=5.6" width="44" height="44" alt=""><div><h1>Kas Command</h1><p>Tiga saldo, satu catatan <span class="version">v6.4</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="debts">Utang</button><button data-view="owner">Rencana pribadi lama</button><button data-view="reserve">Rincian pajak</button><button id="openTax">Alat pajak lama</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
 <div id="storageNotice" class="notice" role="status"></div>
 <div class="topline"><label for="month">Bulan<input id="month" type="month" required></label><p id="periodLabel"></p></div>
 <nav aria-label="Menu Kas" id="nav">
-<button data-view="dashboard" class="active">Uang saya</button><button data-view="transactions">Catat uang</button><button data-view="reports">Laporan bulanan</button>
+<button data-view="dashboard" class="active">Uang saya</button><button data-view="reports">Laporan bulanan</button>
 </nav>
 <main>
 <section id="dashboard" class="view">
-<div class="launcher-heading"><h2>Mau catat apa?</h2><p class="hint">Pilih tombol sesuai keperluanmu.</p></div>
-<div class="task-launcher"><button data-new-flow="sale"><strong>+ Uang masuk</strong><small>Penjualan atau modal usaha</small></button><button data-new-flow="expense"><strong>− Pengeluaran usaha</strong><small>Kain, aksesoris, upah & lainnya</small></button><button data-new-flow="ownerDraw"><strong>Ambil jatah pribadi</strong><small>Dari rekening usaha ke pribadi</small></button><button data-new-flow="taxReserve"><strong>Sisihkan pajak</strong><small>Jumlahnya kamu tentukan</small></button></div>
-<article id="cashOverview" class="card cash-overview" aria-labelledby="cashOverviewTitle">
-<div class="section-head"><h2 id="cashOverviewTitle">Uang usaha</h2><span id="cashOverviewPeriod" class="hint"></span></div>
-<div id="cashOverviewStatus" class="notice warning hidden" role="status"></div>
-<div class="cash-closing"><span id="cashClosingLabel">Saldo akhir tercatat</span><strong id="cashClosingAmount">—</strong><small>Saldo awal + pemasukan − pengeluaran</small></div>
-<div class="cash-overview-grid"><div><span>Saldo awal bulan</span><strong id="cashOpening">—</strong></div><div><span>+ Pemasukan bulan ini</span><strong id="cashIn" class="positive">—</strong></div><div><span>− Pengeluaran bulan ini</span><strong id="cashOut" class="negative">—</strong></div><div><span>Selisih bulan ini</span><strong id="cashDifference">—</strong><small>Pemasukan − pengeluaran, tanpa saldo awal</small></div></div>
-<p class="hint">Berdasarkan catatan, bukan saldo langsung bank atau laba. Pengeluaran termasuk pembayaran utang dan jatah yang sudah diambil.</p>
-</article>
-<article id="personalOverview" class="card personal-overview" aria-label="Uang pribadi"></article>
-<h3>Sisa pembagian uang usaha</h3><p class="hint">Operasional dan cadangan pajak di bawah adalah bagian dari uang usaha. Jatah belum diambil ditampilkan terpisah pada kartu Uang pribadi.</p>
-<div id="dashboardStats" class="stats money-pots"></div>
-<div id="splitSummary" class="split-summary"></div>
-<div id="reviewNotice"></div>
-<details class="card compact-details"><summary>Rincian usaha & uang pribadi</summary><div class="two-cols"><div><h3>Uang usaha</h3><div id="businessSummary"></div><p class="hint">Saldo berdasarkan catatan, bukan laba bersih. Persediaan, piutang, dan penyusutan tidak dihitung di sini.</p></div><div><h3>Uang pribadi</h3><div id="personalSummary"></div><p class="hint">Jatah dicatat sekali: keluar dari usaha, masuk ke pribadi.</p><button data-view="owner">Atur jatah saya</button></div></div></details>
-<article class="card"><div class="section-head"><h3>Terakhir dicatat</h3><button id="showHistory" class="text-button">Riwayat</button></div><div id="recentList"></div></article>
+<div class="launcher-heading"><h2>Saldo kas saya</h2><p class="hint">Saldo dari catatan sampai bulan yang dipilih, bukan saldo langsung bank.</p></div>
+<div id="accountsNotice" class="notice warning hidden" role="status"></div>
+<div id="accountBalances" class="account-balances"></div>
+<div class="task-launcher task-launcher3"><button data-new-flow="sale"><strong>+ Uang masuk</strong></button><button data-new-flow="expense"><strong>− Uang keluar</strong></button><button data-view="transfer"><strong>↔ Pindah uang</strong></button></div>
+<details class="card compact-details"><summary>Catatan terbaru & pemeriksaan</summary><div id="reviewNotice"></div><button id="showHistory" class="text-button">Semua riwayat</button><div id="recentList"></div></details>
+</section>
+<section id="transfer" class="view hidden">
+<div class="section-head"><h2>Pindah uang</h2><button data-view="dashboard">Kembali</button></div>
+<article class="card"><p>Catat sekali setelah kamu transfer lewat bank. Saldo asal berkurang, saldo tujuan bertambah.</p><label>Pindah dari mana ke mana?<select id="transferRoute"><option value="ownerDraw">Operasional → Pribadi</option><option value="taxReserve">Operasional → Cadangan pajak</option><option value="taxReturn">Cadangan pajak → Operasional</option><option value="capital">Pribadi → Operasional</option></select></label><button id="startTransfer" class="primary">Lanjut — isi jumlah</button></article>
+</section>
+<section id="accountHistory" class="view hidden">
+<div class="section-head"><h2 id="accountHistoryTitle">Catatan rekening</h2><button data-view="dashboard">Kembali</button></div>
+<p id="accountHistoryNote" class="hint"></p><details id="accountHistoryCalculation" class="card account-calculation"><summary>Lihat perhitungan saldo</summary><div id="accountHistoryTotals"></div></details><div id="accountHistoryList"></div>
 </section>
 <section id="transactions" class="view hidden">
 <div class="section-head"><h2 id="entryTitle">Uang masuk</h2><button data-view="dashboard">Kembali</button></div>
@@ -46,6 +43,7 @@
 <div id="entryRoute" class="entry-route"></div><div id="entryGuide" class="entry-guide hidden"></div>
 <div id="entrySwitch" class="entry-switch hidden" aria-label="Arah uang"><button id="chooseIncome" type="button" data-entry-direction="in">+ Uang masuk</button><button id="chooseExpense" type="button" data-entry-direction="out">− Uang keluar</button></div>
 <div id="entryChoiceFields">
+<label id="expenseAccountField" class="hidden">Uang keluar dari<select id="expenseAccount"><option value="operational">Operasional — biaya usaha</option><option value="personal">Pribadi — belanja pribadi</option></select></label>
 <label id="entryKindLabel">Uang dari mana?<select id="entryKind"><option value="marketplace">Penjualan marketplace</option><option value="offline">Penjualan offline</option><option value="capital">Modal pribadi untuk usaha</option><option value="other">Transaksi lainnya</option></select></label>
 <label id="marketplaceField">Marketplace<select id="marketplaceSource"><option value="">Pilih marketplace…</option><option value="Shopee">Shopee</option><option value="TikTok Shop">TikTok Shop</option><option value="Lazada">Lazada</option><option value="Marketplace lainnya">Marketplace lainnya</option></select></label>
 <div id="flowIndicator" class="cash-direction" aria-live="polite"></div>
@@ -73,15 +71,14 @@
 <details id="entryHistory" class="card compact-details"><summary>Riwayat transaksi</summary><label>Cari transaksi<input id="searchTx" type="search" placeholder="Kategori, sumber, catatan…"></label><label>Tampilkan<select id="txFilter"><option value="all">Semua transaksi — bulan dipilih</option><option value="business">Usaha — bulan dipilih</option><option value="personal">Pribadi — bulan dipilih</option><option value="review">Perlu ditinjau — bulan dipilih</option><option value="reviewAll">Perlu ditinjau — semua bulan</option><option value="voided">Dibatalkan — bulan dipilih</option></select></label><div id="transactionList"></div></details>
 </div>
 </section>
-<section id="entrySuccess" class="view hidden"><article class="card entry-success"><span class="eyebrow">SELESAI DICATAT</span><h2>Catatan tersimpan</h2><div id="entryReceipt"></div><div class="actions"><button id="viewPersonalAfterSave" class="primary hidden" data-view="owner">Lihat uang pribadi & riwayat</button><button data-view="dashboard">Kembali ke halaman depan</button><button id="recordAnother">Catat lagi</button></div></article></section>
+<section id="entrySuccess" class="view hidden"><article class="card entry-success"><span class="eyebrow">SELESAI DICATAT</span><h2>Catatan tersimpan</h2><div id="entryReceipt"></div><div class="actions"><button id="viewPersonalAfterSave" class="primary hidden" data-account-history="personal">Lihat catatan pribadi</button><button data-view="dashboard">Lihat tiga saldo</button><button id="recordAnother">Catat lagi</button></div></article></section>
 <section id="reserve" class="view hidden">
 <div class="section-head"><div><span class="eyebrow">NOMINAL KAMU TENTUKAN</span><h2>Cadangan pajak</h2></div><button data-view="dashboard">Kembali</button></div>
 <article class="card"><div id="reserveSummary"></div><p>Transfer uang dari rekening operasional ke rekening pajak melalui aplikasi bank, lalu catat di sini sekali.</p><button class="primary" data-new-flow="taxReserve">Catat uang yang disisihkan</button><p class="hint">Bukan biaya atau pajak yang sudah dibayar. Tidak ada potongan persentase pajak otomatis.</p><div class="actions"><button data-new-flow="taxPayment">Catat pembayaran pajak</button><button data-new-flow="taxReturn">Kembalikan ke operasional</button></div><p class="hint">Saat bayar pajak, pilih rekening sumbernya. Jika dibayar dari operasional, cadangan tidak dikurangi. Jika memakai cadangan, saldo cadangan ikut berkurang.</p></article>
 <article class="card"><h3>Riwayat bulan ini</h3><div id="reserveList"></div></article>
 </section>
 <section id="owner" class="view hidden">
-<div class="section-head"><div><h2>Uang pribadi & pengambilan</h2><p>Uang yang sudah diterima berbeda dari jatah yang belum diambil.</p></div><button data-view="dashboard">Kembali</button></div>
-<article id="ownerCashOverview" class="card personal-overview" aria-label="Ringkasan uang pribadi"></article>
+<div class="section-head"><div><h2>Rencana pribadi lama</h2><p>Persentase hanya rencana. Tidak memindahkan uang atau mengurangi saldo operasional.</p></div><button data-view="dashboard">Kembali</button></div>
 <button id="recordOwner" class="primary">Catat jatah yang sudah diambil</button><p class="hint">Sudah transfer lewat bank? Catat sekali di sini. Jangan tambahkan lagi sebagai pemasukan pribadi.</p>
 <article class="card"><h3>Riwayat pengambilan bulan ini</h3><p class="hint">Jika pengambilanmu ada di sini, sudah tercatat. Tidak perlu input ulang.</p><div id="ownerList"></div></article>
 <details class="card compact-details"><summary>Rincian jatah dari penjualan</summary><div id="ownerSplitSummary"></div></details>
@@ -132,7 +129,7 @@
 <details class="card"><summary>Alat lama · impor CSV & ekspor Dashboard</summary><p class="hint">Untuk kebutuhan khusus. CSV dan ekspor Dashboard bukan cadangan lengkap. Untuk pindah HP gunakan cadangan JSON di atas.</p><div class="actions"><label class="file-button">Tambahkan CSV transaksi<input id="importCSV" type="file" accept=".csv,text/csv"></label><button id="exportDashboard">Ekspor Dashboard — bulan dipilih</button></div><p class="hint">Ekspor Dashboard memakai jumlah kas dan melewati penjualan Shopee seperti versi lama. Jangan gunakan file ini sebagai laporan pajak.</p></details>
 </section>
 </main>
-<footer>Kas Command v6.3 · Data tersimpan di perangkat ini.</footer>
+<footer>Kas Command v6.4 · Data tersimpan di perangkat ini.</footer>
 </div>
 <dialog id="paymentDialog"><form id="paymentForm"><h2>Catat pembayaran utang</h2><p id="paymentTitle"></p><label>Jumlah dibayar (Rp)<input id="paymentAmount" type="text" inputmode="numeric" required></label><label>Tanggal pembayaran<input id="paymentDate" type="date" required></label><label>Sumber uang<input id="paymentChannel" value="BCA Operasional" required></label><div class="actions"><button class="primary">Simpan pembayaran</button><button type="button" id="cancelPayment">Batal</button></div></form></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -141,9 +138,9 @@
 <script src="kas-storage.js?v=5"></script>
 <script src="kas-compat.js?v=6.0"></script>
 <script src="kas-buckets.js?v=5.2"></script>
-<script src="kas-accounts.js?v=6.0"></script>
+<script src="kas-accounts.js?v=6.4"></script>
 <script src="vendor/pdf/jspdf-4.2.1.umd.min.js"></script>
 <script src="vendor/pdf/jspdf-autotable-5.0.8.min.js"></script>
 <script src="kas-pdf.js?v=5.5"></script>
-<script src="kas-ui.js?v=6.3"></script>
+<script src="kas-ui.js?v=6.4"></script>
 </body></html>
