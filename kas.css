@@ -135,6 +135,17 @@ nav button.active { border-color: #405974; background: #253b54; color: #edf5ff; 
 .account-card > button:hover { border-color: var(--account-color); background: #ffffff0d; }
 .account-card .negative, .account-card .account-amount.negative, .account-card .negative strong { color: var(--red); }
 .account-card .positive, .account-card .positive strong { color: var(--green); }
+.balance-detail-bar { display:flex; justify-content:space-between; align-items:center; width:100%; margin:0 0 16px; padding:12px 16px; color:var(--blue); background:var(--panel); }
+#balanceDetails > label { display:block; margin-bottom:16px; }
+#balanceDetailSummary h3 { margin:0 0 6px; }
+.detail-balance { display:block; font-size:clamp(24px,5vw,34px); line-height:1.4; overflow-wrap:anywhere; }
+#balanceDetailGroups .label-value { gap:12px; align-items:start; }
+#balanceDetailGroups .label-value span { flex:1; min-width:0; }
+#balanceDetailGroups .label-value strong { max-width:55%; overflow-wrap:anywhere; text-align:right; }
+.balance-audit-row { padding:14px 0; border-bottom:1px solid var(--line); }
+.balance-audit-row p { margin:4px 0; overflow-wrap:anywhere; }
+.balance-audit-row .label-value { gap:12px; }
+.balance-audit-row .label-value strong { overflow-wrap:anywhere; text-align:right; }
 .positive { color: var(--green); }
 .negative { color: var(--red); }
 .quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0 0 20px; }

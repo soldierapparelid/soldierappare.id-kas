@@ -132,10 +132,30 @@
     $('accountHistoryList').innerHTML=loaded.error?'<p class="notice warning">Data belum dapat dibaca. Jangan hapus data situs.</p>':rowsHTML(DB.tx.filter(t=>t&&!t.voided&&String(t.tanggal).slice(0,7)===m&&accountContains(t,selectedAccount)),true,selectedAccount);
   }
   function showAccountHistory(key){if(!Object.hasOwn(accountNames,key))return;selectedAccount=key;renderAccountHistory();go('accountHistory');}
+  function renderBalanceDetails(){
+    const month=$('month').value,account=$('balanceDetailAccount').value||'personal';
+    let d;
+    try{if(loaded.error)throw new Error(loaded.error);d=window.KasAccountDetails.build(DB.tx,month,account,F,A);}catch(error){d={available:false,errors:[loaded.error||'Rincian saldo belum dapat dimuat. Muat ulang aplikasi; data tidak diubah.']};}
+    const status=$('balanceDetailStatus'),uncertain=!d.available||d.provisional||blocked;
+    status.classList.toggle('hidden',!uncertain);
+    status.textContent=blocked&&!loaded.error?'Data berubah di tab lain. Angka ini dari catatan sebelumnya; muat ulang setelah mencadangkan isian.':d.available&&d.provisional?'Sebagian catatan lama belum jelas. Angka ini sementara, hanya dari catatan yang sudah dikenali. Tidak ada data yang dihapus.':(d.errors||[]).join(' ');
+    if(!d.available){
+      $('balanceDetailSummary').innerHTML='<h3>'+esc(accountNames[account]||'Saldo')+'</h3><strong>Belum dapat dihitung</strong>';
+      $('balanceDetailGroups').innerHTML='<p class="hint">Tidak ada total sementara yang ditebak. Data tetap tersimpan.</p>';
+      $('balanceDetailRows').innerHTML='';$('balanceDetailCount').textContent='Transaksi belum dapat dirinci';return;
+    }
+    const signed=value=>(value>0?'+':value<0?'−':'')+rupiah(Math.abs(value));
+    const tone=value=>value<0?'negative':value>0?'positive':'';
+    $('balanceDetailSummary').innerHTML='<h3>'+esc(accountNames[account])+' · '+esc(monthName(month))+'</h3><strong class="detail-balance '+tone(d.closing)+'">'+esc(rupiah(d.closing))+'</strong>'+(d.provisional||blocked?'<p class="hint">Sementara — berdasarkan catatan yang sudah dikenali.</p>':'')+'<p class="hint">'+(d.closing<0?'Minus berarti catatan pengurangan lebih besar daripada penambahan saldo. Bukan otomatis utang bank.':'Ini saldo dari pencatatan, bukan saldo langsung bank.')+'</p><details><summary>Perhitungan bulan ini</summary>'+line('Saldo sebelum bulan ini',d.opening)+line('Masuk bulan ini',d.incoming,'positive')+line('Keluar bulan ini',d.outgoing,'negative')+line('Saldo akhir',d.closing,tone(d.closing))+'</details>';
+    $('balanceDetailGroups').innerHTML=d.groups.map(g=>line((F.flows[g.flow]?.label||g.flow)+' · '+g.count+' catatan',signed(g.net),tone(g.net))).join('')+line('Saldo dari seluruh catatan',d.closing,'total '+tone(d.closing));
+    const byId=new Map(DB.tx.filter(t=>t&&typeof t==='object'&&t.voided!==true&&F.validDate(t.tanggal)&&t.tanggal.slice(0,7)<=month).map(t=>[t.id,t]));
+    $('balanceDetailRows').innerHTML=d.rows.map(row=>{const t=byId.get(row.id)||{};return '<div class="balance-audit-row"><p>'+esc([row.date,F.flows[row.flow]?.label||row.flow].join(' · '))+'</p>'+line(row.isOpening?'Saldo awal tercatat':row.delta>=0?'Menambah saldo':'Mengurangi saldo',signed(row.delta),tone(row.delta))+'<p class="hint">'+esc([t.kategori,t.channel,t.catatan].filter(Boolean).join(' · '))+'</p>'+line('Saldo setelah transaksi',row.balance,tone(row.balance))+'</div>';}).join('')||'<p class="empty">Belum ada transaksi pembentuk saldo.</p>';
+    $('balanceDetailCount').textContent='Lihat '+d.rows.length+' transaksi pembentuk saldo';
+  }
   function render() {
     const m=$('month').value;let s;
     $('periodLabel').textContent=monthName(m);$('reportTitle').textContent='Laporan '+monthName(m);
-    renderAccounts();renderAccountHistory();
+    renderAccounts();renderAccountHistory();renderBalanceDetails();
     const unavailable=()=>{['reserveSummary','reserveList','ownerSummary','ownerSplitSummary','ownerList','recentList','reviewNotice','transactionList','taxSummary','consultantStatus'].forEach(id=>{$(id).innerHTML='<p class="notice warning">Data bulan '+esc(monthName(m))+' belum dapat dihitung. Periksa cadangan; tidak ada data yang dihapus.</p>';});};
     if(loaded.error){unavailable();return;}
     try{s=currentSummary();}catch(error){unavailable();notice('Ringkasan belum dapat dihitung. Data asli tetap tersimpan; unduh cadangan untuk diperiksa.',true);return;}
@@ -543,6 +563,8 @@
   $('flow').addEventListener('invalid',()=>{$('advancedKinds').open=true;});
   $('entryKind').onchange=selectSimpleKind;
   $('startTransfer').onclick=()=>beginEntry($('transferRoute').value);
+  $('showBalanceDetails').onclick=()=>{renderBalanceDetails();go('balanceDetails');};
+  $('balanceDetailAccount').onchange=renderBalanceDetails;
   $('expenseAccount').onchange=()=>{
     const personal=$('expenseAccount').value==='personal';
     $('flow').value=personal?'personalExpense':'expense';$('category').value='';
@@ -555,7 +577,7 @@
   $('date').onchange=()=>{if(!$('editId').value&&$('grossDate').value===previousCashDate)$('grossDate').value=$('date').value;previousCashDate=$('date').value;entryGuidance();};
   $('searchTx').oninput=renderTransactions;$('txFilter').onchange=renderTransactions;
   $('month').onchange=()=>{if(!F.validMonth($('month').value)){$('month').value=localDate().slice(0,7);}if(!$('editId').value&&!$('amount').value&&!$('gross').value&&!$('category').value&&!$('note').value&&$('grossDate').value===previousCashDate&&$('date').value===previousCashDate){$('date').value=defaultDate();$('grossDate').value=defaultDate();previousCashDate=$('date').value;}render();fillTaxSettings();};
-  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);renderAccounts();entryGuidance();}});
+  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue!==raw){blocked=true;notice('Data berubah di tab lain. Form di sini belum dibuang. Unduh cadangan jika perlu, lalu buka ulang halaman sebelum melanjutkan.',true);renderAccounts();renderBalanceDetails();entryGuidance();}});
   document.querySelectorAll('input[inputmode="numeric"]').forEach(el=>el.addEventListener('blur',()=>{const n=parseMoney(el.id);if(n!==null)setMoney(el.id,n);}));
   resetForm();$('debtDate').value=localDate();fillTaxSettings();render();
   notice(loaded.error||'Tersimpan di perangkat ini · belum sinkron antar-perangkat',!!loaded.error);

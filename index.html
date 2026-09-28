@@ -9,11 +9,11 @@
 <link rel="icon" href="kas-icon.svg?v=5.6" type="image/svg+xml">
 <link rel="alternate icon" href="kas-icon-192.png?v=5.6" type="image/png">
 <link rel="apple-touch-icon" href="kas-icon-180.png?v=5.6">
-<link rel="stylesheet" href="kas.css?v=6.4.1">
+<link rel="stylesheet" href="kas.css?v=6.5">
 </head>
 <body>
 <div class="app">
-<header class="app-head"><div class="brand"><img class="brand-icon" src="kas-icon.svg?v=5.6" width="44" height="44" alt=""><div><h1>Kas Command</h1><p>Tiga saldo, satu catatan <span class="version">v6.4</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="debts">Utang</button><button data-view="owner">Rencana pribadi lama</button><button data-view="reserve">Rincian pajak</button><button id="openTax">Alat pajak lama</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
+<header class="app-head"><div class="brand"><img class="brand-icon" src="kas-icon.svg?v=5.6" width="44" height="44" alt=""><div><h1>Kas Command</h1><p>Tiga saldo, satu catatan <span class="version">v6.5</span></p></div></div><details id="moreMenu" class="more-menu"><summary>Lainnya</summary><div class="more-options"><button data-view="debts">Utang</button><button data-view="owner">Rencana pribadi lama</button><button data-view="reserve">Rincian pajak</button><button id="openTax">Alat pajak lama</button><button data-view="settings">Cadangan & pengaturan</button><button id="quickBackup">Unduh cadangan</button></div></details></header>
 <div id="storageNotice" class="notice" role="status"></div>
 <div class="topline"><label for="month">Bulan<input id="month" type="month" required></label><p id="periodLabel"></p></div>
 <nav aria-label="Menu Kas" id="nav">
@@ -24,8 +24,17 @@
 <div class="launcher-heading"><h2>Saldo kas saya</h2><p class="hint">Saldo dari catatan sampai bulan yang dipilih, bukan saldo langsung bank.</p></div>
 <div id="accountsNotice" class="notice warning hidden" role="status"></div>
 <div id="accountBalances" class="account-balances"></div>
+<button id="showBalanceDetails" class="balance-detail-bar">Rincian saldo / minus <span>›</span></button>
 <div class="task-launcher task-launcher3"><button data-new-flow="sale"><strong>+ Uang masuk</strong></button><button data-new-flow="expense"><strong>− Uang keluar</strong></button><button data-view="transfer"><strong>↔ Pindah uang</strong></button></div>
 <details class="card compact-details"><summary>Catatan terbaru & pemeriksaan</summary><div id="reviewNotice"></div><button id="showHistory" class="text-button">Semua riwayat</button><div id="recentList"></div></details>
+</section>
+<section id="balanceDetails" class="view hidden">
+<div class="section-head"><h2>Rincian saldo / minus</h2><button data-view="dashboard">Kembali</button></div>
+<label>Lihat saldo mana?<select id="balanceDetailAccount"><option value="operational">Operasional</option><option value="tax">Cadangan pajak</option><option value="personal" selected>Pribadi</option></select></label>
+<div id="balanceDetailStatus" class="notice warning hidden" role="status"></div>
+<article id="balanceDetailSummary" class="card"></article>
+<article class="card"><h3>Asal saldo dari seluruh catatan</h3><p class="hint">Dari catatan pertama sampai akhir bulan yang dipilih. Bukan hanya transaksi bulan ini.</p><div id="balanceDetailGroups"></div></article>
+<details class="card compact-details"><summary id="balanceDetailCount">Lihat transaksi pembentuk saldo</summary><p class="hint">Urutan tanggal paling lama dahulu. Saldo setelah transaksi menunjukkan bagaimana saldo bertambah atau berkurang.</p><div id="balanceDetailRows"></div></details>
 </section>
 <section id="transfer" class="view hidden">
 <div class="section-head"><h2>Pindah uang</h2><button data-view="dashboard">Kembali</button></div>
@@ -129,7 +138,7 @@
 <details class="card"><summary>Alat lama · impor CSV & ekspor Dashboard</summary><p class="hint">Untuk kebutuhan khusus. CSV dan ekspor Dashboard bukan cadangan lengkap. Untuk pindah HP gunakan cadangan JSON di atas.</p><div class="actions"><label class="file-button">Tambahkan CSV transaksi<input id="importCSV" type="file" accept=".csv,text/csv"></label><button id="exportDashboard">Ekspor Dashboard — bulan dipilih</button></div><p class="hint">Ekspor Dashboard memakai jumlah kas dan melewati penjualan Shopee seperti versi lama. Jangan gunakan file ini sebagai laporan pajak.</p></details>
 </section>
 </main>
-<footer>Kas Command v6.4 · Data tersimpan di perangkat ini.</footer>
+<footer>Kas Command v6.5 · Data tersimpan di perangkat ini.</footer>
 </div>
 <dialog id="paymentDialog"><form id="paymentForm"><h2>Catat pembayaran utang</h2><p id="paymentTitle"></p><label>Jumlah dibayar (Rp)<input id="paymentAmount" type="text" inputmode="numeric" required></label><label>Tanggal pembayaran<input id="paymentDate" type="date" required></label><label>Sumber uang<input id="paymentChannel" value="BCA Operasional" required></label><div class="actions"><button class="primary">Simpan pembayaran</button><button type="button" id="cancelPayment">Batal</button></div></form></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -139,8 +148,9 @@
 <script src="kas-compat.js?v=6.0"></script>
 <script src="kas-buckets.js?v=5.2"></script>
 <script src="kas-accounts.js?v=6.4"></script>
+<script src="kas-account-details.js?v=6.5"></script>
 <script src="vendor/pdf/jspdf-4.2.1.umd.min.js"></script>
 <script src="vendor/pdf/jspdf-autotable-5.0.8.min.js"></script>
 <script src="kas-pdf.js?v=5.5"></script>
-<script src="kas-ui.js?v=6.4"></script>
+<script src="kas-ui.js?v=6.5"></script>
 </body></html>
