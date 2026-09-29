@@ -2,26 +2,40 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0e1310" />
-    <title>Kas Command · Tactical v7.1</title>
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="icon" href="./kas-icon-192.png?v=6.7" />
-    <link rel="apple-touch-icon" href="./kas-icon-180.png?v=6.7" />
-    <script type="module" crossorigin src="./assets/index-9j2LC98c.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-4eTs9d_N.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2563eb" />
+    <title>KAS SLD.ID — Buku Kas</title>
+    <meta name="description" content="Kas usaha, pribadi, cadangan pajak dan bon — KAS SLD.ID." />
+    <meta name="application-name" content="KAS SLD.ID" />
+    <meta name="apple-mobile-web-app-title" content="KAS SLD.ID" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="./manifest.json?v=8.0" />
+    <link rel="icon" type="image/png" href="./kas-icon-192.png?v=8.0" />
+    <link rel="apple-touch-icon" href="./kas-icon-180.png?v=8.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+      // Pasang tema sebelum render agar tidak berkedip
+      try {
+        var t = localStorage.getItem('bukukas_theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+      } catch (e) {}
+    </script>
+    <script type="module" crossorigin src="./assets/index-C4ld1xTH.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-xbaClBxL.css">
   </head>
-  <body class="bg-[#0e1310] text-slate-100 antialiased selection:bg-emerald-600 selection:text-white">
+  <body>
     <div id="root"></div>
-    <script src="./kas-finance.js?v=6.0"></script>
-    <script src="./kas-storage.js?v=5"></script>
-    <script src="./kas-buckets.js?v=5.2"></script>
-    <script src="./kas-accounts.js?v=6.4"></script>
-    <script src="./kas-account-details.js?v=6.5"></script>
+    <script src="./kas-finance.js?v=8.0"></script>
+    <script src="./kas-storage.js?v=8.0"></script>
+    <script src="./kas-buckets.js?v=8.0"></script>
+    <script src="./kas-accounts.js?v=8.0"></script>
+    <script src="./kas-account-details.js?v=8.0"></script>
+    <script src="./kas-tactical-bridge.js?v=8.0"></script>
+    <script src="./kas-tactical-radar.js?v=8.0"></script>
     <script src="./vendor/pdf/jspdf-4.2.1.umd.min.js"></script>
     <script src="./vendor/pdf/jspdf-autotable-5.0.8.min.js"></script>
-    <script src="./kas-pdf.js?v=5.5"></script>
-    <script src="./kas-tactical-bridge.js?v=7.0"></script>
-    <script src="./kas-tactical-radar.js?v=7.1"></script>
+    <script src="./kas-pdf.js?v=8.0"></script>
   </body>
 </html>

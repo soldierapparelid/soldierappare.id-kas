@@ -119,7 +119,7 @@
           });
         });
       });
-      doc.setProperties({ title: 'Laporan kas usaha - ' + model.monthLabel, author: 'Kas Command', creator: 'Kas Command' });
+      doc.setProperties({ title: 'Laporan kas usaha - ' + model.monthLabel, author: 'KAS SLD.ID', creator: 'KAS SLD.ID' });
       function font(size, bold, color) { doc.setFont('KasSans', bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor.apply(doc, color || INK); }
       font(19, true); doc.text('Laporan pemasukan dan pengeluaran', 12, 31);
       var cards = [['Pemasukan', model.incoming, GREEN], ['Pengeluaran', model.outgoing, RED], ['Selisih', model.difference, model.difference < 0 ? RED : INK]];
@@ -160,7 +160,7 @@
       if (model.openingRows.length > 1) table('Saldo awal tercatat - bukan pemasukan', model.openingRows, [28, 207, 38], false);
       var pages = doc.getNumberOfPages();
       for (var page = 1; page <= pages; page++) {
-        doc.setPage(page); font(10, true); doc.text('KAS COMMAND', 12, 13);
+        doc.setPage(page); font(10, true); doc.text('KAS SLD.ID', 12, 13);
         font(9, false, MUTED); doc.text(model.monthLabel, 285, 13, { align: 'right' });
         doc.setDrawColor.apply(doc, EDGE); doc.setLineWidth(0.25); doc.line(12, 18, 285, 18); doc.line(12, 199, 285, 199);
         font(7.5, false, MUTED); doc.text('Laporan kas usaha', 12, 204); doc.text('Halaman ' + page + ' / ' + pages, 285, 204, { align: 'right' });
