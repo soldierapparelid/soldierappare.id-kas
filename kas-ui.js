@@ -173,8 +173,15 @@
   }
   function render() {
     const m=$('month').value;let s;
-    $('periodLabel').textContent=monthName(m);$('reportTitle').textContent='Laporan '+monthName(m);
+    $('periodLabel').textContent=monthName(m);$('reportTitle').textContent='Laporan konsultan · '+monthName(m);
     renderAccounts();renderAccountHistory();renderBalanceDetails();
+    // A cash-summary problem must not hide the independent all-month debt ledger.
+    try {
+      if(loaded.error)throw new Error('Unreadable source');
+      renderDebts();
+    } catch(error) {
+      ['debtList','legacyReceivables'].forEach(id=>{$(id).innerHTML='<p class="notice warning">Catatan utang / bon belum dapat ditampilkan. Data asli tidak diubah; unduh cadangan untuk diperiksa.</p>';});
+    }
     const unavailable=()=>{['reserveSummary','reserveList','ownerSummary','ownerSplitSummary','ownerList','recentList','reviewNotice','transactionList','taxSummary','consultantStatus'].forEach(id=>{$(id).innerHTML='<p class="notice warning">Data bulan '+esc(monthName(m))+' belum dapat dihitung. Periksa cadangan; tidak ada data yang dihapus.</p>';});};
     if(loaded.error){unavailable();return;}
     try{s=currentSummary();}catch(error){unavailable();notice('Ringkasan belum dapat dihitung. Data asli tetap tersimpan; unduh cadangan untuk diperiksa.',true);return;}
@@ -189,7 +196,7 @@
     $('ownerSummary').innerHTML=line('Rencana bulan ini',budget)+line('Sudah diambil',t.ownerDraw||0)+line('Sisa rencana',Math.max(0,budget-(t.ownerDraw||0)));
     if(document.activeElement!==$('ownerBudget'))setMoney('ownerBudget',budget);
     $('ownerList').innerHTML=rowsHTML(s.tx.filter(x=>F.classify(x)==='ownerDraw'),true,'personal');
-    renderTransactions();renderTax(tax);renderConsultant();renderDebts();entryGuidance();
+    renderTransactions();renderTax(tax);renderConsultant();entryGuidance();
   }
   function renderSplit(b) {
     const p=splitPolicy(),title=!p.valid?'Pengaturan rencana perlu diperiksa':p.enabled?(100-p.personalPercent)+'% usaha · '+p.personalPercent+'% pribadi':'Rencana persentase dijeda';
@@ -454,9 +461,15 @@
   }
   function reportSourceAvailable(){
     if(blocked){alert('Berkas belum dibuat karena data perangkat belum dapat dipastikan. Selesaikan kendala penyimpanan; jangan hapus data situs.');return false;}
-    if(currentSummary().invalidCount){alert('Berkas belum dibuat: perbaiki tanggal atau nominal catatan yang tidak valid dahulu. Data tidak diubah.');return false;}
-    if(!currentAccounts().reserveReady){alert('Berkas belum dibuat: '+currentAccounts().errors.join(' ')+' Data tidak diubah.');return false;}
-    return true;
+    try {
+      const cash=currentCash();
+      if(!cash.operational.available||!cash.tax.available){alert('Berkas belum dibuat: '+cash.errors.join(' ')+' Data tidak diubah.');return false;}
+      if(currentSummary().invalidCount){alert('Berkas belum dibuat: perbaiki tanggal atau nominal catatan yang tidak valid dahulu. Data tidak diubah.');return false;}
+      if(!currentAccounts().reserveReady){alert('Berkas belum dibuat: '+currentAccounts().errors.join(' ')+' Data tidak diubah.');return false;}
+      return true;
+    } catch(error) {
+      alert('Berkas belum dibuat karena catatan belum dapat dihitung dengan aman. Unduh cadangan untuk diperiksa; data tidak diubah.');return false;
+    }
   }
   function exportCsv(name,rows){download(name+'-'+$('month').value+'.csv',F.csv(rows),'text/csv;charset=utf-8');}
   $('downloadCash').onclick=()=>exportCsv('kas-transaksi',txRows(currentSummary().tx));
