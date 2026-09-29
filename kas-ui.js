@@ -108,6 +108,7 @@
   function renderAccounts() {
     let a;try{a=currentCash();}catch(e){a={};}
     const unreadable=!!loaded.error,stale=blocked&&!unreadable;
+    renderMainCash(a,unreadable,stale);
     const uncertain=unreadable||stale||!a.ready;
     $('accountsNotice').classList.toggle('hidden',!uncertain);
     $('accountsNotice').textContent=unreadable?'Data belum dapat dibaca. Jangan hapus data situs.':stale?'Angka sebelumnya: data berubah di tab lain. Isian belum dibuang; muat ulang setelah menyimpan cadangan.':a.available?'Catatan lama belum lengkap. Angka sementara, bukan saldo bank. Data lama tetap disimpan.':'Ada catatan yang belum dapat dihitung dengan aman. Buka perhitungan atau cadangan untuk diperiksa.';
@@ -115,6 +116,24 @@
       const x=a[key]||{},valid=!unreadable&&x.available,provisional=valid&&(x.provisional||stale);
       return '<article class="account-card account-'+key+'" data-account="'+key+'"><h2>'+name+'</h2><span class="account-state">'+(valid?(provisional?'Saldo tercatat · sementara':'Saldo tercatat'):'Perlu diperiksa')+'</span><strong class="account-amount '+(valid&&x.closing<0?'negative':'')+'" data-balance="'+key+'">'+esc(valid?rupiah(x.closing):'Belum dapat dihitung')+'</strong><button data-account-history="'+key+'">Lihat catatan</button></article>';
     }).join('');
+  }
+  // Presentation only: the business balance already consists of operational + tax cash.
+  // Personal cash, unpaid debts, and old planning percentages are never added or subtracted here.
+  function renderMainCash(a,unreadable,stale) {
+    const operational=a.operational||{},tax=a.tax||{};
+    const safe=n=>Number.isSafeInteger(n);
+    const combined=safe(operational.closing)&&safe(tax.closing)?operational.closing+tax.closing:null;
+    const available=!unreadable&&operational.available&&tax.available&&safe(combined);
+    const provisional=available&&(operational.provisional||tax.provisional||stale);
+    let summary;try{if(available)summary=currentSummary();}catch(e){summary=null;}
+    const metrics=available&&summary&&safe(summary.businessIn)&&safe(summary.businessOut)&&summary.businessIn>=0&&summary.businessOut>=0&&summary.cashBusinessClosing===combined;
+    $('mainCashSummary').innerHTML='<div class="cash-hero-head"><span class="eyebrow">KAS USAHA</span><span>'+esc(monthName($('month').value))+'</span></div>'+
+      '<span class="cash-hero-state">'+(available?(provisional?'Saldo tercatat · sementara':'Saldo tercatat'):'Perlu diperiksa')+'</span>'+
+      '<strong class="cash-hero-amount '+(available&&combined<0?'negative':'')+'" data-main-cash>'+esc(available?rupiah(combined):'Belum dapat dihitung')+'</strong>'+
+      '<p class="cash-hero-note">Operasional + cadangan pajak. Uang pribadi terpisah.</p>'+
+      (provisional?'<p class="cash-hero-note">'+(stale?'Data berubah di tab lain. Ini angka sebelumnya; simpan cadangan sebelum memuat ulang.':'Sebagian catatan lama perlu diperiksa. Angka ini masih sementara.')+'</p>':'')+
+      '<div class="cash-hero-metrics"><div><span>Masuk usaha · bulan ini</span><strong class="positive" data-business-in>'+esc(metrics?rupiah(summary.businessIn):'Belum dapat dihitung')+'</strong></div><div><span>Keluar usaha · bulan ini</span><strong class="negative" data-business-out>'+esc(metrics?rupiah(summary.businessOut):'Belum dapat dihitung')+'</strong></div></div>'+
+      '<div class="cash-hero-bottom"><p class="cash-hero-note">Dari catatan sampai bulan dipilih, bukan saldo langsung bank.</p><button class="cash-hero-link" data-business-history="true">Lihat transaksi usaha <span aria-hidden="true">↗</span></button></div>';
   }
   function accountContains(t,key) {
     const f=F.classify(t),route=transferRoutes[f];
@@ -492,10 +511,10 @@
   function resetDebt(){ $('debtForm').reset();$('debtEditId').value='';$('debtMode').value='';$('debtName').readOnly=false;$('debtDate').value=defaultDate();$('debtFormTitle').textContent='Tambah utang';$('debtAmountLabel').firstChild.textContent='Pokok utang (Rp)';$('debtSave').textContent='Tambah catatan utang';$('debtCancel').classList.add('hidden'); }
   function editDebt(id,mode){
     const d=DB.pi.find(x=>x&&x.id===id);if(!d)return;
-    resetDebt();$('debtEditId').value=id;$('debtMode').value=mode;$('debtName').value=d.nama;$('debtName').readOnly=mode==='add';$('debtDue').value=d.tempo||'';$('debtCancel').classList.remove('hidden');
+    resetDebt();$('debtEditor').open=true;$('debtEditId').value=id;$('debtMode').value=mode;$('debtName').value=d.nama;$('debtName').readOnly=mode==='add';$('debtDue').value=d.tempo||'';$('debtCancel').classList.remove('hidden');
     if(mode==='add'){$('debtFormTitle').textContent='Tambah utang ke '+d.nama;$('debtAmountLabel').firstChild.textContent='Tambahan utang (Rp)';$('debtSave').textContent='Simpan tambahan utang';}
     else{$('debtFormTitle').textContent='Edit catatan utang';setMoney('debtAmount',d.jumlah);$('debtDate').value=d.tanggal||defaultDate();$('debtNote').value=d.catatan||'';$('debtSave').textContent='Simpan perubahan utang';}
-    go('debts');
+    go('debts');$('debtEditor').scrollIntoView?.({behavior:'smooth',block:'start'});
   }
   $('debtCancel').onclick=resetDebt;
   $('debtForm').addEventListener('submit',e=>{
@@ -552,6 +571,7 @@
     if(b.dataset.debtEdit)editDebt(b.dataset.debtEdit,'edit');if(b.dataset.debtAdd)editDebt(b.dataset.debtAdd,'add');
     if(b.dataset.newFlow)beginEntry(b.dataset.newFlow);
     if(b.dataset.accountHistory)showAccountHistory(b.dataset.accountHistory);
+    if(b.dataset.businessHistory)showHistory('business');
     if(b.dataset.entryDirection)beginEntry(b.dataset.entryDirection==='in'?'sale':'expense');
     if(b.hasAttribute('data-review'))showHistory('reviewAll');
   });

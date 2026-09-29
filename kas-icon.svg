@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
   <title id="title">Kas Command</title>
-  <desc id="description">Dompet ungu dengan huruf K berwarna krem.</desc>
-  <rect width="512" height="512" fill="#6d28d9"/>
-  <path d="M148 157v-21c0-12 9-23 21-26l138-29c17-4 33 9 33 26v50Z" fill="#c4b5fd"/>
-  <rect x="110" y="151" width="292" height="222" rx="43" fill="#3b176f" stroke="#c4b5fd" stroke-width="12"/>
-  <path d="M199 205v112m3-53 72-59m-62 51 66 61" fill="none" stroke="#fff9ed" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="341" y="223" width="72" height="78" rx="22" fill="#fff9ed"/>
-  <circle cx="366" cy="262" r="9" fill="#6d28d9"/>
+  <desc id="description">Dompet berwarna tinta dengan huruf K di atas bidang emas hangat.</desc>
+  <rect width="512" height="512" fill="#d3a44b"/>
+  <path d="M145 179v-20c0-11 8-21 19-24l147-32c13-3 25 7 25 20v56Z" fill="#f5f4ef"/>
+  <rect x="112" y="163" width="286" height="213" rx="35" fill="#202b30"/>
+  <path d="M188 215v109m3-51 68-58m-60 50 66 59" fill="none" stroke="#f5f4ef" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="333" y="235" width="66" height="68" rx="17" fill="#d3a44b"/>
+  <circle cx="356" cy="269" r="8" fill="#202b30"/>
 </svg>
