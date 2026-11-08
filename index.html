@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#2563eb" />
+    <meta name="theme-color" content="#050807" />
     <title>KAS SLD.ID — Buku Kas</title>
     <meta name="description" content="Kas usaha, pribadi, cadangan pajak dan bon — KAS SLD.ID." />
     <meta name="application-name" content="KAS SLD.ID" />
@@ -14,18 +14,24 @@
     <link rel="apple-touch-icon" href="./kas-icon-180.png?v=8.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Font dimuat tanpa menahan tampilan; sebelum siap memakai font bawaan HP -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" /></noscript>
     <script>
       // Pasang tema sebelum render agar tidak berkedip
+      // v8.1: gelap jadi bawaan, kecuali pengguna memilih mode terang
       try {
-        var t = localStorage.getItem('bukukas_theme');
-        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
-      } catch (e) {}
+        if (localStorage.getItem('kas_theme_v81') !== 'light') document.documentElement.classList.add('dark');
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
     </script>
-    <script type="module" crossorigin src="./assets/index-BVbBBawu.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Cor-xycX.css">
+    <style>#splash{z-index:9999;background:radial-gradient(420px 420px at 50% 45%,#10b98138,#0000 70%),#050807;place-items:center;transition:opacity .35s,visibility .35s;display:grid;position:fixed;inset:0}#splash.hide{opacity:0;visibility:hidden}#splash .box{flex-direction:column;align-items:center;gap:12px;font-family:Plus Jakarta Sans,system-ui,sans-serif;display:flex}#splash .ring{place-items:center;width:88px;height:88px;display:grid;position:relative}#splash .ring:before{content:"";border:2px solid #34d39924;border-top-color:#34d399;border-radius:50%;animation:.9s linear infinite kas-spin;position:absolute;inset:0}#splash img{border-radius:16px;width:58px;height:58px}#splash b{color:#ecf3f0;letter-spacing:.02em;font-size:17px}#splash small{color:#65766f;font-size:11px}@keyframes kas-spin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){#splash .ring:before{animation:none}}</style>
+    <script type="module" crossorigin src="./assets/index-g7lPsW_f.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BR77e1_A.css">
   </head>
   <body>
+    <div id="splash" aria-hidden="true"><div class="box"><div class="ring"><img src="./kas-icon-192.png?v=8.0" alt="" /></div><b>KAS SLD.ID</b><small>Usaha &amp; pribadi terpisah</small></div></div>
     <div id="root"></div>
     <script src="./kas-finance.js?v=8.0"></script>
     <script src="./kas-storage.js?v=8.0"></script>
@@ -34,8 +40,6 @@
     <script src="./kas-account-details.js?v=8.0"></script>
     <script src="./kas-tactical-bridge.js?v=8.0"></script>
     <script src="./kas-tactical-radar.js?v=8.0"></script>
-    <script src="./vendor/pdf/jspdf-4.2.1.umd.min.js"></script>
-    <script src="./vendor/pdf/jspdf-autotable-5.0.8.min.js"></script>
-    <script src="./kas-pdf.js?v=8.0"></script>
+    <!-- Pembuat PDF (±450 KB) dimuat hanya saat Unduh PDF ditekan, lihat MoreView -->
   </body>
 </html>

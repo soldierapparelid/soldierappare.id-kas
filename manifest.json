@@ -4,8 +4,8 @@
   "description": "Kas usaha, pribadi, cadangan pajak dan bon — SLD.ID",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f3f5f9",
-  "theme_color": "#2563eb",
+  "background_color": "#050807",
+  "theme_color": "#050807",
   "icons": [
     {
       "src": "kas-icon-192.png?v=8.0",
